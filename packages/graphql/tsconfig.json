@@ -1,0 +1,24 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "paths": {
+      "@nestjs-cognito/auth": ["../auth/lib"],
+      "@nestjs-cognito/auth/*": ["../auth/lib/*"],
+      "@nestjs-cognito/core": ["../core/lib"],
+      "@nestjs-cognito/core/*": ["../core/lib/*"],
+      "@nestjs-cognito/testing": ["../testing/lib"],
+      "@nestjs-cognito/testing/*": ["../testing/lib/*"]
+    }
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.build.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

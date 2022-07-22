@@ -1,0 +1,27 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./lib",
+    "paths": {
+      "@nestjs-cognito/auth": ["../auth/lib"],
+      "@nestjs-cognito/auth/*": ["../auth/lib/*"],
+      "@nestjs-cognito/core": ["../core/lib"],
+      "@nestjs-cognito/core/*": ["../core/lib/*"],
+      "@nestjs-cognito/testing": ["../testing/lib"],
+      "@nestjs-cognito/testing/*": ["../testing/lib/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "tests/**/*", "*.spec.ts"],
+  "references": [
+    {
+      "path": "../auth/tsconfig.build.json"
+    },
+    {
+      "path": "../core/tsconfig.build.json"
+    },
+    {
+      "path": "../testing/tsconfig.build.json"
+    }
+  ]
+}

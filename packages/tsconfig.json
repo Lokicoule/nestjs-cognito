@@ -1,0 +1,17 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./auth/tsconfig.build.json"
+    },
+    {
+      "path": "./core/tsconfig.build.json"
+    },
+    {
+      "path": "./graphql/tsconfig.build.json"
+    },
+    {
+      "path": "./testing/tsconfig.build.json"
+    }
+  ]
+}

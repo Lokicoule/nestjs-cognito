@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/tests",
+    "types": ["jest", "node"],
+    "rootDir": ".",
+    "resolveJsonModule": true,
+    "paths": {
+      "@nestjs-cognito/core": ["../core/lib"],
+      "@nestjs-cognito/core/*": ["../core/lib/*"],
+      "@nestjs-cognito/testing": ["../testing/lib"],
+      "@nestjs-cognito/testing/*": ["../testing/lib/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../core/tsconfig.build.json"
+    },
+    {
+      "path": "../testing/tsconfig.build.json"
+    }
+  ]
+}
