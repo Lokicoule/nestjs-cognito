@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/auth",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "description": "Auth Module for NestJS and Cognito",
   "author": "Loik Fekkai",
   "license": "MIT",
@@ -9,6 +9,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/Lokicoule/nestjs-cognito-monorepo/auth#readme",
   "repository": {
     "type": "git",
@@ -24,8 +27,8 @@
   },
   "devDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.131.0",
-    "@nestjs-cognito/core": "^0.0.0",
-    "@nestjs-cognito/testing": "^0.0.0",
+    "@nestjs-cognito/core": "^0.0.1-alpha.0",
+    "@nestjs-cognito/testing": "^0.0.1-alpha.0",
     "@nestjs/common": "^8.0.0 || ^9.0.0",
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/testing": "^9.0.4"

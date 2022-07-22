@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/core",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "description": "Cognito Provider for NestJS",
   "author": "Loik Fekkai",
   "license": "MIT",
@@ -9,6 +9,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/Lokicoule/nestjs-cognito-monorepo/core#readme",
   "repository": {
     "type": "git",
