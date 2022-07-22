@@ -13,7 +13,6 @@
     "clean": "tsc -b --clean packages",
     "format": "prettier packages/**/*.ts --ignore-path ./.prettierignore --write",
     "lint": "eslint 'packages/**/*.ts' --fix",
-    "prepublish:npm": "yarn build && yarn changelog | pbcopy",
     "publish:npm": "lerna publish",
     "prepublish:next": "yarn build",
     "publish:next": "lerna publish --dist-tag next",
@@ -23,9 +22,6 @@
     "test:e2e:core": "lerna run test:e2e --scope @nestjs-cognito/core --stream",
     "test:e2e:graphql": "lerna run test:e2e --scope @nestjs-cognito/graphql --stream",
     "prepare": "husky install"
-  },
-  "resolutions": {
-    "graphql": "15.8.0"
   },
   "devDependencies": {
     "@nestjs/core": "^8.0.0 || ^9.0.0",
@@ -73,6 +69,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nestjs/graphql"
+    "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo.git"
   }
 }

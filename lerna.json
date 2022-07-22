@@ -3,5 +3,10 @@
   "useNx": false,
   "version": "0.0.0",
   "npmClient": "yarn",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+      "npmClient": "npm"
+    }
+  }
 }

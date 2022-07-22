@@ -9,10 +9,10 @@
   "files": [
     "dist"
   ],
-  "homepage": "https://github.com/Lokicoule/nestjs-cognito/core#readme",
+  "homepage": "https://github.com/Lokicoule/nestjs-cognito-monorepo/core#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lokicoule/nestjs-cognito.git"
+    "url": "git+https://github.com/Lokicoule/nestjs-cognito-monorepo.git"
   },
   "scripts": {
     "build": "rimraf -rf dist && tsc -p tsconfig.json",
@@ -20,7 +20,7 @@
     "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch"
   },
   "bugs": {
-    "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
+    "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo/issues"
   },
   "devDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.131.0",

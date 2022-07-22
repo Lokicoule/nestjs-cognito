@@ -1,4 +1,4 @@
-<h1 align="center">@NestJS-Cognito/GraphQL</h1>
+<h1 align="center">@nestjs-cognito/graphql</h1>
 
 ## Description
 
