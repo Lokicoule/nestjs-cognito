@@ -21,7 +21,7 @@ You can find more details [here](../core/README.md).
 
 ### Synchronously
 
-Use `CognitoAuthModule.register` method with options of [CognitoModuleOptions interface](../core/README.md#options-params)
+Use `CognitoAuthModule.register` method with options of [CognitoModuleOptions interface](../../packages/core/README.md#options-params)
 
 ```ts
 import { CognitoAuthModule } from "@nestjs-cognito/auth";
