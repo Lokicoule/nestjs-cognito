@@ -10,7 +10,7 @@
 ## Installation
 
 ```bash
-npm i --save @nestjs-cognito/auth
+npm i @nestjs-cognito/auth
 ```
 
 ## Configuration
@@ -29,7 +29,7 @@ import { Module } from "@nestjs/common";
 
 @Module({
   imports: [
-    CognitoModule.register({
+    CognitoAuthModule.register({
       region: "eu-west-X",
     }),
   ],
