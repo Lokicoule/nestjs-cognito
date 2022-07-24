@@ -10,7 +10,7 @@
 ## Installation
 
 ```bash
-npm i --save @nestjs/jwt nestjs-cognito
+npm i @nestjs-cognito/core
 ```
 
 ## Configuration
