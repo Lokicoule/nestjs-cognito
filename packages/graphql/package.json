@@ -32,7 +32,7 @@
     "@nestjs/testing": "9.0.5"
   },
   "peerDependencies": {
-    "@nestjs-cognito/auth": "~0.0.2-alpha.0",
-    "@nestjs/graphql": "^10.0.16"
+    "@nestjs-cognito/auth": "0.1.0",
+    "@nestjs/graphql": "10.0.21"
   }
 }
