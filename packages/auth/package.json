@@ -32,7 +32,7 @@
     "@nestjs/testing": "9.0.5"
   },
   "peerDependencies": {
-    "@nestjs-cognito/core": "~0.0.2-alpha.0",
+    "@nestjs-cognito/core": "0.1.0",
     "@nestjs/jwt": "^9.0.0"
   }
 }
