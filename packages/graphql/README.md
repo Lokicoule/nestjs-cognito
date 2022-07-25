@@ -6,19 +6,8 @@
 
 ## Installation
 
-Peer dependencies :
-
-- @nestjs/jwt
-- @aws-sdk/client-cognito-identity-provider
-- @nestjs-cognito/auth
-- @nestjs-cognito/core
-
 ```bash
-npm i @nestjs/jwt @aws-sdk/client-cognito-identity-provider @nestjs-cognito/auth @nestjs-cognito/core
-```
-
-```bash
-npm i --save @nestjs-cognito/graphql
+npm i @nestjs-cognito/graphql
 ```
 
 ## Configuration

@@ -19,11 +19,7 @@ export class CognitoGraphQLModule {
   static registerAsync(options: CognitoModuleAsyncOptions): DynamicModule {
     return {
       module: CognitoGraphQLModule,
-      imports: [
-        ...(options.imports || []),
-        CognitoModule.registerAsync(options),
-      ],
-      providers: [...(options.extraProviders || [])],
+      imports: [CognitoModule.registerAsync(options)],
       exports: [CognitoModule],
     };
   }
