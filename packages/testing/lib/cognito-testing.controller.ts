@@ -1,11 +1,11 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { TestingCognitoService } from "./testing-cognito.service";
+import { CognitoTestingService } from "./cognito-testing.service";
 
 @Controller()
-export class TestingCognitoController {
-  constructor(private readonly authService: TestingCognitoService) {}
+export class CognitoTestingController {
+  constructor(private readonly authService: CognitoTestingService) {}
 
-  @Post("login")
+  @Post("cognito-testing-login")
   login(@Body() body: Record<string, string>) {
     return this.authService.getAccessToken(
       {

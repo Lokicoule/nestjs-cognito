@@ -8,7 +8,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectCognitoIdentityProvider } from "@nestjs-cognito/core";
 
 @Injectable()
-export class TestingCognitoService {
+export class CognitoTestingService {
   constructor(
     @InjectCognitoIdentityProvider()
     private readonly client: CognitoIdentityProvider
