@@ -27,6 +27,7 @@
     "@commitlint/cli": "17.0.3",
     "@commitlint/config-angular": "17.0.3",
     "@golevelup/ts-jest": "0.3.3",
+    "@nestjs/config": "^2.2.0",
     "@nestjs/core": "9.0.5",
     "@nestjs/platform-express": "9.0.5",
     "@nestjs/testing": "9.0.5",
