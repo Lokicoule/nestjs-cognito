@@ -1,1 +1,1 @@
-export * from "./testing-cognito.module";
+export * from "./cognito-testing.module";
