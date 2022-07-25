@@ -25,11 +25,7 @@ export class CognitoAuthModule {
   static registerAsync(options: CognitoModuleAsyncOptions): DynamicModule {
     return {
       module: CognitoAuthModule,
-      imports: [
-        ...(options.imports || []),
-        CognitoModule.registerAsync(options),
-      ],
-      providers: [...(options.extraProviders || [])],
+      imports: [CognitoModule.registerAsync(options)],
       exports: [CognitoModule],
     };
   }
