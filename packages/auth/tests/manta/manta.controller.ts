@@ -1,4 +1,4 @@
-import { Authorization } from "../../../lib";
+import { Authorization } from "../../lib";
 import { Controller, Get } from "@nestjs/common";
 
 @Controller("manta")

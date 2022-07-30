@@ -19,6 +19,9 @@
   },
   "scripts": {
     "build": "rimraf -rf dist && tsc -p tsconfig.json",
+    "coverage": "jest --config ./tests/jest-lib.json --coverage && coveralls < coverage/lcov.info",
+    "coverage:e2e": "jest --config ./tests/jest-e2e.json --coverage && coveralls < coverage/lcov.info",
+    "coverage:all": "npm run coverage && npm run coverage:e2e",
     "test": "jest --config ./tests/jest-lib.json",
     "test:dev": "jest --config ./tests/jest-lib.json --watch",
     "test:e2e": "jest --config ./tests/jest-e2e.json",
@@ -29,8 +32,8 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo/issues"
   },
   "devDependencies": {
-    "@nestjs-cognito/core": "^0.1.1",
-    "@nestjs-cognito/testing": "^0.1.1",
+    "@nestjs-cognito/core": "^0.1.0",
+    "@nestjs-cognito/testing": "^0.1.2",
     "@nestjs/jwt": "9.0.0",
     "@nestjs/testing": "9.0.5"
   },
@@ -38,26 +41,13 @@
     "@nestjs-cognito/core": "0.1.0",
     "@nestjs/jwt": "^9.0.0"
   },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": ".",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "./lib/**/*.ts"
-    ],
-    "coverageDirectory": "./coverage",
-    "testEnvironment": "node"
-  },
   "lint-staged": {
     "*.ts": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "@nestjs-cognito/workspace": "file:../..",
+    "cd": "^0.3.3"
   }
 }

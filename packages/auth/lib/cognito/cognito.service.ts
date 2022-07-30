@@ -36,11 +36,9 @@ export class CognitoService {
         AccessToken: accessToken,
       };
       const response: GetUserResponse = await this.client.getUser(request);
-      console.log("response", response);
       const decodedAccessToken = this.decodeAccessToken(accessToken);
       return UserMapper.fromGetUserAndDecodedJwt(response, decodedAccessToken);
     } catch (error) {
-      console.log("error", error);
       throw new UnauthorizedException(error, "Authentication failed.");
     }
   }
@@ -55,7 +53,6 @@ export class CognitoService {
   private decodeAccessToken(
     accessToken: string
   ): string | { [key: string]: any } {
-    console.log("access token", accessToken);
     const decodedAccessToken = this.jwtService.decode(accessToken);
     if (!Boolean(decodedAccessToken)) {
       throw new UnauthorizedException("Invalid access token.");

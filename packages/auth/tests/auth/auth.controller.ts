@@ -1,4 +1,4 @@
-import { Authentication, CurrentUser, User } from "../../../lib";
+import { Authentication, CurrentUser, User } from "../../lib";
 import { Controller, Get } from "@nestjs/common";
 
 @Controller("auth")
