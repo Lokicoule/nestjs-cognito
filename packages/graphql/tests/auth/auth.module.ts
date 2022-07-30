@@ -2,7 +2,7 @@ import { CognitoAuthModule } from "@nestjs-cognito/auth";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { CognitoTestingModule } from "../../../testing/lib/cognito-testing.module";
-import { AuthController } from "./auth.controller";
+import { AuthResolver } from "./auth.resolver";
 
 @Module({
   imports: [
@@ -21,6 +21,6 @@ import { AuthController } from "./auth.controller";
       inject: [ConfigService],
     }),
   ],
-  controllers: [AuthController],
+  providers: [AuthResolver],
 })
 export class AuthModule {}

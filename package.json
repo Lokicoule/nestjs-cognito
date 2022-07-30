@@ -11,12 +11,12 @@
   "scripts": {
     "build": "tsc -b -v packages",
     "clean": "tsc -b --clean packages",
+    "coverage": "jest --coverage && coveralls < coverage/lcov.info",
     "format": "prettier packages/**/*.ts --ignore-path ./.prettierignore --write",
     "lint": "eslint 'packages/**/*.ts' --fix",
     "publish:npm": "lerna publish",
     "prepublish:next": "yarn build",
     "publish:next": "lerna publish --dist-tag next",
-    "test": "lerna run test --parallel",
     "test:e2e": "lerna run test:e2e --parallel",
     "test:e2e:auth": "lerna run test:e2e --scope @nestjs-cognito/auth --stream",
     "test:e2e:core": "lerna run test:e2e --scope @nestjs-cognito/core --stream",
@@ -39,6 +39,8 @@
     "@types/ws": "8.5.3",
     "@typescript-eslint/eslint-plugin": "5.30.7",
     "@typescript-eslint/parser": "5.30.7",
+    "apollo-server-core": "^3.10.0",
+    "apollo-server-express": "^3.10.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
     "eslint": "8.20.0",
@@ -54,13 +56,26 @@
     "pactum": "3.1.13",
     "prettier": "2.7.1",
     "reflect-metadata": "0.1.13",
-    "release-it": "15.1.4",
+    "release-it": "^15.1.4",
     "rimraf": "3.0.2",
     "rxjs": "7.5.6",
     "supertest": "6.2.4",
     "ts-jest": "28.0.7",
     "ts-node": "10.9.1",
     "typescript": "4.7.4"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "packages/*/lib/**/*.ts"
+    ],
+    "testEnvironment": "node",
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "packages/tsconfig.spec.json"
+      }
+    }
   },
   "lint-staged": {
     "*.ts": [

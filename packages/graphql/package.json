@@ -12,6 +12,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "nest",
+    "aws",
+    "cognito",
+    "graphql"
+  ],
   "homepage": "https://github.com/Lokicoule/nestjs-cognito-monorepo/graphql#readme",
   "repository": {
     "type": "git",
@@ -19,6 +25,7 @@
   },
   "scripts": {
     "build": "rimraf -rf dist && tsc -p tsconfig.json",
+    "release": "release-it",
     "test:e2e": "jest --config ./tests/jest-e2e.json",
     "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch"
   },
@@ -26,7 +33,6 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo/issues"
   },
   "devDependencies": {
-    "@nestjs-cognito/auth": "^0.1.1",
     "@nestjs-cognito/testing": "^0.1.1",
     "@nestjs/apollo": "^10.0.19",
     "@nestjs/graphql": "10.0.21",
@@ -34,8 +40,10 @@
     "apollo-server-core": "^3.10.0",
     "apollo-server-express": "^3.10.0"
   },
+  "dependencies": {
+    "@nestjs-cognito/auth": "0.1.1"
+  },
   "peerDependencies": {
-    "@nestjs-cognito/auth": "0.1.0",
     "@nestjs/graphql": "10.0.21"
   }
 }

@@ -2,7 +2,7 @@ import { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { request, spec } from "pactum";
-import { AppModule } from "./app.module";
+import { TestingAppModule } from "./app.module";
 
 describe("Cognito Module : Testing", () => {
   let app: INestApplication;
@@ -10,7 +10,7 @@ describe("Cognito Module : Testing", () => {
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [TestingAppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();

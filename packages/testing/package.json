@@ -12,6 +12,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "nest",
+    "aws",
+    "cognito",
+    "testing"
+  ],
   "homepage": "https://github.com/Lokicoule/nestjs-cognito-monorepo/testing#readme",
   "repository": {
     "type": "git",
@@ -19,16 +25,14 @@
   },
   "scripts": {
     "build": "rimraf -rf dist && tsc -p tsconfig.json",
+    "release": "release-it",
     "test:e2e": "jest --config ./tests/jest-e2e.json",
     "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch"
   },
   "bugs": {
     "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo/issues"
   },
-  "devDependencies": {
+  "dependencies": {
     "@nestjs-cognito/core": "^0.1.1"
-  },
-  "peerDependencies": {
-    "@nestjs-cognito/core": "0.1.0"
   }
 }

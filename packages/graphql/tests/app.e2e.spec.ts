@@ -38,18 +38,83 @@ describe("Cognito Module : GraphQL", () => {
         .expectBodyContains("AccessToken")
         .stores("flipperToken", "AccessToken");
       await spec()
-        .get("/auth/me")
+        .get("/graphql")
+        .withGraphQLQuery(
+          `query GetMe {
+          getMe {
+            username,
+            email,
+            groups,
+          }
+        }`
+        )
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
         .expectStatus(200)
         .expectBody({
-          _username: "8dd0d4e0-6175-40e4-a1d2-71b8c77c7121",
-          _email: "flipper@dolphin.com",
-          _groups: ["dolphin"],
+          data: {
+            getMe: {
+              username: "8dd0d4e0-6175-40e4-a1d2-71b8c77c7121",
+              email: "flipper@dolphin.com",
+              groups: ["dolphin"],
+            },
+          },
         });
     });
 
     it("should be unsuccessfull because authorization header is missing", async () => {
-      await spec().get("/auth/me").expectStatus(401);
+      await spec()
+        .get("/graphql")
+        .withGraphQLQuery(
+          `query GetMe {
+        getMe {
+          username,
+          email,
+          groups,
+        }
+      }`
+        )
+        .expectStatus(200)
+        .expectJsonLike({
+          errors: [],
+        });
+    });
+
+    it("should be unsuccessfull because authorization header is wrong/has expired", async () => {
+      await spec()
+        .get("/graphql")
+        .withGraphQLQuery(
+          `query GetMe {
+      getMe {
+        username,
+        email,
+        groups,
+      }
+    }`
+        )
+        .withHeaders("Authorization", "Bearer wrong-token")
+        .expectStatus(200)
+        .expectJsonLike({
+          errors: [],
+        });
+      await spec()
+        .get("/graphql")
+        .withGraphQLQuery(
+          `query GetMe {
+    getMe {
+      username,
+      email,
+      groups,
+    }
+  }`
+        )
+        .withHeaders(
+          "Authorization",
+          "Bearer eyJraWQiOiJKUnVCOVR1bEx4NU9MUU43SDZRUThVMGhmSG1UT284Q1h1RFR2NGc5aVRJPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJmODhkOGIzNi0yZmRiLTQ3ZDgtYTU4OS0yODQ2YmQwMzc1MjYiLCJjb2duaXRvOmdyb3VwcyI6WyJhZG1pbiJdLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0xLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMV9PTTIycTh6bjAiLCJjbGllbnRfaWQiOiI0ZTBxMG1tZmNiajJwNWZzdDZ1MHRva2RwMiIsIm9yaWdpbl9qdGkiOiJiM2Y1ZGQ3ZS00ZTcyLTRmMzAtYTUzYi1lNzNmYTllZTI0MzgiLCJldmVudF9pZCI6ImU5OTI2ZTVhLTc3OGQtNDg2MC05Nzc3LWJmOTU1NWVlZjkwMCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE2NTg2NzI0NzksImV4cCI6MTY1ODY3NjA3OSwiaWF0IjoxNjU4NjcyNDc5LCJqdGkiOiI2NDZiYTA4ZC1jMGE3LTQ3YjAtYmM4Mi1mYTY0N2FlMjgyYzUiLCJ1c2VybmFtZSI6ImY4OGQ4YjM2LTJmZGItNDdkOC1hNTg5LTI4NDZiZDAzNzUyNiJ9.Z8OkqNgc-zYdDt5fPoDB88VHnUOhGxlLLpdFi8kuGQ_LmEKWBrOZvdgWHq_-6TdQysdxcZkPGMZnZesMVGu4VXSbUbmUkMGrTTXT5suJRHXhvhIB75j35mh132avMuTSPzC1vxbPLJKyN7zQ9_OLodQATiVMvtRWME8geynPokHxADTFkFppK_oYfLoqIFMS8maLsU2UUy84S11xqzV1Sz0jTmyd2D4s2JOYxXflC-q4855WZDGGlUmdviNgLOW5S0D1C_ClCg--M-G9RLgh80Pyofd2ScSpuaHfIOyNhs2tPpJM3bNBuubiZLijDQMcQ7wRMw5DOwMN1Zix5Niw1g"
+        )
+        .expectStatus(200)
+        .expectJsonLike({
+          errors: [],
+        });
     });
   });
 

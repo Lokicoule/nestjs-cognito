@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { CognitoTestingModule } from "../lib/cognito-testing.module";
+import { CognitoTestingModule } from "../lib";
 
 @Module({
   imports: [
@@ -10,4 +10,4 @@ import { CognitoTestingModule } from "../lib/cognito-testing.module";
     }),
   ],
 })
-export class AppModule {}
+export class TestingAppModule {}
