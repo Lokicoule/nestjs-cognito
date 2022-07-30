@@ -11,6 +11,7 @@
   "scripts": {
     "build": "tsc -b -v packages",
     "clean": "tsc -b --clean packages",
+    "coverage": "jest --coverage && coveralls < coverage/lcov.info",
     "format": "prettier packages/**/*.ts --ignore-path ./.prettierignore --write",
     "lint": "eslint 'packages/**/*.ts' --fix",
     "publish:npm": "lerna publish",
@@ -71,5 +72,23 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo.git"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "./packages",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/lib/**/*.(t|j)s",
+      "!**/**/index.(t|j)s"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node"
   }
 }
