@@ -10,4 +10,4 @@ import { CognitoTestingModule } from "../lib/cognito-testing.module";
     }),
   ],
 })
-export class AppModule {}
+export class TestingAppModule {}
