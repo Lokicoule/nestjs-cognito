@@ -2,7 +2,7 @@
 
 ## Description
 
-[AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html) utilities module for [Nest](https://github.com/nestjs/nest) coupled with GraphQL.
+GraphQL utilities module for [@nestjs-cognito/auth](../../packages/auth/README.md)
 
 ## Installation
 
@@ -12,54 +12,11 @@ npm i @nestjs-cognito/graphql
 
 ## Configuration
 
-### Synchronously
-
-Use `CognitoGraphQLModule.register` method with options of nestjs-cognito [CognitoModuleOptions interface](https://github.com/Lokicoule/nestjs-cognito#readme#options-params)
-
-```ts
-import { CognitoGraphQLModule } from "nestjs-cognito-graphql";
-import { Module } from "@nestjs/common";
-
-@Module({
-  imports: [
-    CognitoGraphQLModule.register({
-      region: "eu-west-X",
-    }),
-  ],
-})
-export class AppModule {}
-```
-
-### Asynchronously
-
-With `CognitoGraphQLModule.registerAsync` you can import your ConfigModule and inject ConfigService to use it in `useFactory` method.
-It's also possible to use `useExisting` or `useClass`.
-You can find more details [here](https://docs.nestjs.com/techniques/configuration).
-
-Here's an example:
-
-```ts
-import { CognitoGraphQLModule } from "nestjs-cognito";
-import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-
-@Module({
-  imports: [
-    CognitoGraphQLModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        region: configService.get("COGNITO_REGION"),
-      }),
-      inject: [ConfigService],
-    }),
-  ],
-})
-export class AppModule {}
-```
+See [@nestjs-cognito/auth](../../packages/auth/README.md#configuration)
 
 ## Usage
 
-You can use the built-in `nestjs-cognito-graphql` decorators and guards.
+You can use the built-in `@nestjs-cognito/graphql` decorators and guards.
 
 ### Built-in decorators and guards
 
@@ -80,8 +37,8 @@ import {
   Authentication,
   AuthenticationGuard,
   CurrentUser,
-} from "nestjs-cognito-graphql";
-import { User } from "nestjs-cognito";
+} from "@nestjs-cognito/graphql";
+import { User } from "@nestjs-cognito/auth";
 
 @Resolver("dogs")
 @Authentication()
@@ -116,12 +73,12 @@ Here is an example that shows how to use authorization:
 ```ts
 import { UseGuards } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
-import { User } from "nestjs-cognito";
+import { User } from "@nestjs-cognito/auth";
 import {
   Authorization,
   AuthorizationGuard,
   CurrentUser,
-} from "nestjs-cognito-graphql";
+} from "@nestjs-cognito/graphql";
 
 @Resolver("dogs")
 @Authorization({

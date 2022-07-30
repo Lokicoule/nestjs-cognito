@@ -28,8 +28,11 @@
   "devDependencies": {
     "@nestjs-cognito/auth": "^0.1.1",
     "@nestjs-cognito/testing": "^0.1.1",
+    "@nestjs/apollo": "^10.0.19",
     "@nestjs/graphql": "10.0.21",
-    "@nestjs/testing": "9.0.5"
+    "@nestjs/testing": "9.0.5",
+    "apollo-server-core": "^3.10.0",
+    "apollo-server-express": "^3.10.0"
   },
   "peerDependencies": {
     "@nestjs-cognito/auth": "0.1.0",
