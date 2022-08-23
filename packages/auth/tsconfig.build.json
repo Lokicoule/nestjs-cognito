@@ -10,7 +10,7 @@
       "@nestjs-cognito/testing/*": ["../testing/lib/*"]
     }
   },
-  "exclude": ["node_modules", "dist", "tests/**/*", "*.spec.ts"],
+  "exclude": ["node_modules", "dist", "tests/**/*", "**/*.spec.ts"],
   "references": [
     {
       "path": "../core/tsconfig.build.json"
