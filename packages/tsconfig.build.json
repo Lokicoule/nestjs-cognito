@@ -13,6 +13,7 @@
     "target": "es2018",
     "sourceMap": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowJs": true
   }
 }
