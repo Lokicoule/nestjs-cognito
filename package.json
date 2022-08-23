@@ -65,17 +65,26 @@
     "typescript": "4.7.4"
   },
   "jest": {
-    "preset": "ts-jest",
     "collectCoverage": true,
     "collectCoverageFrom": [
       "packages/*/lib/**/*.ts"
     ],
-    "testEnvironment": "node",
     "globals": {
       "ts-jest": {
         "tsConfig": "packages/tsconfig.spec.json"
       }
-    }
+    },
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "testEnvironment": "node",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "preset": "ts-jest"
   },
   "lint-staged": {
     "*.ts": [
