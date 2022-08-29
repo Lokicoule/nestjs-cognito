@@ -4,9 +4,17 @@
   "version": "independent",
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "command": {
-    "publish": {
-      "npmClient": "npm"
+  "changelog": {
+    "labels": {
+      "feature": "Features",
+      "bug": "Bug fixes",
+      "enhancement": "Enhancements",
+      "dependencies": "Dependencies"
+    },
+    "command": {
+      "publish": {
+        "npmClient": "npm"
+      }
     }
   }
 }
