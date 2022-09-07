@@ -13,7 +13,10 @@
     },
     "command": {
       "publish": {
-        "npmClient": "npm"
+        "npmClient": "npm",
+        "version": {
+          "message": "chore(release): release v%s"
+        }
       }
     }
   }
