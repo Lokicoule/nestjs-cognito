@@ -10,13 +10,14 @@
       "bug": "Bug fixes",
       "enhancement": "Enhancements",
       "dependencies": "Dependencies"
-    },
-    "command": {
-      "publish": {
-        "npmClient": "npm",
-        "version": {
-          "message": "chore(release): release v%s"
-        }
+    }
+  },
+  "command": {
+    "publish": {
+      "conventionalCommits": true,
+      "npmClient": "npm",
+      "version": {
+        "message": "chore(release): release v%s"
       }
     }
   }
