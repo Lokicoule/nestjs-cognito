@@ -23,8 +23,8 @@
     "url": "git+https://github.com/Lokicoule/nestjs-cognito-monorepo.git"
   },
   "scripts": {
-    "test:e2e": "jest --config ./tests/jest-e2e.json",
-    "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch"
+    "test:e2e": "jest --config ./tests/jest-e2e.json --detectOpenHandles",
+    "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch --detectOpenHandles"
   },
   "bugs": {
     "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo/issues"
