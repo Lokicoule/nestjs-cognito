@@ -3225,7 +3225,7 @@ apollo-reporting-protobuf@^3.3.1, apollo-reporting-protobuf@^3.3.2:
   dependencies:
     "@apollo/protobufjs" "1.2.4"
 
-apollo-server-core@^3.10.0:
+apollo-server-core@3.10.0, apollo-server-core@^3.10.0:
   version "3.10.0"
   resolved "https://registry.npmjs.org/apollo-server-core/-/apollo-server-core-3.10.0.tgz"
   integrity sha512-ln5drIk3oW/ycYhcYL9TvM7vRf7OZwJrgHWlnjnMakozBQIBSumdMi4pN001DhU9mVBWTfnmBv3CdcxJdGXIvA==
@@ -3265,7 +3265,7 @@ apollo-server-errors@^3.3.1:
   resolved "https://registry.npmjs.org/apollo-server-errors/-/apollo-server-errors-3.3.1.tgz"
   integrity sha512-xnZJ5QWs6FixHICXHxUfm+ZWqqxrNuPlQ+kj5m6RtEgIpekOPssH/SD9gf2B4HuWV0QozorrygwZnux8POvyPA==
 
-apollo-server-express@^3.10.0:
+apollo-server-express@3.10.0:
   version "3.10.0"
   resolved "https://registry.npmjs.org/apollo-server-express/-/apollo-server-express-3.10.0.tgz"
   integrity sha512-ww3tZq9I/x3Oxtux8xlHAZcSB0NNQ17lRlY6yCLk1F+jCzdcjuj0x8XNg0GdTrMowt5v43o786bU9VYKD5OVnA==
