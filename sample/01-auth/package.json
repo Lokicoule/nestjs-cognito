@@ -10,7 +10,7 @@
     "start:dev": "nest start --watch"
   },
   "dependencies": {
-    "@nestjs-cognito/auth": "0.1.0",
+    "@nestjs-cognito/auth": "0.1.1",
     "@nestjs/common": "9.0.5",
     "@nestjs/core": "9.0.5",
     "@nestjs/platform-express": "9.0.5",
