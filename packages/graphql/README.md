@@ -1,5 +1,8 @@
 <h1 align="center">@nestjs-cognito/graphql</h1>
 
+[![Node.js CI](https://github.com/Lokicoule/nestjs-cognito-monorepo/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito-monorepo/actions/workflows/node.js.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito-monorepo/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito-monorepo?branch=main)
+
 ## Description
 
 GraphQL utilities module for [@nestjs-cognito/auth](../../packages/auth/README.md)
@@ -129,4 +132,4 @@ export class CatsResolver {
 
 ## License
 
-NestJS-Cognito-GraphQL is [MIT licensed](LICENSE).
+<b>@nestjs-cognito/graphql</b> is [MIT licensed](LICENSE).

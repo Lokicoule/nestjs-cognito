@@ -1,5 +1,8 @@
 <h1 align="center">@nestjs-cognito/testing</h1>
 
+[![Node.js CI](https://github.com/Lokicoule/nestjs-cognito-monorepo/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito-monorepo/actions/workflows/node.js.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito-monorepo/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito-monorepo?branch=main)
+
 ## Description
 
 [AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html) utilities module for [Nest](https://github.com/nestjs/nest).
@@ -88,8 +91,4 @@ describe("Cognito Module : Testing", () => {
 
 ## License
 
-NestJS-Cognito-Testing is [MIT licensed](LICENSE).
-
-```
-
-```
+<b>@nestjs-cognito/testing</b> is [MIT licensed](LICENSE).
