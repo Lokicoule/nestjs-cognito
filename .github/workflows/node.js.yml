@@ -10,6 +10,8 @@ on:
     branches: ["main"]
 
 env:
+  BLUE_EMAIL: ${{ secrets.BLUE_EMAIL }}
+  BLUE_PASSWORD: ${{ secrets.BLUE_PASSWORD }}
   COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
   COGNITO_REGION: ${{ secrets.COGNITO_REGION }}
   COGNITO_USER_EMAIL: ${{ secrets.COGNITO_USER_EMAIL }}
@@ -17,6 +19,12 @@ env:
   COGNITO_USER_PASSWORD: ${{ secrets.COGNITO_USER_PASSWORD }}
   COGNITO_USER_PASSWORD_ADMIN: ${{ secrets.COGNITO_USER_PASSWORD_ADMIN }}
   COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+  FLIPPER_EMAIL: ${{ secrets.FLIPPER_EMAIL }}
+  FLIPPER_PASSWORD: ${{ secrets.FLIPPER_PASSWORD }}
+  MOBY_EMAIL: ${{ secrets.MOBY_EMAIL }}
+  MOBY_PASSWORD: ${{ secrets.MOBY_PASSWORD }}
+  RAY_EMAIL: ${{ secrets.RAY_EMAIL }}
+  RAY_PASSWORD: ${{ secrets.RAY_PASSWORD }}
 
 jobs:
   build:
