@@ -19,6 +19,9 @@
       "version": {
         "message": "chore(release): release v%s"
       }
+    },
+    "version": {
+      "message": "chore(release): release v%s"
     }
   }
 }
