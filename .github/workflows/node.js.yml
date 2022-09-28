@@ -36,7 +36,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: lerna exec npm ci
+        run: npm ci && lerna exec npm i
 
       - name: Build
         run: npm run build
