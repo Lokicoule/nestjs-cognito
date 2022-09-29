@@ -17,11 +17,11 @@ npm i @nestjs-cognito/auth
 
 ### Options params
 
-You can find more details [here](../core/README.md).
+You can find more details [here](https://www.npmjs.com/package/@nestjs-cognito/core).
 
 ### Synchronously
 
-Use `CognitoAuthModule.register` method with options of [CognitoModuleOptions interface](../../packages/core/README.md#options-params)
+Use `CognitoAuthModule.register` method with options of [CognitoModuleOptions interface](https://www.npmjs.com/package/@nestjs-cognito/core)
 
 ```ts
 import { CognitoAuthModule } from "@nestjs-cognito/auth";

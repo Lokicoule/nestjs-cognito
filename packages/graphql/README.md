@@ -5,7 +5,7 @@
 
 ## Description
 
-GraphQL utilities module for [@nestjs-cognito/auth](../../packages/auth/README.md)
+GraphQL utilities module for [@nestjs-cognito/auth](https://www.npmjs.com/package/@nestjs-cognito/auth)
 
 ## Installation
 
@@ -15,7 +15,7 @@ npm i @nestjs-cognito/graphql
 
 ## Configuration
 
-See [@nestjs-cognito/auth](../../packages/auth/README.md#configuration)
+See [@nestjs-cognito/auth](https://www.npmjs.com/package/@nestjs-cognito/auth)
 
 ## Usage
 
