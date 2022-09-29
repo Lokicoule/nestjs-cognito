@@ -2225,14 +2225,14 @@
     lodash.omit "4.5.0"
     tslib "2.4.0"
 
-"@nestjs/common@9.0.5":
-  version "9.0.5"
-  resolved "https://registry.npmjs.org/@nestjs/common/-/common-9.0.5.tgz"
-  integrity sha512-13mncUq4JDSluI5IGvusDZANUfNYCIyPamxlPXJOLawGp8JjqRLHGn9ppNJp7W9mN/B/SmpvW9NFEYFIrKYj9g==
+"@nestjs/common@9.1.2":
+  version "9.1.2"
+  resolved "https://registry.npmjs.org/@nestjs/common/-/common-9.1.2.tgz"
+  integrity sha512-zpF4DaLvvsCVqfrf9LJfSeYP+SBCWCFbOCTOmEZ5Gs6Hralia6s2kS+CSicJKx8IpnyC6ZReuqdTbjcPl4yunA==
   dependencies:
     iterare "1.2.1"
     tslib "2.4.0"
-    uuid "8.3.2"
+    uuid "9.0.0"
 
 "@nestjs/config@2.2.0":
   version "2.2.0"
@@ -2244,10 +2244,10 @@
     lodash "4.17.21"
     uuid "8.3.2"
 
-"@nestjs/core@9.0.5":
-  version "9.0.5"
-  resolved "https://registry.npmjs.org/@nestjs/core/-/core-9.0.5.tgz"
-  integrity sha512-41BBJlsquasVrGeRWNYb74Fwsc+oB5EmKC/hioQJAhGqIw5Kr5AcdEoEFaMKFzNLAPbU6c/nVW8T8CrvtQbQww==
+"@nestjs/core@9.1.2":
+  version "9.1.2"
+  resolved "https://registry.npmjs.org/@nestjs/core/-/core-9.1.2.tgz"
+  integrity sha512-wrb/U8PN50K9wEHOLifR9bFKDH8+Dr37rXBB5J+9v3tSWEHkT4o2OiJ8qFmfX5B9GwGE/YRKaJqxw/ScvYvPFw==
   dependencies:
     "@nuxtjs/opencollective" "0.3.2"
     fast-safe-stringify "2.1.1"
@@ -2255,7 +2255,7 @@
     object-hash "3.0.0"
     path-to-regexp "3.2.0"
     tslib "2.4.0"
-    uuid "8.3.2"
+    uuid "9.0.0"
 
 "@nestjs/graphql@10.0.21":
   version "10.0.21"
@@ -2290,10 +2290,10 @@
   resolved "https://registry.npmjs.org/@nestjs/mapped-types/-/mapped-types-1.1.0.tgz"
   integrity sha512-+2kSly4P1QI+9eGt+/uGyPdEG1hVz7nbpqPHWZVYgoqz8eOHljpXPag+UCVRw9zo2XCu4sgNUIGe8Uk0+OvUQg==
 
-"@nestjs/platform-express@9.0.5":
-  version "9.0.5"
-  resolved "https://registry.npmjs.org/@nestjs/platform-express/-/platform-express-9.0.5.tgz"
-  integrity sha512-I6NiOPfL116cBqEwAEdJc+L1N9iIcmoqWjMJY52Kb5cMV2PUzxebddXPqo2HOs7WQv3OLVg0zIUcgwIntq1CEQ==
+"@nestjs/platform-express@9.1.2":
+  version "9.1.2"
+  resolved "https://registry.npmjs.org/@nestjs/platform-express/-/platform-express-9.1.2.tgz"
+  integrity sha512-SlAG6nfEVSk+lQL1Z4kjLip2jJ+w4mc8cG5ccM3mN06gREYfJVayNuydPUYtoxP/QmzugQfO5+cNEdqdhCmSQw==
   dependencies:
     body-parser "1.20.0"
     cors "2.8.5"
@@ -2301,10 +2301,10 @@
     multer "1.4.4-lts.1"
     tslib "2.4.0"
 
-"@nestjs/testing@9.0.5":
-  version "9.0.5"
-  resolved "https://registry.npmjs.org/@nestjs/testing/-/testing-9.0.5.tgz"
-  integrity sha512-/RwWhOBz0rPZzoMiKXsuyCr8FkQrtMxPUHwS+SFnZBsNa/jb56GswgUD7/UnTATU15sjcv0fFtFT3rlu6KK5Ew==
+"@nestjs/testing@9.1.2":
+  version "9.1.2"
+  resolved "https://registry.npmjs.org/@nestjs/testing/-/testing-9.1.2.tgz"
+  integrity sha512-BfwERdTppE4oz6qxCNJVo0kaRH2FO7mipooedT2nDtYW3krGZ8978odmGdpVgNz1xwqKDH3Y/68frs5oW2CTZw==
   dependencies:
     tslib "2.4.0"
 
@@ -9295,6 +9295,11 @@ uuid@8.3.2, uuid@^8.0.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uuid@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.0.tgz"
+  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 uuid@^3.3.2:
   version "3.4.0"
