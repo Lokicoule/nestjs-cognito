@@ -1,7 +1,7 @@
 <h1 align="center">@nestjs-cognito/testing</h1>
 
 [![Node.js CI](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml)
-[![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito-monorepo/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito-monorepo?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
 
 ## Description
 
