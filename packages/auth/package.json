@@ -17,7 +17,7 @@
     "aws",
     "cognito"
   ],
-  "homepage": "https://github.com/Lokicoule/nestjs-cognito/auth#readme",
+  "homepage": "https://github.com/Lokicoule/nestjs-cognito/tree/main/packages/auth#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Lokicoule/nestjs-cognito.git"

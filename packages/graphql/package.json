@@ -18,7 +18,7 @@
     "cognito",
     "graphql"
   ],
-  "homepage": "https://github.com/Lokicoule/nestjs-cognito/graphql#readme",
+  "homepage": "https://github.com/Lokicoule/nestjs-cognito/tree/main/packages/graphql#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Lokicoule/nestjs-cognito.git"

@@ -18,7 +18,7 @@
     "cognito",
     "testing"
   ],
-  "homepage": "https://github.com/Lokicoule/nestjs-cognito/testing#readme",
+  "homepage": "https://github.com/Lokicoule/nestjs-cognito/tree/main/packages/testing#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Lokicoule/nestjs-cognito.git"
