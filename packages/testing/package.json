@@ -18,17 +18,17 @@
     "cognito",
     "testing"
   ],
-  "homepage": "https://github.com/Lokicoule/nestjs-cognito-monorepo/testing#readme",
+  "homepage": "https://github.com/Lokicoule/nestjs-cognito/testing#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lokicoule/nestjs-cognito-monorepo.git"
+    "url": "git+https://github.com/Lokicoule/nestjs-cognito.git"
   },
   "scripts": {
     "test:e2e": "jest --config ./tests/jest-e2e.json --detectOpenHandles",
     "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch --detectOpenHandles"
   },
   "bugs": {
-    "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo/issues"
+    "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "dependencies": {
     "@nestjs-cognito/core": "^0.2.2"

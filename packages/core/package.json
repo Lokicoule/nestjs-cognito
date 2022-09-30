@@ -17,17 +17,17 @@
     "aws",
     "cognito"
   ],
-  "homepage": "https://github.com/Lokicoule/nestjs-cognito-monorepo/core#readme",
+  "homepage": "https://github.com/Lokicoule/nestjs-cognito/core#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lokicoule/nestjs-cognito-monorepo.git"
+    "url": "git+https://github.com/Lokicoule/nestjs-cognito.git"
   },
   "scripts": {
     "test:e2e": "jest --config ./tests/jest-e2e.json --detectOpenHandles",
     "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch --detectOpenHandles"
   },
   "bugs": {
-    "url": "https://github.com/Lokicoule/nestjs-cognito-monorepo/issues"
+    "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "3.181.0",

@@ -8,8 +8,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-* **build:** unpack specs ([f550985](https://github.com/Lokicoule/nestjs-cognito-monorepo/commit/f550985acb9687551bc78a5af815b23c51bea186))
-* clean up ([2779725](https://github.com/Lokicoule/nestjs-cognito-monorepo/commit/2779725f11ceabae373a8f75481871204c226ce9))
+* **build:** unpack specs ([f550985](https://github.com/Lokicoule/nestjs-cognito/commit/f550985acb9687551bc78a5af815b23c51bea186))
+* clean up ([2779725](https://github.com/Lokicoule/nestjs-cognito/commit/2779725f11ceabae373a8f75481871204c226ce9))
 
 
 
@@ -22,7 +22,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-* **auth:** cognitoservice ([56ce946](https://github.com/Lokicoule/nestjs-cognito-monorepo/commit/56ce94650b1117432015afe675fbe6a38b3b820a))
+* **auth:** cognitoservice ([56ce946](https://github.com/Lokicoule/nestjs-cognito/commit/56ce94650b1117432015afe675fbe6a38b3b820a))
 
 
 
@@ -43,4 +43,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* **@nestjs-cognito:** monorepo ([b521f8e](https://github.com/Lokicoule/nestjs-cognito-monorepo/commit/b521f8e1eaaf169edb99b35ab61a7a3870235396))
+* **@nestjs-cognito:** monorepo ([b521f8e](https://github.com/Lokicoule/nestjs-cognito/commit/b521f8e1eaaf169edb99b35ab61a7a3870235396))

@@ -1,6 +1,6 @@
 <h1 align="center">@nestjs-cognito/auth</h1>
 
-[![Node.js CI](https://github.com/Lokicoule/nestjs-cognito-monorepo/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito-monorepo/actions/workflows/node.js.yml)
+[![Node.js CI](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito-monorepo/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito-monorepo?branch=main)
 
 ## Description
