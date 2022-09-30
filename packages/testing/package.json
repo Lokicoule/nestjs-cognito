@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/testing",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Cognito testing helpers for NestJS-Cognito",
   "author": "Loik Fekkai",
   "license": "MIT",
@@ -31,6 +31,6 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "dependencies": {
-    "@nestjs-cognito/core": "^0.2.3"
+    "@nestjs-cognito/core": "^0.2.4"
   }
 }
