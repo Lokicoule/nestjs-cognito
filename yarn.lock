@@ -8841,10 +8841,10 @@ superagent@^8.0.0:
     readable-stream "^3.6.0"
     semver "^7.3.7"
 
-supertest@6.2.4:
-  version "6.2.4"
-  resolved "https://registry.npmjs.org/supertest/-/supertest-6.2.4.tgz"
-  integrity sha512-M8xVnCNv+q2T2WXVzxDECvL2695Uv2uUj2O0utxsld/HRyJvOU8W9f1gvsYxSNU4wmIe0/L/ItnpU4iKq0emDA==
+supertest@6.3.0:
+  version "6.3.0"
+  resolved "https://registry.npmjs.org/supertest/-/supertest-6.3.0.tgz"
+  integrity sha512-QgWju1cNoacP81Rv88NKkQ4oXTzGg0eNZtOoxp1ROpbS4OHY/eK5b8meShuFtdni161o5X0VQvgo7ErVyKK+Ow==
   dependencies:
     methods "^1.1.2"
     superagent "^8.0.0"
