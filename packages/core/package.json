@@ -33,7 +33,7 @@
     "@aws-sdk/client-cognito-identity-provider": "3.185.0",
     "@nestjs/common": "9.1.4",
     "@nestjs/testing": "9.1.4",
-    "@types/jest": "29.1.1"
+    "@types/jest": "29.1.2"
   },
   "peerDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.131.0",
