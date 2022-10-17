@@ -31,13 +31,10 @@
   },
   "devDependencies": {
     "@nestjs-cognito/testing": "^0.2.5",
-    "@nestjs/jwt": "9.0.0",
     "@nestjs/testing": "9.1.4"
   },
   "dependencies": {
-    "@nestjs-cognito/core": "^0.2.5"
-  },
-  "peerDependencies": {
+    "@nestjs-cognito/core": "^0.2.5",
     "@nestjs/jwt": "^9.0.0"
   },
   "lint-staged": {
