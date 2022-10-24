@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@nestjs-cognito/auth": "0.2.6",
-    "@nestjs/common": "9.1.5",
-    "@nestjs/core": "9.1.5",
-    "@nestjs/platform-express": "9.1.5",
+    "@nestjs/common": "9.1.6",
+    "@nestjs/core": "9.1.6",
+    "@nestjs/platform-express": "9.1.6",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.5.7"
