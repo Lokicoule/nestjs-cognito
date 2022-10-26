@@ -40,8 +40,5 @@
   },
   "dependencies": {
     "@nestjs-cognito/auth": "^0.2.7"
-  },
-  "peerDependencies": {
-    "@nestjs/graphql": "10.1.5"
   }
 }
