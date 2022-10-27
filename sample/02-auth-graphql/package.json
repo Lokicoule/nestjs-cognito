@@ -10,7 +10,7 @@
     "start:dev": "nest start --watch"
   },
   "dependencies": {
-    "@nestjs-cognito/graphql": "0.2.6",
+    "@nestjs-cognito/graphql": "0.2.7",
     "@nestjs/apollo": "10.1.4",
     "@nestjs/common": "9.1.6",
     "@nestjs/core": "9.1.6",
