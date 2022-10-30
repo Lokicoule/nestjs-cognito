@@ -2979,10 +2979,10 @@
   dependencies:
     node-fetch "*"
 
-"@types/node@*", "@types/node@18.11.7":
-  version "18.11.7"
-  resolved "https://registry.npmjs.org/@types/node/-/node-18.11.7.tgz"
-  integrity sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==
+"@types/node@*", "@types/node@18.11.8":
+  version "18.11.8"
+  resolved "https://registry.npmjs.org/@types/node/-/node-18.11.8.tgz"
+  integrity sha512-uGwPWlE0Hj972KkHtCDVwZ8O39GmyjfMane1Z3GUBGGnkZ2USDq7SxLpVIiIHpweY9DS0QTDH0Nw7RNBsAAZ5A==
 
 "@types/node@^10.1.0":
   version "10.17.60"
