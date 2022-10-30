@@ -71,7 +71,7 @@ You can use the built-in `@nestjs-cognito/auth` decorators and guards.
 ### Built-in decorators and guards
 
 - Decorate the controller with the `@Authentication` decorator or with the `@UseGuards` decorator to apply the `AuthenticationGuard` to the controller in order to ensure that the user is authenticated.
-- Decorate the resolver with the `@Authorization` decorator or with the `@UseGuards` decorator to apply the `AuthorizationGuard` in order to ensure that the user is authorized.
+- Decorate the controller with the `@Authorization` decorator or with the `@UseGuards` decorator to apply the `AuthorizationGuard` in order to ensure that the user is authorized.
 - Decorate method arguments with the `@CurrentUser` decorator to get the current user.
 
 <b>During the `authorization` process, we already check if the user is authenticated, so you don't need to use `authentication` guard or decorator.</b>
