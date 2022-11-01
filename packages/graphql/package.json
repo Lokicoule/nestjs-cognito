@@ -35,8 +35,8 @@
     "@nestjs/apollo": "10.1.4",
     "@nestjs/graphql": "10.1.5",
     "@nestjs/testing": "9.1.6",
-    "apollo-server-core": "3.10.3",
-    "apollo-server-express": "3.10.3"
+    "apollo-server-core": "3.10.4",
+    "apollo-server-express": "3.10.4"
   },
   "dependencies": {
     "@nestjs-cognito/auth": "^0.2.7"
