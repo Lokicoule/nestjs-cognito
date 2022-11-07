@@ -52,7 +52,7 @@
     "graphql": "16.6.0",
     "husky": "8.0.1",
     "jest": "29.2.2",
-    "lerna": "6.0.1",
+    "lerna": "6.0.3",
     "lerna-changelog": "2.2.0",
     "lint-staged": "13.0.3",
     "pactum": "3.2.4",
