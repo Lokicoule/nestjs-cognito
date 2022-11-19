@@ -7915,10 +7915,10 @@ pactum-matchers@^1.1.3:
   resolved "https://registry.npmjs.org/pactum-matchers/-/pactum-matchers-1.1.3.tgz"
   integrity sha512-JRFUfWDxnA3e99M3tU+HUxkwiXIO1VlwSYzdJTUrxiOBOF8jUrCkeaHuTsfzQQFMkFAd0BrTqPhfb14hCgVX7w==
 
-pactum@3.2.4:
-  version "3.2.4"
-  resolved "https://registry.npmjs.org/pactum/-/pactum-3.2.4.tgz"
-  integrity sha512-92mtb1VSbxieEXUz/B1PTwPlL0HX+48ZZGgr1cXpPLWpeLnZbyJOWs0IOqXDrEaerocb3+jFKanItM62ylpv8A==
+pactum@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.npmjs.org/pactum/-/pactum-3.3.0.tgz"
+  integrity sha512-bMfXGS5dI8CJNWyzKm1PS+21lR94QpPEZevgRu0QUWDm1FJjAdXyVM4HkWZUnEX8x0Dg6Rkgs/1skIOYh8xXaQ==
   dependencies:
     "@exodus/schemasafe" "^1.0.0-rc.9"
     deep-override "^1.0.2"
