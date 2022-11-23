@@ -33,7 +33,7 @@
     "eslint": "8.28.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
-    "prettier": "2.7.1",
+    "prettier": "2.8.0",
     "ts-loader": "9.4.1",
     "ts-node": "10.9.1",
     "tsconfig-paths": "4.1.0",
