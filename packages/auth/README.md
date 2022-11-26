@@ -13,6 +13,12 @@
 npm i @nestjs-cognito/auth
 ```
 
+Don't forget to install the [peerDependency](https://github.com/Lokicoule/nestjs-cognito/blob/%40nestjs-cognito/core%400.2.8/packages/core/package.json#L39): `@aws-sdk/client-cognito-identity-provider`
+
+```bash
+npm i @aws-sdk/client-cognito-identity-provider
+```
+
 ## Configuration
 
 ### Options params
