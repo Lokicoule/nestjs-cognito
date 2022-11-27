@@ -64,7 +64,7 @@ export interface CognitoModuleAsyncOptions
 Use `CognitoModule.register` method with options of [CognitoModuleOptions interface](#options-params)
 
 ```ts
-import { CognitoModule } from "nestjs-cognito";
+import { CognitoModule } from "@nestjs-cognito/core";
 import { Module } from "@nestjs/common";
 
 @Module({
@@ -86,7 +86,7 @@ You can find more details [here](https://docs.nestjs.com/techniques/configuratio
 Here's an example:
 
 ```ts
-import { CognitoModule } from "nestjs-cognito";
+import { CognitoModule } from "@nestjs-cognito/core";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 
