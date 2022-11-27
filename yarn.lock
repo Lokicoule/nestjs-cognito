@@ -3913,10 +3913,10 @@ caseless@~0.12.0:
   resolved "https://registry.npmjs.org/caseless/-/caseless-0.12.0.tgz"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
 
-centra@^2.4.2:
-  version "2.5.0"
-  resolved "https://registry.npmjs.org/centra/-/centra-2.5.0.tgz"
-  integrity sha512-CnSF1HD8vOOgNbE4P2fZEhdhfAohvpcF3DSdSvEcSHDAZvr+Xfw73isT8SXJJc3VMBqSwjXhr29/ikHUgFcypg==
+centra@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.npmjs.org/centra/-/centra-2.6.0.tgz"
+  integrity sha512-dgh+YleemrT8u85QL11Z6tYhegAs3MMxsaWAq/oXeAmYJ7VxL3SI9TZtnfaEvNDMAPolj25FXIb3S+HCI4wQaQ==
 
 chalk@4.1.0:
   version "4.1.0"
@@ -7961,10 +7961,10 @@ pactum-matchers@^1.1.3:
   resolved "https://registry.npmjs.org/pactum-matchers/-/pactum-matchers-1.1.3.tgz"
   integrity sha512-JRFUfWDxnA3e99M3tU+HUxkwiXIO1VlwSYzdJTUrxiOBOF8jUrCkeaHuTsfzQQFMkFAd0BrTqPhfb14hCgVX7w==
 
-pactum@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/pactum/-/pactum-3.3.0.tgz"
-  integrity sha512-bMfXGS5dI8CJNWyzKm1PS+21lR94QpPEZevgRu0QUWDm1FJjAdXyVM4HkWZUnEX8x0Dg6Rkgs/1skIOYh8xXaQ==
+pactum@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.npmjs.org/pactum/-/pactum-3.3.1.tgz"
+  integrity sha512-hQ4kZ5MUSMI5pamr4/n9qyKm6JAyYeHHK5lC5WGmnuVj8iSZDgaF0YGON3TZiC4pPeRmkNy2/l634a1sUCx0Ww==
   dependencies:
     "@exodus/schemasafe" "^1.0.0-rc.9"
     deep-override "^1.0.2"
@@ -7975,7 +7975,7 @@ pactum@3.3.0:
     openapi-fuzzer-core "^1.0.6"
     pactum-matchers "^1.1.3"
     parse-graphql "^1.0.0"
-    phin "^3.6.1"
+    phin "^3.7.0"
     polka "^0.5.2"
 
 parent-module@^1.0.0:
@@ -8110,12 +8110,12 @@ performance-now@^2.1.0:
   resolved "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz"
   integrity sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==
 
-phin@^3.6.1:
-  version "3.6.1"
-  resolved "https://registry.npmjs.org/phin/-/phin-3.6.1.tgz"
-  integrity sha512-ubcFKk2jRr2WUJEh+QpMkCgOQansJDuIShKbsjpejeyI/aOMLrAf0TaisbMjKwTq9CsypFFJqUaN9ZSRmBJLPw==
+phin@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.npmjs.org/phin/-/phin-3.7.0.tgz"
+  integrity sha512-DqnVNrpYhKGBZppNKprD+UJylMeEKOZxHgPB+ZP6mGzf3uA2uox4Ep9tUm+rUc8WLIdHT3HcAE4X8fhwQA9JKg==
   dependencies:
-    centra "^2.4.2"
+    centra "^2.6.0"
 
 picocolors@^1.0.0:
   version "1.0.0"
