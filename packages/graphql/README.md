@@ -10,8 +10,10 @@ GraphQL utilities module for [@nestjs-cognito/auth](https://www.npmjs.com/packag
 ## Installation
 
 ```bash
-npm i @nestjs-cognito/graphql
+npm i @nestjs-cognito/core @nestjs-cognito/auth @nestjs-cognito/graphql
 ```
+
+Hint: If you plan to only use this module's utilities, you don't need to manually install `@aws-sdk/client-cognito-identity-provider`.
 
 ## Configuration
 

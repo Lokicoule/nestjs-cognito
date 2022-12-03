@@ -15,7 +15,7 @@ This module is a simple wrapper on [AWS Cognito](https://docs.aws.amazon.com/cog
 ## Installation
 
 ```bash
-npm i @nestjs-cognito/core
+npm i @nestjs-cognito/core @aws-sdk/client-cognito-identity-provider
 ```
 
 ## Configuration
@@ -145,8 +145,10 @@ export class MyService {
 ## Installation
 
 ```bash
-npm i @nestjs-cognito/auth
+npm i @nestjs-cognito/core @nestjs-cognito/auth
 ```
+
+Hint: If you plan to only use this module's utilities, you don't need to manually install `@aws-sdk/client-cognito-identity-provider`.
 
 ## Configuration
 
@@ -321,8 +323,10 @@ GraphQL utilities module for [@nestjs-cognito/auth](https://www.npmjs.com/packag
 ## Installation
 
 ```bash
-npm i @nestjs-cognito/graphql
+npm i @nestjs-cognito/core @nestjs-cognito/auth @nestjs-cognito/graphql
 ```
+
+Hint: If you plan to only use this module's utilities, you don't need to manually install `@aws-sdk/client-cognito-identity-provider`.
 
 ## Configuration
 

@@ -10,7 +10,7 @@
 ## Installation
 
 ```bash
-npm i @nestjs-cognito/core
+npm i @nestjs-cognito/core @aws-sdk/client-cognito-identity-provider
 ```
 
 ## Configuration
