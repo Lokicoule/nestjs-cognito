@@ -30,7 +30,7 @@ describe("Cognito Module : Testing", () => {
   });
 
   describe("login", () => {
-    it("should be successfull and return http code 2O1", async () => {
+    it("should be successful and return http code 2O1", async () => {
       await spec()
         .post("/cognito-testing-login")
         .withBody({

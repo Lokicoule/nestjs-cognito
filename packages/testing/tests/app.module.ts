@@ -6,7 +6,7 @@ import { CognitoTestingModule } from "../lib";
   imports: [
     ConfigModule.forRoot(),
     CognitoTestingModule.register({
-      region: "eu-west-1",
+      region: process.env.COGNITO_REGION ?? "eu-west-1",
     }),
   ],
 })

@@ -1,12 +1,14 @@
 import { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
-import { request, spec } from "pactum";
+import { handler, request, spec } from "pactum";
 import { AppModule } from "./app.module";
 
 describe("Cognito Module : Auth", () => {
   let app: INestApplication;
   let config: ConfigService;
+  let jwt: JwtService;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
@@ -15,10 +17,15 @@ describe("Cognito Module : Auth", () => {
 
     app = moduleFixture.createNestApplication();
     config = moduleFixture.get<ConfigService>(ConfigService);
+    jwt = moduleFixture.get<JwtService>(JwtService);
 
     await app.listen(0);
     const url = (await app.getUrl()).replace("[::1]", "localhost");
     request.setBaseUrl(url);
+
+    handler.addCaptureHandler("username from identity token", (ctx) => {
+      return jwt.decode((ctx.res.json as any).IdToken)!["cognito:username"];
+    });
   });
 
   afterAll(async () => {
@@ -26,7 +33,7 @@ describe("Cognito Module : Auth", () => {
   });
 
   describe("auth/me", () => {
-    it("should be successfull and return the current user", async () => {
+    it("should be successful and return the current user", async () => {
       await spec()
         .post("/cognito-testing-login")
         .withBody({
@@ -36,23 +43,24 @@ describe("Cognito Module : Auth", () => {
         })
         .expectStatus(201)
         .expectBodyContains("AccessToken")
-        .stores("flipperToken", "AccessToken");
+        .stores("flipperToken", "AccessToken")
+        .stores("flipperUsername", "#username from identity token");
       await spec()
         .get("/auth/me")
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
         .expectStatus(200)
         .expectBody({
-          _username: "8dd0d4e0-6175-40e4-a1d2-71b8c77c7121",
-          _email: "flipper@dolphin.com",
+          _username: "$S{flipperUsername}",
+          _email: config.get("FLIPPER_EMAIL"),
           _groups: ["dolphin"],
         });
     });
 
-    it("should be unsuccessfull because authorization header is missing", async () => {
+    it("should be unsuccessful because authorization header is missing", async () => {
       await spec().get("/auth/me").expectStatus(401);
     });
 
-    it("should be unsuccessfull because authorization header is wrong/has expired", async () => {
+    it("should be unsuccessful because authorization header is wrong/has expired", async () => {
       await spec()
         .get("/auth/me")
         .withHeaders("Authorization", "Bearer wrong-token")
@@ -69,7 +77,7 @@ describe("Cognito Module : Auth", () => {
 
   describe("dolphin: authorization", () => {
     describe("flipper", () => {
-      it("should be unsuccessfull because ray is not in the dolphin group", async () => {
+      it("should be unsuccessful because ray is not in the dolphin group", async () => {
         await spec()
           .post("/cognito-testing-login")
           .withBody({
@@ -85,7 +93,7 @@ describe("Cognito Module : Auth", () => {
           .withHeaders("Authorization", "Bearer $S{flipperToken}")
           .expectStatus(403);
       });
-      it("should be successfull because user is in the dolphin group", async () => {
+      it("should be successful because user is in the dolphin group", async () => {
         await spec()
           .post("/cognito-testing-login")
           .withBody({
