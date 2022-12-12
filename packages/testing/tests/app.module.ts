@@ -1,12 +1,16 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { CognitoTestingModule } from "../lib";
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    CognitoTestingModule.register({
-      region: process.env.COGNITO_REGION ?? "eu-west-1",
+    CognitoTestingModule.registerAsync({
+      imports: [ConfigModule.forRoot()],
+      useFactory: async (configService: ConfigService) => ({
+        region: configService.get("COGNITO_REGION"),
+      }),
+      inject: [ConfigService],
     }),
   ],
 })
