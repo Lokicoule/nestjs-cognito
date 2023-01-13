@@ -9357,10 +9357,10 @@ trouter@^2.0.1:
   dependencies:
     matchit "^1.0.0"
 
-ts-jest@29.0.4:
-  version "29.0.4"
-  resolved "https://registry.npmjs.org/ts-jest/-/ts-jest-29.0.4.tgz"
-  integrity sha512-YdNofkoyzeinwjIqLSYQeAM+GTmFQ7xFNtWcR5OyitY5VLzzNINrNmfhP5H3daA/V+RGQR7O3g1K6ysRgu5xIQ==
+ts-jest@29.0.5:
+  version "29.0.5"
+  resolved "https://registry.npmjs.org/ts-jest/-/ts-jest-29.0.5.tgz"
+  integrity sha512-PL3UciSgIpQ7f6XjVOmbi96vmDHUqAyqDr8YxzopDqX3kfgYtX1cuNeBjP+L9sFXi6nzsGGA6R3fP3DDDJyrxA==
   dependencies:
     bs-logger "0.x"
     fast-json-stable-stringify "2.x"
