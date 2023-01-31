@@ -30,7 +30,7 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "3.257.0"
+    "@aws-sdk/client-cognito-identity-provider": "3.261.0"
   },
   "devDependencies": {
     "@nestjs/common": "9.2.1",
