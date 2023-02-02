@@ -9,14 +9,20 @@ import { AuthResolver } from "./auth.resolver";
     CognitoAuthModule.registerAsync({
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
-        region: configService.get("COGNITO_REGION"),
+        jwtVerifier: {
+          userPoolId: configService.get("COGNITO_USER_POOL_ID"),
+          tokenUse: "id",
+          clientId: configService.get("COGNITO_CLIENT_ID"),
+        },
       }),
       inject: [ConfigService],
     }),
     CognitoTestingModule.registerAsync({
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
-        region: configService.get("COGNITO_REGION"),
+        identityProvider: {
+          region: configService.get("COGNITO_REGION"),
+        },
       }),
       inject: [ConfigService],
     }),

@@ -30,12 +30,13 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
-    "@nestjs-cognito/testing": "^0.2.9",
+    "@nestjs-cognito/testing": "file:../testing",
+    "@nestjs/jwt": "^10.0.1",
     "@nestjs/testing": "9.3.2"
   },
   "dependencies": {
-    "@nestjs-cognito/core": "^0.2.9",
-    "@nestjs/jwt": "^10.0.0"
+    "@nestjs-cognito/core": "file:../core",
+    "aws-jwt-verify": "^3.4.0"
   },
   "lint-staged": {
     "*.ts": [

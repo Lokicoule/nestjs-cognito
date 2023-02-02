@@ -8,7 +8,9 @@ import { AppService } from "../common/app.service";
   imports: [
     CognitoModule.registerAsync({
       useFactory: () => ({
-        region: "us-east-1",
+        jwtVerifier: {
+          userPoolId: "us-east-1_123456789",
+        },
       }),
     }),
   ],
