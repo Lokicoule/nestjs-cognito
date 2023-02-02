@@ -5,13 +5,10 @@ import {
   CognitoModuleOptions,
 } from "@nestjs-cognito/core";
 import { JwtModule } from "@nestjs/jwt";
-import { CognitoService } from "./cognito/cognito.service";
 
 @Global()
 @Module({
   imports: [JwtModule.register({})],
-  providers: [CognitoService],
-  exports: [CognitoService],
 })
 export class CognitoAuthModule {
   static register(config: CognitoModuleOptions): DynamicModule {

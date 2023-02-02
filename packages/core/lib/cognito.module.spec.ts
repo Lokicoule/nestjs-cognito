@@ -14,6 +14,7 @@ describe("CognitoModule", () => {
         imports: [
           CognitoModule.register({
             region: "us-east-1",
+            userPoolId: "us-east-1_123456789",
           }),
         ],
       }).compile();
@@ -33,6 +34,7 @@ describe("CognitoModule", () => {
             CognitoModule.registerAsync({
               useFactory: () => ({
                 region: "us-east-1",
+                userPoolId: "us-east-1_123456789",
               }),
             }),
           ],
@@ -54,7 +56,10 @@ describe("CognitoModule", () => {
                 implements CognitoModuleOptionsFactory
               {
                 createCognitoModuleOptions(): CognitoModuleOptions {
-                  return {};
+                  return {
+                    region: "us-east-1",
+                    userPoolId: "us-east-1_123456789",
+                  };
                 }
               },
             }),

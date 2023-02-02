@@ -1,10 +1,28 @@
 import { CognitoIdentityProviderClientConfig } from "@aws-sdk/client-cognito-identity-provider";
 import { ModuleMetadata, Provider, Type } from "@nestjs/common";
+import {
+  CognitoJwtVerifierProperties,
+  CognitoJwtVerifierSingleUserPool,
+} from "aws-jwt-verify/cognito-verifier";
 
 /**
- * @interface CognitoModuleOptions - Options for the CognitoModule
+ * @type CognitoJwtVerifier - The CognitoJwtVerifier instance
+ * @property {CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>} - The CognitoJwtVerifierSingleUserPool instance
  */
-export type CognitoModuleOptions = CognitoIdentityProviderClientConfig;
+export type CognitoJwtVerifier =
+  CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>;
+
+/**
+ * @type CognitoModuleOptions - Options for the CognitoModule
+ * @property {CognitoIdentityProviderClientConfig} region - The region to use
+ * @property {CognitoJwtVerifierProperties} userPoolId - The user pool id to use
+ * @property {CognitoJwtVerifierProperties} clientId - The client id to use
+ * @property {CognitoJwtVerifierProperties} tokenUse - The token use to use
+ * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#constructor-property
+ * @see https://github.com/awslabs/aws-jwt-verify#readme
+ */
+export type CognitoModuleOptions = CognitoIdentityProviderClientConfig &
+  CognitoJwtVerifierProperties;
 
 /**
  * @interface CognitoModuleOptionsFactory - Metadata for the CognitoModule

@@ -13,7 +13,7 @@ describe("CognitoTestingModule", () => {
       const module = await Test.createTestingModule({
         imports: [
           CognitoTestingModule.register({
-            region: "us-east-1",
+            userPoolId: "us-east-1_123456789",
           }),
         ],
       }).compile();
@@ -32,7 +32,7 @@ describe("CognitoTestingModule", () => {
           imports: [
             CognitoTestingModule.registerAsync({
               useFactory: () => ({
-                region: "us-east-1",
+                userPoolId: "us-east-1_123456789",
               }),
             }),
           ],
@@ -54,7 +54,9 @@ describe("CognitoTestingModule", () => {
                 implements CognitoModuleOptionsFactory
               {
                 createCognitoModuleOptions(): CognitoModuleOptions {
-                  return {};
+                  return {
+                    userPoolId: "us-east-1_123456789",
+                  };
                 }
               },
             }),

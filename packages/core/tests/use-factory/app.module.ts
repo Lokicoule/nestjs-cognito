@@ -9,6 +9,7 @@ import { AppService } from "../common/app.service";
     CognitoModule.registerAsync({
       useFactory: () => ({
         region: "us-east-1",
+        userPoolId: "us-east-1_123456789",
       }),
     }),
   ],

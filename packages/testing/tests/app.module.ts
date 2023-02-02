@@ -9,6 +9,7 @@ import { CognitoTestingModule } from "../lib";
       imports: [ConfigModule.forRoot()],
       useFactory: async (configService: ConfigService) => ({
         region: configService.get("COGNITO_REGION"),
+        userPoolId: configService.get("COGNITO_USER_POOL_ID"),
       }),
       inject: [ConfigService],
     }),

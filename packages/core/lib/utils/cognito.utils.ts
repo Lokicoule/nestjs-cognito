@@ -4,7 +4,49 @@ import {
   CognitoIdentityProviderClientConfig,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { Logger } from "@nestjs/common";
+import { CognitoJwtVerifier as CognitoJwtVerifierAWS } from "aws-jwt-verify";
+import {
+  CognitoJwtVerifierProperties,
+  CognitoJwtVerifierSingleUserPool,
+} from "aws-jwt-verify/cognito-verifier";
 import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
+
+/**
+ * Get the CognitoJwtVerifier instance
+ * @param {CognitoModuleOptions} options - The CognitoModuleOptions
+ * @returns {CognitoJwtVerifier} - The CognitoJwtVerifier instance
+ */
+export const createCognitoJwtVerifierInstance = (
+  cognitoModuleOptions: CognitoModuleOptions
+): CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties> => {
+  const logger = new Logger("CognitoJwtVerifier");
+
+  const {
+    userPoolId,
+    clientId,
+    tokenUse = "id",
+    ...others
+  } = cognitoModuleOptions;
+
+  if (!Boolean(userPoolId)) {
+    logger.warn(
+      `The userPoolId is missing in the CognitoJwtVerifier configuration`
+    );
+  }
+
+  if (!Boolean(clientId)) {
+    logger.warn(
+      `The clientId is missing in the CognitoJwtVerifier configuration`
+    );
+  }
+
+  return CognitoJwtVerifierAWS.create({
+    clientId,
+    userPoolId,
+    tokenUse,
+    ...others,
+  });
+};
 
 /**
  * Get the CognitoIdentityProvider instance
@@ -44,7 +86,7 @@ export const createCognitoIdentityProviderClientInstance = (
  * @param {string} from - The name from where the configuration is coming from
  */
 function buildConfigurationFromOptions(
-  cognitoModuleOptions: CognitoModuleOptions,
+  cognitoModuleOptions: CognitoIdentityProviderClientConfig,
   from: string
 ): CognitoIdentityProviderClientConfig {
   const logger = new Logger(from);

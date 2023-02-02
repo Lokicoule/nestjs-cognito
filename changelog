@@ -1,0 +1,19 @@
+Add userPoolId to the module options
+Prefers the use of IdToken
+GraphQL decorators add Gql
+
+show example with accessToken and data (username, groups)
+
+show example with idToken and data (username, groups, email)
+
+update cognito user pool id github action
+
+documentation
+
+aws cognito identity provider to peer to peer because is not used by others modules.
+
+update sample
+
+update wiki
+
+remove unused packages (for example cognito-identit-provider, nestjs/jwt...)

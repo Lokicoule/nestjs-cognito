@@ -1,11 +1,11 @@
 import { createMock } from "@golevelup/ts-jest";
+import { CognitoJwtVerifier } from "@nestjs-cognito/core";
 import {
   ExecutionContext,
   ServiceUnavailableException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { AbstractGuard } from "./abstract.guard";
-import { CognitoService } from "./cognito";
 import { User } from "./user/user.model";
 
 class TestGuard extends AbstractGuard {
@@ -32,7 +32,16 @@ describe("AbstractGuard", () => {
   let guard: TestGuard;
 
   beforeEach(() => {
-    guard = new TestGuard(createMock<CognitoService>());
+    guard = new TestGuard(
+      createMock<CognitoJwtVerifier>({
+        verify: jest.fn().mockReturnValue({
+          sub: "sub",
+          "cognito:username": "test",
+          "cognito:groups": ["test"],
+          email: "email",
+        }),
+      })
+    );
   });
 
   it("should be defined", () => {
@@ -46,7 +55,7 @@ describe("AbstractGuard", () => {
 
     it("should be undefined", () => {
       expect(
-        new BadTestGuard(createMock<CognitoService>()).getRequest(
+        new BadTestGuard(createMock<CognitoJwtVerifier>()).getRequest(
           createMock<ExecutionContext>()
         )
       ).toBeUndefined();
@@ -62,7 +71,7 @@ describe("AbstractGuard", () => {
       });
 
       expect(() =>
-        new BadTestGuard(createMock<CognitoService>()).canActivate(context)
+        new BadTestGuard(createMock<CognitoJwtVerifier>()).canActivate(context)
       ).rejects.toThrow(
         new ServiceUnavailableException("Request is undefined or null.")
       );
@@ -75,7 +84,7 @@ describe("AbstractGuard", () => {
 
       context.switchToHttp().getRequest.mockReturnValue({
         headers: {
-          authorization: "auth",
+          authorization: "fake-token",
         },
       });
 

@@ -4,6 +4,7 @@ import {
   COGNITO_CLIENT_INSTANCE_TOKEN,
   COGNITO_INSTANCE_TOKEN,
   COGNITO_MODULE_OPTIONS,
+  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
 } from "./cognito.constants";
 import {
   CognitoModuleAsyncOptions,
@@ -13,6 +14,7 @@ import {
 import {
   createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
+  createCognitoJwtVerifierInstance,
 } from "./utils/cognito.utils";
 
 @Module({})
@@ -34,8 +36,16 @@ export class CognitoModule {
           provide: COGNITO_CLIENT_INSTANCE_TOKEN,
           useValue: createCognitoIdentityProviderClientInstance(options),
         },
+        {
+          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+          useValue: createCognitoJwtVerifierInstance(options),
+        },
       ],
-      exports: [COGNITO_INSTANCE_TOKEN, COGNITO_CLIENT_INSTANCE_TOKEN],
+      exports: [
+        COGNITO_INSTANCE_TOKEN,
+        COGNITO_CLIENT_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+      ],
     };
   }
 
@@ -53,7 +63,11 @@ export class CognitoModule {
         ...(options.extraProviders || []),
         ...cognitoProviders,
       ],
-      exports: [COGNITO_INSTANCE_TOKEN, COGNITO_CLIENT_INSTANCE_TOKEN],
+      exports: [
+        COGNITO_INSTANCE_TOKEN,
+        COGNITO_CLIENT_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+      ],
     };
   }
 
