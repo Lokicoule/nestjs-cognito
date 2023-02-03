@@ -28,4 +28,12 @@ export class AuthController {
       groups,
     };
   }
+
+  @Get("email-from-payload")
+  getEmailFromPayload(
+    @CognitoUser("email")
+    email: string
+  ) {
+    return email;
+  }
 }

@@ -41,10 +41,6 @@ export abstract class AbstractGuard implements CanActivate {
       request[COGNITO_USER_CONTEXT_PROPERTY] =
         UserMapper.fromCognitoJwtPayload(payload);
 
-      console.log(
-        "request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY]",
-        request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY]
-      );
       return this.onValidate(this.getAuthenticatedUser(request));
     } catch (error) {
       throw new UnauthorizedException(error, "Authentication failed.");

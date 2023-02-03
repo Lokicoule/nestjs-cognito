@@ -4,14 +4,15 @@ import {
   CognitoModuleAsyncOptions,
   CognitoModuleOptions,
 } from "@nestjs-cognito/core";
-import { JwtModule } from "@nestjs/jwt";
+
+interface CognitoAuthModuleOptions extends CognitoModuleOptions {
+  jwtVerifier: Required<CognitoModuleOptions>["jwtVerifier"];
+}
 
 @Global()
-@Module({
-  imports: [JwtModule.register({})],
-})
+@Module({})
 export class CognitoAuthModule {
-  static register(config: CognitoModuleOptions): DynamicModule {
+  static register(config: CognitoAuthModuleOptions): DynamicModule {
     return {
       module: CognitoAuthModule,
       imports: [CognitoModule.register(config)],

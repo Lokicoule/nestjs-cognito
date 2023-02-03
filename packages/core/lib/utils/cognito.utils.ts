@@ -19,6 +19,10 @@ import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
 export const createCognitoJwtVerifierInstance = (
   cognitoModuleOptions: CognitoModuleOptions
 ): CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties> => {
+  if (!Boolean(cognitoModuleOptions.jwtVerifier)) {
+    return null;
+  }
+
   const logger = new Logger("CognitoJwtVerifier");
 
   const {
@@ -26,7 +30,7 @@ export const createCognitoJwtVerifierInstance = (
     clientId,
     tokenUse = "id",
     ...others
-  } = cognitoModuleOptions;
+  } = cognitoModuleOptions.jwtVerifier;
 
   if (!Boolean(userPoolId)) {
     logger.warn(
@@ -56,9 +60,13 @@ export const createCognitoJwtVerifierInstance = (
 export const createCognitoIdentityProviderInstance = (
   cognitoModuleOptions: CognitoModuleOptions
 ): CognitoIdentityProvider => {
+  if (!Boolean(cognitoModuleOptions.identityProvider)) {
+    return null;
+  }
+
   return new CognitoIdentityProvider(
     buildConfigurationFromOptions(
-      cognitoModuleOptions,
+      cognitoModuleOptions.identityProvider,
       "CognitoIdentityProvider"
     )
   );
@@ -72,9 +80,13 @@ export const createCognitoIdentityProviderInstance = (
 export const createCognitoIdentityProviderClientInstance = (
   cognitoModuleOptions: CognitoModuleOptions
 ): CognitoIdentityProviderClient => {
+  if (!Boolean(cognitoModuleOptions.identityProvider)) {
+    return null;
+  }
+
   return new CognitoIdentityProviderClient(
     buildConfigurationFromOptions(
-      cognitoModuleOptions,
+      cognitoModuleOptions.identityProvider,
       "CognitoIdentityProviderClient"
     )
   );

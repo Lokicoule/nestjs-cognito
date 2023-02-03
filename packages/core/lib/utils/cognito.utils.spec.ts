@@ -12,7 +12,9 @@ import {
 describe("CognitoUtils", () => {
   it("should get cognito identity provider instance", async () => {
     const options = {
-      region: "us-east-1",
+      identityProvider: {
+        region: "us-east-1",
+      },
     } as CognitoModuleOptions;
 
     const cognitoIdentityProvider =
@@ -21,12 +23,16 @@ describe("CognitoUtils", () => {
     expect(cognitoIdentityProvider).toBeInstanceOf(
       CognitoIdentityProviderClient
     );
-    expect(await cognitoIdentityProvider.config.region()).toBe(options.region);
+    expect(await cognitoIdentityProvider.config.region()).toBe(
+      options!.identityProvider!.region
+    );
   });
 
   it("should get cognito identity provider client instance", async () => {
     const options = {
-      region: "us-east-1",
+      identityProvider: {
+        region: "us-east-1",
+      },
     } as CognitoModuleOptions;
 
     const cognitoIdentityProviderClient =
@@ -37,15 +43,15 @@ describe("CognitoUtils", () => {
       CognitoIdentityProviderClient
     );
     expect(await cognitoIdentityProviderClient.config.region()).toEqual(
-      options.region
+      options!.identityProvider!.region
     );
   });
 
   it("should get cognito jwt verifier instance", async () => {
     const options: CognitoModuleOptions = {
-      userPoolId: "us-east-1_123456789",
-      clientId: "123456789",
-      tokenUse: "id",
+      jwtVerifier: {
+        userPoolId: "us-east-1_123456789",
+      },
     };
 
     const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);

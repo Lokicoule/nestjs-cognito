@@ -13,8 +13,9 @@ describe("AuthenticationGuard", () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
           CognitoAuthModule.register({
-            region: "us-east-1",
-            userPoolId: "us-east-1_123456789",
+            jwtVerifier: {
+              userPoolId: "us-east-1_123456789",
+            },
           }),
         ],
         providers: [AuthenticationGuard],

@@ -100,6 +100,26 @@ describe("Cognito Module : Auth", () => {
     });
   });
 
+  describe("auth/email-from-payload", () => {
+    it("should be successful and return the current user", async () => {
+      await spec()
+        .post("/cognito-testing-login")
+        .withBody({
+          username: config.get("FLIPPER_EMAIL"),
+          password: config.get("FLIPPER_PASSWORD"),
+          clientId: config.get("COGNITO_CLIENT_ID"),
+        })
+        .expectStatus(201)
+        .expectBodyContains("IdToken")
+        .stores("flipperToken", "IdToken");
+      await spec()
+        .get("/auth/email-from-payload")
+        .withHeaders("Authorization", "Bearer $S{flipperToken}")
+        .expectStatus(200)
+        .expectBody(config.get("FLIPPER_EMAIL"));
+    });
+  });
+
   describe("dolphin: authorization", () => {
     describe("flipper", () => {
       it("should be unsuccessful because ray is not in the dolphin group", async () => {

@@ -42,8 +42,8 @@ describe("Cognito Module : GraphQL", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .expectStatus(201)
-        .expectBodyContains("AccessToken")
-        .stores("flipperToken", "AccessToken")
+        .expectBodyContains("IdToken")
+        .stores("flipperToken", "IdToken")
         .stores("flipperUsername", "#username from identity token");
       await spec()
         .get("/graphql")
@@ -126,6 +126,69 @@ describe("Cognito Module : GraphQL", () => {
     });
   });
 
+  describe("getMeFromPayload", () => {
+    it("should be successful and return the current user", async () => {
+      await spec()
+        .post("/cognito-testing-login")
+        .withBody({
+          username: config.get("FLIPPER_EMAIL"),
+          password: config.get("FLIPPER_PASSWORD"),
+          clientId: config.get("COGNITO_CLIENT_ID"),
+        })
+        .expectStatus(201)
+        .expectBodyContains("IdToken")
+        .stores("flipperToken", "IdToken")
+        .stores("flipperUsername", "#username from identity token");
+      await spec()
+        .get("/graphql")
+        .withGraphQLQuery(
+          `query GetMeFromPayload {
+          getMeFromPayload {
+            username,
+            email,
+            groups,
+          }
+        }`
+        )
+        .withHeaders("Authorization", "Bearer $S{flipperToken}")
+        .expectStatus(200)
+        .expectBody({
+          data: {
+            getMeFromPayload: {
+              username: "$S{flipperUsername}",
+              email: config.get("FLIPPER_EMAIL"),
+              groups: ["dolphin"],
+            },
+          },
+        });
+    });
+  });
+
+  describe("getEmailFromPayload", () => {
+    it("should be successful and return the current user", async () => {
+      await spec()
+        .post("/cognito-testing-login")
+        .withBody({
+          username: config.get("FLIPPER_EMAIL"),
+          password: config.get("FLIPPER_PASSWORD"),
+          clientId: config.get("COGNITO_CLIENT_ID"),
+        })
+        .expectStatus(201)
+        .expectBodyContains("IdToken")
+        .stores("flipperToken", "IdToken");
+      await spec()
+        .get("/graphql")
+        .withGraphQLQuery(`query GetEmailFromPayload { getEmailFromPayload }`)
+        .withHeaders("Authorization", "Bearer $S{flipperToken}")
+        .expectStatus(200)
+        .expectBody({
+          data: {
+            getEmailFromPayload: config.get("FLIPPER_EMAIL"),
+          },
+        });
+    });
+  });
+
   describe("dolphin: authorization", () => {
     describe("flipper", () => {
       it("should be unsuccessful because ray is not in the dolphin group", async () => {
@@ -137,8 +200,8 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(201)
-          .expectBodyContains("AccessToken")
-          .stores("flipperToken", "AccessToken");
+          .expectBodyContains("IdToken")
+          .stores("flipperToken", "IdToken");
         await spec()
           .get("/graphql")
           .withGraphQLQuery(
@@ -163,8 +226,8 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(201)
-          .expectBodyContains("AccessToken")
-          .stores("flipperToken", "AccessToken");
+          .expectBodyContains("IdToken")
+          .stores("flipperToken", "IdToken");
         await spec()
           .post("/graphql")
           .withGraphQLQuery(
@@ -195,8 +258,8 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(201)
-          .expectBodyContains("AccessToken")
-          .stores("flipperToken", "AccessToken");
+          .expectBodyContains("IdToken")
+          .stores("flipperToken", "IdToken");
         await spec()
           .get("/graphql")
           .withGraphQLQuery(
@@ -223,8 +286,8 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(201)
-          .expectBodyContains("AccessToken")
-          .stores("rayToken", "AccessToken");
+          .expectBodyContains("IdToken")
+          .stores("rayToken", "IdToken");
 
         await spec()
           .get("/graphql")
@@ -252,8 +315,8 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(201)
-          .expectBodyContains("AccessToken")
-          .stores("blueToken", "AccessToken");
+          .expectBodyContains("IdToken")
+          .stores("blueToken", "IdToken");
         await spec()
           .get("/graphql")
           .withGraphQLQuery(
@@ -282,8 +345,8 @@ describe("Cognito Module : GraphQL", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .expectStatus(201)
-        .expectBodyContains("AccessToken")
-        .stores("flipperToken", "AccessToken");
+        .expectBodyContains("IdToken")
+        .stores("flipperToken", "IdToken");
       await spec()
         .get("/graphql")
         .withGraphQLQuery(
@@ -308,8 +371,8 @@ describe("Cognito Module : GraphQL", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .expectStatus(201)
-        .expectBodyContains("AccessToken")
-        .stores("rayToken", "AccessToken");
+        .expectBodyContains("IdToken")
+        .stores("rayToken", "IdToken");
       await spec()
         .get("/graphql")
         .withGraphQLQuery(

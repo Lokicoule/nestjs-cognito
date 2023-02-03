@@ -21,8 +21,10 @@ export type CognitoJwtVerifier =
  * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#constructor-property
  * @see https://github.com/awslabs/aws-jwt-verify#readme
  */
-export type CognitoModuleOptions = CognitoIdentityProviderClientConfig &
-  CognitoJwtVerifierProperties;
+export type CognitoModuleOptions = {
+  identityProvider?: CognitoIdentityProviderClientConfig;
+  jwtVerifier?: CognitoJwtVerifierProperties;
+};
 
 /**
  * @interface CognitoModuleOptionsFactory - Metadata for the CognitoModule

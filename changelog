@@ -17,3 +17,7 @@ update sample
 update wiki
 
 remove unused packages (for example cognito-identit-provider, nestjs/jwt...)
+
+remove console.log or warn or error
+
+replace currentuser decorator by cognitouser

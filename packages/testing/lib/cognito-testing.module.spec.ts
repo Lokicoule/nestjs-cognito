@@ -2,7 +2,7 @@ import { CognitoIdentityProvider } from "@aws-sdk/client-cognito-identity-provid
 import {
   CognitoModuleOptions,
   CognitoModuleOptionsFactory,
-  COGNITO_INSTANCE_TOKEN,
+  COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
 } from "@nestjs-cognito/core";
 import { Test } from "@nestjs/testing";
 import { CognitoTestingModule } from "./cognito-testing.module";
@@ -13,13 +13,15 @@ describe("CognitoTestingModule", () => {
       const module = await Test.createTestingModule({
         imports: [
           CognitoTestingModule.register({
-            userPoolId: "us-east-1_123456789",
+            identityProvider: {
+              region: "us-east-1",
+            },
           }),
         ],
       }).compile();
 
       const cognito = module.get<CognitoIdentityProvider>(
-        COGNITO_INSTANCE_TOKEN
+        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
       );
       expect(cognito).toBeDefined();
     });
@@ -31,15 +33,13 @@ describe("CognitoTestingModule", () => {
         const module = await Test.createTestingModule({
           imports: [
             CognitoTestingModule.registerAsync({
-              useFactory: () => ({
-                userPoolId: "us-east-1_123456789",
-              }),
+              useFactory: () => ({}),
             }),
           ],
         }).compile();
 
         const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_INSTANCE_TOKEN
+          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
         );
         expect(cognito).toBeDefined();
       });
@@ -55,7 +55,9 @@ describe("CognitoTestingModule", () => {
               {
                 createCognitoModuleOptions(): CognitoModuleOptions {
                   return {
-                    userPoolId: "us-east-1_123456789",
+                    identityProvider: {
+                      region: "us-east-1",
+                    },
                   };
                 }
               },
@@ -64,7 +66,7 @@ describe("CognitoTestingModule", () => {
         }).compile();
 
         const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_INSTANCE_TOKEN
+          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
         );
         expect(cognito).toBeDefined();
       });

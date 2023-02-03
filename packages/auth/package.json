@@ -31,11 +31,12 @@
   },
   "devDependencies": {
     "@nestjs-cognito/testing": "^0.2.9",
+    "@nestjs/jwt": "^10.0.1",
     "@nestjs/testing": "9.2.1"
   },
   "dependencies": {
     "@nestjs-cognito/core": "file:../core",
-    "@nestjs/jwt": "^10.0.0"
+    "aws-jwt-verify": "^3.4.0"
   },
   "lint-staged": {
     "*.ts": [

@@ -1,11 +1,15 @@
 import { CognitoIdentityProvider } from "@aws-sdk/client-cognito-identity-provider";
 import { Test } from "@nestjs/testing";
 import {
+  CognitoJwtVerifier,
   CognitoModuleOptions,
   CognitoModuleOptionsFactory,
 } from "./interfaces/cognito-module.options";
 import { CognitoModule } from "./cognito.module";
-import { COGNITO_INSTANCE_TOKEN } from "./cognito.constants";
+import {
+  COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+} from "./cognito.constants";
 
 describe("CognitoModule", () => {
   describe("register", () => {
@@ -13,14 +17,15 @@ describe("CognitoModule", () => {
       const module = await Test.createTestingModule({
         imports: [
           CognitoModule.register({
-            region: "us-east-1",
-            userPoolId: "us-east-1_123456789",
+            identityProvider: {
+              region: "us-east-1",
+            },
           }),
         ],
       }).compile();
 
       const cognito = module.get<CognitoIdentityProvider>(
-        COGNITO_INSTANCE_TOKEN
+        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
       );
       expect(cognito).toBeDefined();
     });
@@ -33,17 +38,45 @@ describe("CognitoModule", () => {
           imports: [
             CognitoModule.registerAsync({
               useFactory: () => ({
-                region: "us-east-1",
-                userPoolId: "us-east-1_123456789",
+                identityProvider: {
+                  region: "us-east-1",
+                },
               }),
             }),
           ],
         }).compile();
 
-        const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_INSTANCE_TOKEN
-        );
-        expect(cognito).toBeDefined();
+        expect(
+          module.get<CognitoIdentityProvider>(
+            COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
+          )
+        ).toBeDefined();
+        expect(
+          module.get<CognitoJwtVerifier>(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+        ).toBeNull();
+      });
+
+      it("should provide the cognito jwt verifier", async () => {
+        const module = await Test.createTestingModule({
+          imports: [
+            CognitoModule.registerAsync({
+              useFactory: () => ({
+                jwtVerifier: {
+                  userPoolId: "us-east-1_123456789",
+                },
+              }),
+            }),
+          ],
+        }).compile();
+
+        expect(
+          module.get<CognitoJwtVerifier>(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+        ).toBeDefined();
+        expect(
+          module.get<CognitoIdentityProvider>(
+            COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
+          )
+        ).toBeNull();
       });
     });
 
@@ -57,8 +90,9 @@ describe("CognitoModule", () => {
               {
                 createCognitoModuleOptions(): CognitoModuleOptions {
                   return {
-                    region: "us-east-1",
-                    userPoolId: "us-east-1_123456789",
+                    identityProvider: {
+                      region: "us-east-1",
+                    },
                   };
                 }
               },
@@ -67,7 +101,7 @@ describe("CognitoModule", () => {
         }).compile();
 
         const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_INSTANCE_TOKEN
+          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
         );
         expect(cognito).toBeDefined();
       });
