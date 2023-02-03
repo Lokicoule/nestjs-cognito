@@ -1,9 +1,9 @@
-import { Authentication, CognitoUser, CurrentUser } from "../../lib";
+import { GqlAuthentication, GqlCognitoUser, CurrentUser } from "../../lib";
 import { Query, Resolver } from "@nestjs/graphql";
 import { UserDto } from "./dto/user.dto";
 
 @Resolver()
-@Authentication()
+@GqlAuthentication()
 export class AuthResolver {
   @Query(() => UserDto)
   getMe(@CurrentUser() me) {
@@ -11,12 +11,12 @@ export class AuthResolver {
   }
 
   @Query(() => UserDto)
-  getMeFromPayload(@CognitoUser(["username", "email", "groups"]) me) {
+  getMeFromPayload(@GqlCognitoUser(["username", "email", "groups"]) me) {
     return new UserDto(me.username, me.email, me.groups);
   }
 
   @Query(() => String)
-  getEmailFromPayload(@CognitoUser("email") email) {
+  getEmailFromPayload(@GqlCognitoUser("email") email) {
     return email;
   }
 }

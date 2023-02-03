@@ -1,6 +1,5 @@
 Add userPoolId to the module options
 Prefers the use of IdToken
-GraphQL decorators add Gql
 
 show example with accessToken and data (username, groups)
 
@@ -15,9 +14,3 @@ aws cognito identity provider to peer to peer because is not used by others modu
 update sample
 
 update wiki
-
-remove unused packages (for example cognito-identit-provider, nestjs/jwt...)
-
-remove console.log or warn or error
-
-replace currentuser decorator by cognitouser

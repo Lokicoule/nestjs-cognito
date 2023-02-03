@@ -10,7 +10,7 @@ import { GqlExecutionContext } from "@nestjs/graphql";
  * @example @CognitoUser("username") username: string
  * @example @CognitoUser(["cognito:username", "email"]) { username, email }: { username: string, email: string }
  */
-export const CognitoUser = createParamDecorator(
+export const GqlCognitoUser = createParamDecorator(
   (data: string | string[], ctx: ExecutionContext) => {
     const request = GqlExecutionContext.create(ctx).getContext().req;
     const payload = request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY];
