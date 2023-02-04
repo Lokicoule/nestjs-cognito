@@ -31,7 +31,7 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
-    "@nestjs-cognito/testing": "file:../testing",
+    "@nestjs-cognito/testing": "1.0.0-alpha.0",
     "@nestjs/apollo": "10.1.7",
     "@nestjs/graphql": "10.1.7",
     "@nestjs/jwt": "10.0.1",
@@ -40,6 +40,6 @@
     "apollo-server-express": "3.11.1"
   },
   "dependencies": {
-    "@nestjs-cognito/auth": "file:../auth"
+    "@nestjs-cognito/auth": "1.0.0-alpha.0"
   }
 }
