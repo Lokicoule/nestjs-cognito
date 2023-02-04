@@ -5,35 +5,72 @@
 
 ## Description
 
-[AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html) utilities module for [Nest](https://github.com/nestjs/nest).
-This module is intended for end-to-end and integration testing.
+This module is a solution for [NestJS](https://github.com/nestjs/nest) which facilitates the integration with [Amazon Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html) for end-to-end and integration testing purposes. It includes a module, a controller, and a service that simplify testing your authentication and authorization code based on [Amazon Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html).
 
 ## Installation
 
 ```bash
-npm i @nestjs-cognito/testing
+npm install @nestjs-cognito/testing
 ```
 
 ## Usage
+
+### Module
+
+To use the `CognitoTestingModule`, you will need to import it and use either the `register` or `registerAsync` method to set up its dependencies:
 
 ```ts
 @Module({
   imports: [
     CognitoTestingModule.register({
-      region: "eu-west-1",
+      identityProvider: {
+        region: "eu-west-1",
+      },
     }),
   ],
 })
 export class AppModule {}
 ```
 
-Now, you can call the method `cognito-testing-login` and pass to the body the following properties :
+### Controller
 
-- username : The username of the test user
-- password : The password of the test user
-- clientId : Must be filled in order to use `initiateAuth` method exposed by @aws-sdk/client-cognito-identity-provider.
+The `CognitoTestingController` is a simple controller that accepts a username and password and returns an access token. The code is shown below:
 
-## Example with Jest and Pactum
+<details>
+<summary>Controller Source Code</summary>
+
+```ts
+import { Body, Controller, Post } from "@nestjs/common";
+import { CognitoTestingService } from "@nestjs-cognito/testing";
+
+@Controller()
+export class CognitoTestingController {
+  constructor(private readonly authService: CognitoTestingService) {}
+
+  @Post("cognito-testing-login")
+  login(@Body() body: Record<string, string>) {
+    return this.authService.getAccessToken(
+      {
+        username: body.username,
+        password: body.password,
+      },
+      body.clientId
+    );
+  }
+}
+```
+
+</details>
+
+### Service
+
+The `CognitoTestingService` is a service that uses the `CognitoIdentityProvider` client to get an access token. To call the method `cognito-testing-login`, you need to pass the following information in the request body:
+
+- `username`: The username of the test user
+- `password`: The password of the test user
+- `clientId`: Required for using the initiateAuth method provided by `@aws-sdk/client-cognito-identity-provider`.
+
+## Example using Jest and Pactum
 
 ```ts
 import { CognitoTestingModule } from "@nestjs-cognito/testing";
