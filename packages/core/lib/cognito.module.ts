@@ -1,9 +1,10 @@
 import { DynamicModule, Module, Provider } from "@nestjs/common";
 import { cognitoProviders } from "./cognito.providers";
 import {
-  COGNITO_CLIENT_INSTANCE_TOKEN,
-  COGNITO_INSTANCE_TOKEN,
+  COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
+  COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
   COGNITO_MODULE_OPTIONS,
+  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
 } from "./cognito.constants";
 import {
   CognitoModuleAsyncOptions,
@@ -13,6 +14,7 @@ import {
 import {
   createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
+  createCognitoJwtVerifierInstance,
 } from "./utils/cognito.utils";
 
 @Module({})
@@ -27,15 +29,23 @@ export class CognitoModule {
       module: CognitoModule,
       providers: [
         {
-          provide: COGNITO_INSTANCE_TOKEN,
+          provide: COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
           useValue: createCognitoIdentityProviderInstance(options),
         },
         {
-          provide: COGNITO_CLIENT_INSTANCE_TOKEN,
+          provide: COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
           useValue: createCognitoIdentityProviderClientInstance(options),
         },
+        {
+          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+          useValue: createCognitoJwtVerifierInstance(options),
+        },
       ],
-      exports: [COGNITO_INSTANCE_TOKEN, COGNITO_CLIENT_INSTANCE_TOKEN],
+      exports: [
+        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+        COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+      ],
     };
   }
 
@@ -53,7 +63,11 @@ export class CognitoModule {
         ...(options.extraProviders || []),
         ...cognitoProviders,
       ],
-      exports: [COGNITO_INSTANCE_TOKEN, COGNITO_CLIENT_INSTANCE_TOKEN],
+      exports: [
+        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+        COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+      ],
     };
   }
 

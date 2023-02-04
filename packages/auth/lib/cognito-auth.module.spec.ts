@@ -3,7 +3,7 @@ import { Test } from "@nestjs/testing";
 import {
   CognitoModuleOptions,
   CognitoModuleOptionsFactory,
-  COGNITO_INSTANCE_TOKEN,
+  COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
 } from "@nestjs-cognito/core";
 import { CognitoAuthModule } from "./cognito-auth.module";
 
@@ -13,13 +13,15 @@ describe("CognitoAuthModule", () => {
       const module = await Test.createTestingModule({
         imports: [
           CognitoAuthModule.register({
-            region: "us-east-1",
+            jwtVerifier: {
+              userPoolId: "us-east-1_123456789",
+            },
           }),
         ],
       }).compile();
 
       const cognito = module.get<CognitoIdentityProvider>(
-        COGNITO_INSTANCE_TOKEN
+        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
       );
       expect(cognito).toBeDefined();
     });
@@ -32,14 +34,16 @@ describe("CognitoAuthModule", () => {
           imports: [
             CognitoAuthModule.registerAsync({
               useFactory: () => ({
-                region: "us-east-1",
+                jwtVerifier: {
+                  userPoolId: "us-east-1_123456789",
+                },
               }),
             }),
           ],
         }).compile();
 
         const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_INSTANCE_TOKEN
+          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
         );
         expect(cognito).toBeDefined();
       });
@@ -54,7 +58,11 @@ describe("CognitoAuthModule", () => {
                 implements CognitoModuleOptionsFactory
               {
                 createCognitoModuleOptions(): CognitoModuleOptions {
-                  return {};
+                  return {
+                    jwtVerifier: {
+                      userPoolId: "us-east-1_123456789",
+                    },
+                  };
                 }
               },
             }),
@@ -62,7 +70,7 @@ describe("CognitoAuthModule", () => {
         }).compile();
 
         const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_INSTANCE_TOKEN
+          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
         );
         expect(cognito).toBeDefined();
       });

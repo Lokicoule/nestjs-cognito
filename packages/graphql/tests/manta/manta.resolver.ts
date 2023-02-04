@@ -1,9 +1,9 @@
 import { Query, Resolver } from "@nestjs/graphql";
-import { Authorization } from "../../lib";
+import { GqlAuthorization } from "../../lib";
 import { Response } from "../common/response.dto";
 
 @Resolver(() => Response)
-@Authorization({
+@GqlAuthorization({
   requiredGroups: ["manta"],
   prohibitedGroups: ["dolphin", "shark", "whale"],
 })

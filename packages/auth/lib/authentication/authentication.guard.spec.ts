@@ -1,9 +1,8 @@
 import { createMock } from "@golevelup/ts-jest";
+import { CognitoJwtVerifier } from "@nestjs-cognito/core";
 import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import { CognitoService } from "../cognito";
 import { CognitoAuthModule } from "../cognito-auth.module";
-import { UserBuilder } from "../user/user.builder";
 import { AuthenticationGuard } from "./authentication.guard";
 
 describe("AuthenticationGuard", () => {
@@ -14,7 +13,9 @@ describe("AuthenticationGuard", () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
           CognitoAuthModule.register({
-            region: "us-east-1",
+            jwtVerifier: {
+              userPoolId: "us-east-1_123456789",
+            },
           }),
         ],
         providers: [AuthenticationGuard],
@@ -29,10 +30,11 @@ describe("AuthenticationGuard", () => {
     it("should return true when user is authenticated", async () => {
       const mockContext = createMock<ExecutionContext>();
       authenticationGuard = new AuthenticationGuard(
-        createMock<CognitoService>({
-          getUser: jest
-            .fn()
-            .mockReturnValue(new UserBuilder().setUsername("test").build()),
+        createMock<CognitoJwtVerifier>({
+          verify: jest.fn().mockReturnValue({
+            sub: "sub",
+            "cognito:username": "test",
+          }),
         })
       );
 
@@ -51,8 +53,8 @@ describe("AuthenticationGuard", () => {
     it("should thrown an UnauthorizedException when user is undefined", async () => {
       const mockContext = createMock<ExecutionContext>();
       authenticationGuard = new AuthenticationGuard(
-        createMock<CognitoService>({
-          getUser: jest.fn().mockReturnValue(undefined),
+        createMock<CognitoJwtVerifier>({
+          verify: jest.fn().mockReturnValue(undefined),
         })
       );
       mockContext.switchToHttp().getRequest.mockReturnValue({

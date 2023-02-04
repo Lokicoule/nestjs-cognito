@@ -1,17 +1,27 @@
 import {
+  CognitoJwtVerifier,
+  InjectCognitoJwtVerifier,
+} from "@nestjs-cognito/core";
+import {
   CanActivate,
   ExecutionContext,
   Injectable,
   ServiceUnavailableException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { CognitoService } from "./cognito/cognito.service";
-import { COGNITO_USER_CONTEXT_PROPERTY } from "./user/user.constants";
+import {
+  COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY,
+  COGNITO_USER_CONTEXT_PROPERTY,
+} from "./user/user.constants";
+import { UserMapper } from "./user/user.mapper";
 import { User } from "./user/user.model";
 
 @Injectable()
 export abstract class AbstractGuard implements CanActivate {
-  constructor(protected readonly cognitoService: CognitoService) {}
+  constructor(
+    @InjectCognitoJwtVerifier()
+    private readonly jwtVerifier: CognitoJwtVerifier
+  ) {}
 
   /**
    * Check if the user is authenticated
@@ -21,11 +31,20 @@ export abstract class AbstractGuard implements CanActivate {
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = this.getRequest(context);
     const authorization = this.getAuthorizationToken(request);
-    const user: User = await this.cognitoService.getUser(authorization);
 
-    request[COGNITO_USER_CONTEXT_PROPERTY] = user;
+    try {
+      const payload = await this.jwtVerifier.verify(authorization);
+      if (!Boolean(payload) || !Boolean(payload["sub"])) {
+        throw new UnauthorizedException("User is not authenticated.");
+      }
+      request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
+      request[COGNITO_USER_CONTEXT_PROPERTY] =
+        UserMapper.fromCognitoJwtPayload(payload);
 
-    return this.onValidate(this.getAuthenticatedUser(request));
+      return this.onValidate(this.getAuthenticatedUser(request));
+    } catch (error) {
+      throw new UnauthorizedException(error, "Authentication failed.");
+    }
   }
 
   /**

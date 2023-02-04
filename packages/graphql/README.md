@@ -5,51 +5,63 @@
 
 ## Description
 
-GraphQL utilities module for [@nestjs-cognito/auth](https://www.npmjs.com/package/@nestjs-cognito/auth)
+This package is a complement to [@nestjs-cognito/auth](https://www.npmjs.com/package/@nestjs-cognito/auth) and adds GraphQL support for Amazon Cognito authentication and authorization. It does not expose a CognitoGraphqlModule.
+
+This package includes a GraphQL middleware that provides the authenticated user information in the GraphQL context. The middleware checks the presence of an Authorization header in the request and verifies the token with `aws-jwt-verify`. If the token is valid, the middleware adds the user information to the context.
+
+In addition to the middleware, this package also includes guards (`AuthenticationGuard` and `AuthorizationGuard`) and decorators (`GqlCognitoUser`, `GqlAuthentication` and `GqlAuthorization`) that can be used to restrict access to certain resolvers based on the user's authentication status or role.
+It's recommended to use the decorators instead of guards coupled with `UseGuards` NestJS decorator.
 
 ## Installation
 
+To install the library, use npm:
+
 ```bash
-npm i @nestjs-cognito/core @nestjs-cognito/auth @nestjs-cognito/graphql
+npm install @nestjs-cognito/graphql
+
 ```
-
-Hint: If you plan to only use this module's utilities, you don't need to manually install `@aws-sdk/client-cognito-identity-provider`.
-
-## Configuration
-
-See [@nestjs-cognito/auth](https://www.npmjs.com/package/@nestjs-cognito/auth)
 
 ## Usage
 
-You can use the built-in `@nestjs-cognito/graphql` decorators and guards.
+To use this package, you need to configure the [@nestjs-cognito/auth](https://www.npmjs.com/package/@nestjs-cognito/auth) module. Once the authentication module is configured, you can use the following exports from this package to handle Cognito authentication and authorization in your GraphQL resolvers.
 
-### Built-in decorators and guards
+### `@GqlAuthentication()`
 
-- Decorate the resolver with the `@Authentication` decorator or with the `@UseGuards` decorator to apply the `AuthenticationGuard` to the resolver in order to ensure that the user is authenticated.
-- Decorate the resolver with the `@Authorization` decorator or with the `@UseGuards` decorator to apply the `AuthorizationGuard` in order to ensure that the user is authorized.
-- Decorate method arguments with the `@CurrentUser` decorator to get the current user.
+This is a GraphQL middleware that provides the authenticated user information in the GraphQL context. The middleware checks the presence of a Authorization header in the request and verifies the token with Amazon Cognito. If the token is valid, the middleware adds the user information to the context.
 
-<b>During the `authorization` process, we already check if the user is authenticated, so you don't need to use `authentication` guard or decorator.</b>
+```ts
+import { GqlAuthentication } from "@nestjs-cognito/graphql";
 
-In addition, you can find more details about `@UseGuards` decorator [here](https://docs.nestjs.com/guards).
+@Resolver()
+@GqlAuthentication()
+export class MyResolver {
+  @Query()
+  public async myQuery() {
+    // Only authenticated user can access this resolver
+  }
+}
+```
 
-Here is an example that shows how to use authentication:
+<details>
+<summary>
+Examples of using authentication:
+</summary>
 
 ```ts
 import { UseGuards } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import {
-  Authentication,
+  GqlAuthentication,
   AuthenticationGuard,
-  CurrentUser,
+  GqlCognitoUser,
 } from "@nestjs-cognito/graphql";
-import { User } from "@nestjs-cognito/auth";
+import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
 
 @Resolver("dogs")
-@Authentication()
+@GqlAuthentication()
 export class DogsResolver {
   @Query(() => String)
-  findAll(@CurrentUser() me: User): string {
+  findAll(@GqlCognitoUser() me: CognitoJwtPayload): string {
     return "This action returns all my dogs";
   }
 }
@@ -58,7 +70,7 @@ export class DogsResolver {
 @UseGuards(AuthenticationGuard)
 export class CatsResolver {
   @Query(() => String)
-  findAll(@CurrentUser() me: User): string {
+  findAll(@GqlCognitoUser() me: CognitoJwtPayload): string {
     return "This action returns all my cats";
   }
 }
@@ -67,42 +79,64 @@ export class CatsResolver {
 export class DogsResolver {
   @Query(() => String)
   @UseGuards(AuthenticationGuard)
-  findAll(@CurrentUser() me: User): string {
+  findAll(@GqlCognitoUser() me: CognitoJwtPayload): string {
     return "This action returns all my dogs";
   }
 }
 ```
 
-Here is an example that shows how to use authorization:
+</details>
+
+### `@GqlAuthorization()`
+
+This is a decorator that can be used to enforce authorization rules in your GraphQL resolvers. The decorator takes a list of authorized groups and checks if the authenticated user is a member of any of the groups. If the user is not a member of any of the groups, an error is thrown.
+
+```ts
+import { GqlAuthorization } from "@nestjs-cognito/graphql";
+
+@Resolver()
+export class MyResolver {
+  @Query()
+  @GqlAuthorization(["group1", "group2"])
+  public async myQuery() {
+    // only users in group1 or group2 can access this resolver
+  }
+}
+```
+
+<details>
+<summary>
+Examples of using authorization:
+</summary>
 
 ```ts
 import { UseGuards } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
-import { User } from "@nestjs-cognito/auth";
 import {
-  Authorization,
+  GqlAuthorization,
   AuthorizationGuard,
-  CurrentUser,
+  GqlCognitoUser,
 } from "@nestjs-cognito/graphql";
+import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
 
 @Resolver("dogs")
-@Authorization({
+@GqlAuthorization({
   allowedGroups: ["user", "admin"],
   requiredGroups: ["moderator"],
   prohibitedGroups: ["visitor"],
 })
 export class DogsResolver {
   @Query(() => String)
-  findAll(@CurrentUser() me: User): string {
+  findAll(@GqlCognitoUser() me: CognitoJwtPayload): string {
     return "This action returns all my dogs";
   }
 }
 
 @Resolver("cats")
-@Authorization(["user"]) // allowedGroups by default
+@GqlAuthorization(["user"]) // allowedGroups by default
 export class CatsResolver {
   @Query(() => String)
-  findAll(@CurrentUser() me: User): string {
+  findAll(@GqlCognitoUser() me: CognitoJwtPayload): string {
     return "This action returns all my cats";
   }
 }
@@ -117,7 +151,7 @@ export class CatsResolver {
 )
 export class CatsResolver {
   @Query(() => String)
-  findAll(@CurrentUser() me: User): string {
+  findAll(@GqlCognitoUser() me: CognitoJwtPayload): string {
     return "This action returns all my cats";
   }
 }
@@ -126,11 +160,32 @@ export class CatsResolver {
 export class CatsResolver {
   @Query(() => String)
   @UseGuards(AuthorizationGuard(["user", "admin"]))
-  findAll(@CurrentUser() me: User): string {
+  findAll(@GqlCognitoUser() me: CognitoJwtPayload): string {
     return "This action returns all my cats";
   }
 }
 ```
+
+</details>
+
+### `@GqlCognitoUser()`
+
+This is a decorator that can be used in your GraphQL resolvers to access the authenticated user information from the context.
+
+```ts
+import { GqlCognitoUser } from "@nestjs-cognito/graphql";
+import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
+
+@Resolver()
+export class MyResolver {
+  @Query()
+  public async myQuery(@GqlCognitoUser() user: CognitoJwtPayload) {
+    // user information from Cognito
+  }
+}
+```
+
+For a complete example of how to use these guards and decorators, you can check out the [@nestjs-cognito/auth](https://www.npmjs.com/package/@nestjs-cognito/auth) package.
 
 ## License
 

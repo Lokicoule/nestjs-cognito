@@ -2,7 +2,7 @@ import { User } from "./user.model";
 
 export class UserBuilder {
   private _username: string;
-  private _email: string;
+  private _email: string | null;
   private _groups: string[];
 
   /**
@@ -34,8 +34,8 @@ export class UserBuilder {
    * Set the email address of the user
    * @param {string} email - The email address
    */
-  public setEmail(email: string) {
-    this._email = email.toLowerCase();
+  public setEmail(email: string | null) {
+    this._email = email?.toLowerCase();
     return this;
   }
 
@@ -51,7 +51,7 @@ export class UserBuilder {
    * @param {string[]} groups - The groups
    */
   public setGroups(groups: string[]) {
-    this._groups = groups.map((group) => group.toLowerCase());
+    this._groups = groups?.map((group) => group?.toLowerCase());
     return this;
   }
 

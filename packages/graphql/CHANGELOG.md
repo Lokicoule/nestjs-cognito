@@ -1,29 +1,52 @@
-# Change Log
+# Changelog:
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+## @nestjs-cognito/core:
 
-# 0.2.0 (2022-09-28)
+- The code for importing and registering the CognitoAuthModule has changed.
+- The old code:
 
-### Bug Fixes
+```ts
+import { CognitoAuthModule } from "@nestjs-cognito/auth";
+import { Module } from "@nestjs/common";
 
-- **build:** unpack specs ([f550985](https://github.com/Lokicoule/nestjs-cognito/commit/f550985acb9687551bc78a5af815b23c51bea186))
-- clean up ([2779725](https://github.com/Lokicoule/nestjs-cognito/commit/2779725f11ceabae373a8f75481871204c226ce9))
-- **graphql:** clean module and update readme ([ba02a7b](https://github.com/Lokicoule/nestjs-cognito/commit/ba02a7b0d2ad1a835430600a1f79c12dfafcf216))
-- **graphql:** module ([36bf020](https://github.com/Lokicoule/nestjs-cognito/commit/36bf020e7abd81955d6acdc8ccfef44ff2a8b88b))
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      region: region,
+    }),
+  ],
+})
+export class AppModule {}
+```
 
-## 0.0.7-alpha.0 (2022-07-23)
+- The new code:
 
-## 0.0.6-alpha.0 (2022-07-23)
+```ts
+import { CognitoAuthModule } from "@nestjs-cognito/auth";
+import { Module } from "@nestjs/common";
 
-## 0.0.5-alpha.0 (2022-07-22)
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      jwtVerifier: {
+        userPoolId: "user_pool_id",
+        clientId: "client_id",
+        tokenUse: "id",
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
 
-## 0.0.4-alpha.0 (2022-07-22)
+## @nestjs-cognito/auth:
 
-## 0.0.3-alpha.0 (2022-07-22)
+- Replaced "CurrentUser" with "CognitoUser".
+- "CurrentUser" is now deprecated.
 
-## 0.0.2-alpha.0 (2022-07-22)
+## @nestjs-cognito/graphql:
 
-### Features
-
-- **@nestjs-cognito:** monorepo ([b521f8e](https://github.com/Lokicoule/nestjs-cognito/commit/b521f8e1eaaf169edb99b35ab61a7a3870235396))
+- Added the "Gql" prefix before all decorators.
+- "Authentication" and "Authorization" decorators are now deprecated for the graphql module and have been replaced by "GqlAuthentication" and "GqlAuthorization".
+- Replaced "CurrentUser" with "GqlCognitoUser".
+- "CurrentUser" is now deprecated.
