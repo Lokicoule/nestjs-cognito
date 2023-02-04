@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/graphql",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.1-alpha.0",
   "description": "Auth Module for NestJS, GraphQL and Cognito",
   "author": "Loik Fekkai",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
-    "@nestjs-cognito/testing": "1.0.0-alpha.0",
+    "@nestjs-cognito/testing": "^1.0.1-alpha.0",
     "@nestjs/apollo": "10.1.7",
     "@nestjs/graphql": "10.1.7",
     "@nestjs/jwt": "10.0.1",
@@ -40,6 +40,6 @@
     "apollo-server-express": "3.11.1"
   },
   "dependencies": {
-    "@nestjs-cognito/auth": "1.0.0-alpha.0"
+    "@nestjs-cognito/auth": "^1.0.1-alpha.0"
   }
 }
