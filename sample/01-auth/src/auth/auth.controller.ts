@@ -1,11 +1,11 @@
-import { Authentication, CurrentUser, User } from '@nestjs-cognito/auth';
+import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
 import { Controller, Get } from '@nestjs/common';
 
 @Controller('auth')
 @Authentication()
 export class AuthController {
   @Get('me')
-  getMe(@CurrentUser() user: User): User {
+  getMe(@CognitoUser(['groups', 'username', 'email']) user) {
     return user;
   }
 }

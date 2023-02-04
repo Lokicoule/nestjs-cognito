@@ -5,7 +5,11 @@ import { AuthResolver } from './auth.resolver';
 @Module({
   imports: [
     CognitoAuthModule.register({
-      region: 'eu-west-1',
+      jwtVerifier: {
+        userPoolId: 'us-east-1_123456789',
+        clientId: '1234567890123456789012',
+        tokenUse: 'id',
+      },
     }),
   ],
   providers: [AuthResolver],
