@@ -89,9 +89,9 @@ Once the `@nestjs-cognito/auth` module is installed and configured, you can use 
 
 ### Built-in Decorators and Guards
 
-- Use the @Authentication decorator or the @UseGuards(AuthenticationGuard) syntax to apply the AuthenticationGuard to a controller and ensure that the user is authenticated.
-- Use the @Authorization decorator or the @UseGuards(AuthorizationGuard) syntax to apply the AuthorizationGuard to a controller and ensure that the user is authorized.
-- Decorate method arguments with the @CognitoUser decorator to retrieve the payload information extracted from the JWT.
+- Use the `@Authentication` decorator or the `@UseGuards(AuthenticationGuard)` syntax to apply the `AuthenticationGuard` to a controller and ensure that the user is authenticated.
+- Use the `@Authorization` decorator or the `@UseGuards(AuthorizationGuard)` syntax to apply the `AuthorizationGuard` to a controller and ensure that the user is authorized.
+- Decorate method arguments with the `@CognitoUser` decorator to retrieve the payload information extracted from the JWT.
 
 <b>Note: During the authorization process, the authentication of the user is already checked, so there's no need to use the `authentication` guard or decorator.</b>
 
@@ -101,7 +101,7 @@ In addition, you can find more details about `@UseGuards` decorator from the off
 
 #### `@Authentication` Decorator
 
-To configure the authentication, you'll need to use the @Authentication decorator. You can add the @Authentication decorator to controllers or routes:
+To configure the authentication, you'll need to use the `@Authentication` decorator. You can add the `@Authentication` decorator to controllers or routes:
 
 ```ts
 import { Authentication } from "@nestjs-cognito/auth";
@@ -118,7 +118,7 @@ export class DogsController {
 
 You can also use the `AuthenticationGuard` to secure individual routes or endpoint.
 
-To use the AuthenticationGuard, you'll need to use the @UseGuards decorator:
+To use the `AuthenticationGuard`, you'll need to use the `@UseGuards` decorator:
 
 ```ts
 import { Authentication } from "@nestjs-cognito/auth";
