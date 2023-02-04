@@ -1,18 +1,52 @@
-# Change Log
+# Changelog:
 
-All notable changes to this project will be documented in this file.
-See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+## @nestjs-cognito/core:
 
-# 0.2.0 (2022-09-28)
+- The code for importing and registering the CognitoAuthModule has changed.
+- The old code:
 
-### Bug Fixes
+```ts
+import { CognitoAuthModule } from "@nestjs-cognito/auth";
+import { Module } from "@nestjs/common";
 
-- **build:** unpack specs ([f550985](https://github.com/Lokicoule/nestjs-cognito/commit/f550985acb9687551bc78a5af815b23c51bea186))
-- clean up ([2779725](https://github.com/Lokicoule/nestjs-cognito/commit/2779725f11ceabae373a8f75481871204c226ce9))
-- **deps:** pin dependencies ([#7](https://github.com/Lokicoule/nestjs-cognito/issues/7)) ([06ef3d0](https://github.com/Lokicoule/nestjs-cognito/commit/06ef3d0f8a8958f06ca6fb7b49abc1b7917bb316))
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      region: region,
+    }),
+  ],
+})
+export class AppModule {}
+```
 
-## 0.0.2-alpha.0 (2022-07-22)
+- The new code:
 
-### Features
+```ts
+import { CognitoAuthModule } from "@nestjs-cognito/auth";
+import { Module } from "@nestjs/common";
 
-- **@nestjs-cognito:** monorepo ([b521f8e](https://github.com/Lokicoule/nestjs-cognito/commit/b521f8e1eaaf169edb99b35ab61a7a3870235396))
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      jwtVerifier: {
+        userPoolId: "user_pool_id",
+        clientId: "client_id",
+        tokenUse: "id",
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+## @nestjs-cognito/auth:
+
+- Replaced "CurrentUser" with "CognitoUser".
+- "CurrentUser" is now deprecated.
+
+## @nestjs-cognito/graphql:
+
+- Added the "Gql" prefix before all decorators.
+- "Authentication" and "Authorization" decorators are now deprecated for the graphql module and have been replaced by "GqlAuthentication" and "GqlAuthorization".
+- Replaced "CurrentUser" with "GqlCognitoUser".
+- "CurrentUser" is now deprecated.
