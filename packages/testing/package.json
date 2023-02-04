@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/testing",
-  "version": "0.2.9",
+  "version": "1.0.0-alpha.0",
   "description": "Cognito testing helpers for NestJS-Cognito",
   "author": "Loik Fekkai",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
-    "@nestjs-cognito/core": "file:../core",
-    "@aws-sdk/client-cognito-identity-provider": "3.264.0"
+    "@aws-sdk/client-cognito-identity-provider": "3.264.0",
+    "@nestjs-cognito/core": "file:../core"
   }
 }
