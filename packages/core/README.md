@@ -29,14 +29,14 @@ npm install @aws-sdk/client-cognito-identity-provider aws-jwt-verify
 
 ### Options params
 
-The <strong>CognitoModuleOptions</strong> interface is the configuration options for the `@nestjs-cognito/core` module. It contains two properties: identityProvider and jwtVerifier.
+The <strong>CognitoModuleOptions</strong> interface is the configuration options for the `@nestjs-cognito/core` module. It contains two properties: _identityProvider_ and _jwtVerifier_.
 
 - <strong>identityProvider</strong> is an optional configuration object for the `@aws-sdk/client-cognito-identity-provider` package.
 - <strong>jwtVerifier</strong> is an optional configuration object for the `aws-jwt-verify` package.
 
-You can use the <strong>CognitoModuleOptionsFactory</strong> interface for creating the <strong>CognitoModuleOptions</strong> in an asynchronous way, using imports, providers, exports, and name properties.
+You can use the <strong>CognitoModuleOptionsFactory</strong> interface for creating the <strong>CognitoModuleOptions</strong> in an asynchronous way, using _imports, providers, exports_, and _name_ properties.
 
-<strong>CognitoModuleAsyncOptions</strong> is another interface for creating the <strong>CognitoModuleOptions</strong> asynchronously. It contains properties such as imports, inject, useFactory, and extraProviders.
+<strong>CognitoModuleAsyncOptions</strong> is another interface for creating the <strong>CognitoModuleOptions</strong> asynchronously. It contains properties such as _imports, inject, useFactory_, and _extraProviders_.
 
 <details>
 <summary>Definition</summary>
@@ -102,9 +102,9 @@ export interface CognitoModuleAsyncOptions
 ### Synchronously
 
 Use `CognitoModule.register` method with options of [CognitoModuleOptions interface](#options-params)
-The method takes an options object that implements the CognitoModuleOptions interface as a parameter. This options object can contain configurations for both the jwtVerifier and identityProvider.
+The method takes an options object that implements the _CognitoModuleOptions_ interface as a parameter. This options object can contain configurations for both the _jwtVerifier_ and _identityProvider_.
 
-It's important to note that the identityProvider is used in the case where you want to use the Cognito identity provider. If you don't want to use the identity provider, you can omit this configuration from the options object and only specify the jwtVerifier configuration and vice-versa.
+It's important to note that the _identityProvider_ is used in the case where you want to use the Cognito identity provider. If you don't want to use the identity provider, you can omit this configuration from the options object and only specify the _jwtVerifier_ configuration and vice-versa.
 
 ```ts
 import { CognitoModule } from "@nestjs-cognito/core";
