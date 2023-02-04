@@ -5,7 +5,7 @@ import { COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY } from "../user.constants";
  * Decorator that can be used to inject the cognito user into a controller.
  * @param {string} [propertyName] The name of the property to inject the user into.
  * @returns {(target: object, key: string | symbol, descriptor: TypedPropertyDescriptor<any>) => any}
- * @example @CognitoUser() user: User
+ * @example @CognitoUser() user: CognitoJwtPayload
  * @example @CognitoUser("username") username: string
  * @example @CognitoUser(["cognito:username", "email"]) { username, email }: { username: string, email: string }
  */
