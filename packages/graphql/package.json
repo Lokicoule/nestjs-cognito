@@ -35,7 +35,7 @@
     "@nestjs/apollo": "10.1.7",
     "@nestjs/graphql": "10.1.7",
     "@nestjs/jwt": "10.0.1",
-    "@nestjs/testing": "9.3.2",
+    "@nestjs/testing": "9.3.3",
     "apollo-server-core": "3.11.1",
     "apollo-server-express": "3.11.1"
   },
