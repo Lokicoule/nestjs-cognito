@@ -3,6 +3,16 @@
 [![Node.js CI](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
 
+## Why You Should Start Using @NestJs-Cognito Today
+
+As web developers, we understand the significance of having a secure and dependable authentication system for our applications. In today's world, where security threats are on the rise, it is imperative to ensure that our users' data is protected. But building an authentication system from scratch can be a challenging and time-consuming task, especially when we want to make it scalable and maintainable.
+
+This is where **NestJS** and **AWS Cognito** come in. **NestJS**, the powerful **Node.js framework** developed by [Kamil Myśliwiec](https://twitter.com/kammysliwiec), and **AWS Cognito**, the managed authentication service from AWS, can be integrated to create a robust authentication system with ease.
+
+To make this integration simpler, we have the **@nestjs-cognito** package collection. It includes **@nestjs-cognito/core**, **@nestjs-cognito/auth**, **@nestjs-cognito/graphql**, and **@nestjs-cognito/testing**.
+
+If you're looking for a secure, dependable, and scalable solution for authentication and authorization in your NestJS application, then **@nestjs-cognito** is the right choice for you. Start using **@nestjs-cognito** today and simplify your development process. And don't forget to give it a star on GitHub to support the project and show your appreciation!
+
 <details>
   <summary>
     <h1 align="center">@nestjs-cognito/core</h1>
