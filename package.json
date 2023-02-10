@@ -45,7 +45,7 @@
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
     "coveralls": "3.1.1",
-    "eslint": "8.33.0",
+    "eslint": "8.34.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-prettier": "4.2.1",
