@@ -3,7 +3,7 @@ import { UserMapper } from "./user.mapper";
 import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
 
 describe("UserMapper", () => {
-  describe("fromPayload", () => {
+  describe("fromCognitoJwtPayload", () => {
     it("should throw an error if the username is not present", () => {
       expect(() => {
         UserMapper.fromCognitoJwtPayload({} as CognitoJwtPayload);
@@ -37,6 +37,30 @@ describe("UserMapper", () => {
       expect(user.username).toEqual("username");
       expect(user.email).toEqual("email");
       expect(user.groups).toEqual(["group1", "group2"]);
+    });
+
+    it("should return a full user with a single group", () => {
+      const user = UserMapper.fromCognitoJwtPayload({
+        "cognito:username": "username",
+        email: "email",
+        "cognito:groups": "group1",
+      } as unknown as CognitoJwtPayload);
+      expect(user).toBeDefined();
+      expect(user.username).toEqual("username");
+      expect(user.email).toEqual("email");
+      expect(user.groups).toEqual(["group1"]);
+    });
+
+    it("should handle Cognito usernames and groups without a namespace", () => {
+      const user = UserMapper.fromCognitoJwtPayload({
+        username: "username",
+        email: "email",
+        groups: "group1",
+      } as unknown as CognitoJwtPayload);
+      expect(user).toBeDefined();
+      expect(user.username).toEqual("username");
+      expect(user.email).toEqual("email");
+      expect(user.groups).toEqual(["group1"]);
     });
   });
 });
