@@ -55,7 +55,7 @@
     "lerna": "6.6.1",
     "lerna-changelog": "2.2.0",
     "lint-staged": "13.2.0",
-    "pactum": "3.3.2",
+    "pactum": "3.3.3",
     "prettier": "2.8.7",
     "reflect-metadata": "0.1.13",
     "rimraf": "4.4.0",
