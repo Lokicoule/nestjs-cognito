@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@nestjs-cognito/core": "^1.0.2",
-    "aws-jwt-verify": "^3.4.0"
+    "aws-jwt-verify": "^4.0.0"
   },
   "lint-staged": {
     "*.ts": [
