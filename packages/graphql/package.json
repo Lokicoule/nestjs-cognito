@@ -33,7 +33,7 @@
   "devDependencies": {
     "@nestjs-cognito/testing": "^1.0.2",
     "@nestjs/apollo": "10.2.1",
-    "@nestjs/graphql": "10.2.0",
+    "@nestjs/graphql": "10.2.1",
     "@nestjs/jwt": "10.0.2",
     "@nestjs/testing": "9.4.0",
     "apollo-server-core": "3.12.0",
