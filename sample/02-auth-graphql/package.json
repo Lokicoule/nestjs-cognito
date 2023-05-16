@@ -10,12 +10,12 @@
     "start:dev": "nest start --watch"
   },
   "dependencies": {
-    "@nestjs-cognito/auth": "^1.0.1-alpha.0",
-    "@nestjs-cognito/graphql": "^1.0.1-alpha.0",
+    "@nestjs-cognito/auth": "^1.0.2",
+    "@nestjs-cognito/graphql": "^1.0.2",
     "@nestjs/apollo": "11.0.5",
     "@nestjs/common": "9.4.0",
     "@nestjs/core": "9.4.0",
-    "@nestjs/graphql": "10.2.1",
+    "@nestjs/graphql": "11.0.5",
     "@nestjs/platform-express": "9.4.0",
     "@apollo/server": "4.3.2",
     "graphql": "16.6.0",
