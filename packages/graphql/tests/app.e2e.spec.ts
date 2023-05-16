@@ -41,6 +41,7 @@ describe("Cognito Module : GraphQL", () => {
           password: config.get("FLIPPER_PASSWORD"),
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
+        .withHeaders("Content-Type", "application/json")
         .expectStatus(201)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken")
@@ -57,6 +58,7 @@ describe("Cognito Module : GraphQL", () => {
         }`
         )
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
+        .withHeaders("Content-Type", "application/json")
         .expectStatus(200)
         .expectBody({
           data: {
@@ -79,6 +81,7 @@ describe("Cognito Module : GraphQL", () => {
           password: config.get("FLIPPER_PASSWORD"),
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
+        .withHeaders("Content-Type", "application/json")
         .expectStatus(201)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken");
@@ -86,6 +89,7 @@ describe("Cognito Module : GraphQL", () => {
         .get("/graphql")
         .withGraphQLQuery(`query GetEmailFromPayload { getEmailFromPayload }`)
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
+        .withHeaders("Content-Type", "application/json")
         .expectStatus(200)
         .expectBody({
           data: {
@@ -105,6 +109,7 @@ describe("Cognito Module : GraphQL", () => {
             password: config.get("RAY_PASSWORD"),
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(201)
           .expectBodyContains("IdToken")
           .stores("flipperToken", "IdToken");
@@ -118,6 +123,7 @@ describe("Cognito Module : GraphQL", () => {
           }`
           )
           .withHeaders("Authorization", "$S{flipperToken}")
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
           .expectJsonLike({
             errors: [],
@@ -131,6 +137,7 @@ describe("Cognito Module : GraphQL", () => {
             password: config.get("FLIPPER_PASSWORD"),
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(201)
           .expectBodyContains("IdToken")
           .stores("flipperToken", "IdToken");
@@ -144,6 +151,7 @@ describe("Cognito Module : GraphQL", () => {
           }`
           )
           .withHeaders("Authorization", "$S{flipperToken}")
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
           .expectJson({
             data: {
@@ -163,6 +171,7 @@ describe("Cognito Module : GraphQL", () => {
             password: config.get("FLIPPER_PASSWORD"),
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(201)
           .expectBodyContains("IdToken")
           .stores("flipperToken", "IdToken");
@@ -176,6 +185,7 @@ describe("Cognito Module : GraphQL", () => {
           }`
           )
           .withHeaders("Authorization", "$S{flipperToken}")
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
           .expectJson({
             data: {
@@ -191,6 +201,7 @@ describe("Cognito Module : GraphQL", () => {
             password: config.get("RAY_PASSWORD"),
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(201)
           .expectBodyContains("IdToken")
           .stores("rayToken", "IdToken");
@@ -205,6 +216,7 @@ describe("Cognito Module : GraphQL", () => {
             }
           }`
           )
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
           .expectJson({
             data: {
@@ -220,6 +232,7 @@ describe("Cognito Module : GraphQL", () => {
             password: config.get("BLUE_PASSWORD"),
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(201)
           .expectBodyContains("IdToken")
           .stores("blueToken", "IdToken");
@@ -233,6 +246,7 @@ describe("Cognito Module : GraphQL", () => {
           }`
           )
           .withHeaders("Authorization", "$S{blueToken}")
+          .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
           .expectJsonMatch({
             errors: [{ message: "Forbidden resource" }],
@@ -250,6 +264,7 @@ describe("Cognito Module : GraphQL", () => {
           password: config.get("FLIPPER_PASSWORD"),
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
+        .withHeaders("Content-Type", "application/json")
         .expectStatus(201)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken");
@@ -263,6 +278,7 @@ describe("Cognito Module : GraphQL", () => {
           }`
         )
         .withHeaders("Authorization", "$S{flipperToken}")
+        .withHeaders("Content-Type", "application/json")
         .expectStatus(200)
         .expectJsonMatch({
           errors: [{ message: "Forbidden resource" }],
@@ -276,6 +292,7 @@ describe("Cognito Module : GraphQL", () => {
           password: config.get("RAY_PASSWORD"),
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
+        .withHeaders("Content-Type", "application/json")
         .expectStatus(201)
         .expectBodyContains("IdToken")
         .stores("rayToken", "IdToken");
@@ -289,6 +306,7 @@ describe("Cognito Module : GraphQL", () => {
           }`
         )
         .withHeaders("Authorization", "$S{rayToken}")
+        .withHeaders("Content-Type", "application/json")
         .expectStatus(200)
         .expectJson({
           data: {
