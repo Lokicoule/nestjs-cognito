@@ -22,7 +22,8 @@
     "test:e2e:auth": "lerna run test:e2e --scope @nestjs-cognito/auth --stream",
     "test:e2e:core": "lerna run test:e2e --scope @nestjs-cognito/core --stream",
     "test:e2e:graphql": "lerna run test:e2e --scope @nestjs-cognito/graphql --stream",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cw": "commitizard -s conventional"
   },
   "devDependencies": {
     "@commitlint/cli": "17.6.3",
