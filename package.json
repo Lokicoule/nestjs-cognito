@@ -35,7 +35,7 @@
     "@nestjs/testing": "9.4.2",
     "@types/graphql": "14.5.0",
     "@types/jest": "29.5.2",
-    "@types/node": "18.16.16",
+    "@types/node": "18.16.17",
     "@types/node-fetch": "3.0.3",
     "@types/normalize-path": "3.0.0",
     "@types/ws": "8.5.5",
