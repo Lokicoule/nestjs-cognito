@@ -43,7 +43,7 @@ export abstract class AbstractGuard implements CanActivate {
 
       return this.onValidate(this.getAuthenticatedUser(request));
     } catch (error) {
-      throw new UnauthorizedException(error, "Authentication failed.");
+      throw new UnauthorizedException("Authentication failed.", { cause: error });
     }
   }
 
