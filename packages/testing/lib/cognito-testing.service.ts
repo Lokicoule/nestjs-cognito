@@ -47,7 +47,9 @@ export class CognitoTestingService {
       }
       return response.AuthenticationResult;
     } catch (error) {
-      throw new UnauthorizedException(error, "Invalid username or password.");
+      throw new UnauthorizedException("Invalid username or password.", {
+        cause: error,
+      });
     }
   }
 
@@ -76,7 +78,9 @@ export class CognitoTestingService {
     try {
       return await this.client.respondToAuthChallenge(request);
     } catch (error) {
-      throw new UnauthorizedException(error, "Invalid username or password.");
+      throw new UnauthorizedException("Invalid username or password.", {
+        cause: error,
+      });
     }
   }
 }
