@@ -3,7 +3,6 @@
   "useNx": false,
   "version": "independent",
   "npmClient": "yarn",
-  "useWorkspaces": true,
   "changelog": {
     "labels": {
       "feature": "Features",
