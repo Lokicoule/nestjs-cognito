@@ -4,6 +4,7 @@ import {
   CognitoJwtVerifierProperties,
   CognitoJwtVerifierSingleUserPool,
 } from "aws-jwt-verify/cognito-verifier";
+import { JwksCache } from "aws-jwt-verify/jwk";
 
 /**
  * @type CognitoJwtVerifier - The CognitoJwtVerifier instance
@@ -23,7 +24,11 @@ export type CognitoJwtVerifier =
  */
 export type CognitoModuleOptions = {
   identityProvider?: CognitoIdentityProviderClientConfig;
-  jwtVerifier?: CognitoJwtVerifierProperties;
+  jwtVerifier?: CognitoJwtVerifierProperties & {
+    additionalProperties?: {
+      jwksCache: JwksCache;
+    };
+  };
 };
 
 /**
