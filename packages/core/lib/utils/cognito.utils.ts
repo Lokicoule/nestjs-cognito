@@ -19,7 +19,9 @@ import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
 export const createCognitoJwtVerifierInstance = (
   cognitoModuleOptions: CognitoModuleOptions
 ): CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties> => {
-  if (!Boolean(cognitoModuleOptions.jwtVerifier)) {
+  const jwtVerifier = cognitoModuleOptions.jwtVerifier;
+
+  if (!jwtVerifier) {
     return null;
   }
 
@@ -29,27 +31,31 @@ export const createCognitoJwtVerifierInstance = (
     userPoolId,
     clientId,
     tokenUse = "id",
+    additionalProperties,
     ...others
-  } = cognitoModuleOptions.jwtVerifier;
+  } = jwtVerifier;
 
   if (!Boolean(userPoolId)) {
     logger.warn(
-      `The userPoolId is missing in the CognitoJwtVerifier configuration`
+      "The userPoolId is missing in the CognitoJwtVerifier configuration"
     );
   }
 
   if (!Boolean(clientId)) {
     logger.warn(
-      `The clientId is missing in the CognitoJwtVerifier configuration`
+      "The clientId is missing in the CognitoJwtVerifier configuration"
     );
   }
 
-  return CognitoJwtVerifierAWS.create({
-    clientId,
-    userPoolId,
-    tokenUse,
-    ...others,
-  });
+  return CognitoJwtVerifierAWS.create(
+    {
+      clientId,
+      userPoolId,
+      tokenUse,
+      ...others,
+    },
+    additionalProperties
+  );
 };
 
 /**
