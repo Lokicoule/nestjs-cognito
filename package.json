@@ -28,7 +28,7 @@
   "devDependencies": {
     "@commitlint/cli": "17.6.6",
     "@commitlint/config-angular": "17.6.6",
-    "@golevelup/ts-jest": "0.3.8",
+    "@golevelup/ts-jest": "0.4.0",
     "@nestjs/config": "3.0.0",
     "@nestjs/core": "9.4.3",
     "@nestjs/platform-express": "9.4.3",
