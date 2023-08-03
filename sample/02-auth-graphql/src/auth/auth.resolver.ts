@@ -1,17 +1,17 @@
-import { Authentication, CognitoUser } from '@nestjs-cognito/graphql';
+import { GqlAuthentication, GqlCognitoUser } from '@nestjs-cognito/graphql';
 import { Query, Resolver } from '@nestjs/graphql';
 import { UserDto } from './dto/user.dto';
 
 @Resolver()
-@Authentication()
+@GqlAuthentication()
 export class AuthResolver {
   @Query(() => UserDto)
-  getMe(@CognitoUser() me) {
+  getMe(@GqlCognitoUser() me) {
     return new UserDto(me.username, me.email, me.groups);
   }
 
   @Query(() => UserDto)
-  getMeBis(@CognitoUser(['username', 'email', 'groups']) me) {
+  getMeBis(@GqlCognitoUser(['username', 'email', 'groups']) me) {
     return new UserDto(me.username, me.email, me.groups);
   }
 }

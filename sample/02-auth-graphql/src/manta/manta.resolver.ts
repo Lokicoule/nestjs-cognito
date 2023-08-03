@@ -1,9 +1,9 @@
-import { Authorization } from '@nestjs-cognito/graphql';
+import { GqlAuthorization } from '@nestjs-cognito/graphql';
 import { Query, Resolver } from '@nestjs/graphql';
 import { MantaDto } from './dto/manta.dto';
 
 @Resolver()
-@Authorization({
+@GqlAuthorization({
   requiredGroups: ['manta'],
   prohibitedGroups: ['dolphin', 'shark', 'whale'],
 })

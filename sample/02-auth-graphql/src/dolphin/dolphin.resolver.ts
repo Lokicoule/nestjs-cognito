@@ -1,9 +1,9 @@
-import { Authentication } from '@nestjs-cognito/graphql';
+import { GqlAuthentication } from '@nestjs-cognito/graphql';
 import { Query, Resolver } from '@nestjs/graphql';
 import { DolphinDto } from './dto/dolphin.dto';
 
 @Resolver()
-@Authentication()
+@GqlAuthentication()
 export class DolphinResolver {
   @Query(() => DolphinDto)
   getFlipper() {
