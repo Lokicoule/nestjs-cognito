@@ -3,6 +3,8 @@ import { cognitoProviders } from "./cognito.providers";
 import {
   COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+  COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
+  COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
   COGNITO_MODULE_OPTIONS,
   COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
 } from "./cognito.constants";
@@ -14,6 +16,8 @@ import {
 import {
   createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
+  createMutableCognitoIdentityProviderClientInstance,
+  createMutableCognitoIdentityProviderInstance,
   createCognitoJwtVerifierInstance,
 } from "./utils/cognito.utils";
 
@@ -40,10 +44,20 @@ export class CognitoModule {
           provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
           useValue: createCognitoJwtVerifierInstance(options),
         },
+        {
+          provide: COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
+          useValue: createMutableCognitoIdentityProviderInstance(options),
+        },
+        {
+          provide: COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
+          useValue: createMutableCognitoIdentityProviderClientInstance(options),
+        },
       ],
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
+        COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
+        COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
         COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
       ],
     };
@@ -67,6 +81,8 @@ export class CognitoModule {
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
         COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+        COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
+        COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
       ],
     };
   }
@@ -77,7 +93,7 @@ export class CognitoModule {
    * @returns {Provider[]} - The providers
    */
   private static createAsyncProviders(
-    options: CognitoModuleAsyncOptions
+    options: CognitoModuleAsyncOptions,
   ): Provider[] {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
@@ -97,7 +113,7 @@ export class CognitoModule {
    * @returns {Provider} - The provider
    */
   private static createAsyncOptionsProvider(
-    options: CognitoModuleAsyncOptions
+    options: CognitoModuleAsyncOptions,
   ): Provider {
     if (options.useFactory) {
       return {

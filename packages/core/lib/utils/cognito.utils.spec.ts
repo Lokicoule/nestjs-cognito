@@ -1,11 +1,8 @@
-import {
-  CognitoIdentityProviderClient,
-  CognitoIdentityProviderClientConfig,
-} from "@aws-sdk/client-cognito-identity-provider";
+import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
 import {
-  createCognitoIdentityProviderInstance,
   createCognitoIdentityProviderClientInstance,
+  createCognitoIdentityProviderInstance,
   createCognitoJwtVerifierInstance,
 } from "./cognito.utils";
 
@@ -21,10 +18,10 @@ describe("CognitoUtils", () => {
       createCognitoIdentityProviderInstance(options);
     expect(cognitoIdentityProvider).toBeDefined();
     expect(cognitoIdentityProvider).toBeInstanceOf(
-      CognitoIdentityProviderClient
+      CognitoIdentityProviderClient,
     );
     expect(await cognitoIdentityProvider.config.region()).toBe(
-      options!.identityProvider!.region
+      options!.identityProvider!.region,
     );
   });
 
@@ -40,10 +37,10 @@ describe("CognitoUtils", () => {
 
     expect(cognitoIdentityProviderClient).toBeDefined();
     expect(cognitoIdentityProviderClient).toBeInstanceOf(
-      CognitoIdentityProviderClient
+      CognitoIdentityProviderClient,
     );
     expect(await cognitoIdentityProviderClient.config.region()).toEqual(
-      options!.identityProvider!.region
+      options!.identityProvider!.region,
     );
   });
 
@@ -57,5 +54,43 @@ describe("CognitoUtils", () => {
     const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);
 
     expect(cognitoJwtVerifier).toBeDefined();
+  });
+
+  it("should create a CognitoIdentityProvider instance", async () => {
+    const options = {
+      identityProvider: {
+        region: "us-east-1",
+      },
+    } as CognitoModuleOptions;
+
+    const cognitoIdentityProvider =
+      createCognitoIdentityProviderInstance(options);
+
+    expect(cognitoIdentityProvider).toBeDefined();
+    expect(cognitoIdentityProvider).toBeInstanceOf(
+      CognitoIdentityProviderClient,
+    );
+    expect(await cognitoIdentityProvider.config.region()).toEqual(
+      options!.identityProvider!.region,
+    );
+  });
+
+  it("should create a CognitoIdentityProviderClient instance", async () => {
+    const options = {
+      identityProvider: {
+        region: "us-east-1",
+      },
+    } as CognitoModuleOptions;
+
+    const cognitoIdentityProviderClient =
+      createCognitoIdentityProviderClientInstance(options);
+
+    expect(cognitoIdentityProviderClient).toBeDefined();
+    expect(cognitoIdentityProviderClient).toBeInstanceOf(
+      CognitoIdentityProviderClient,
+    );
+    expect(await cognitoIdentityProviderClient.config.region()).toEqual(
+      options!.identityProvider!.region,
+    );
   });
 });

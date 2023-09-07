@@ -8,8 +8,14 @@ import {
 import { CognitoModule } from "./cognito.module";
 import {
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+  COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
+  COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
   COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
 } from "./cognito.constants";
+import {
+  CognitoIdentityProviderAdapter,
+  CognitoIdentityProviderClientAdapter,
+} from "./adapters";
 
 describe("CognitoModule", () => {
   describe("register", () => {
@@ -25,9 +31,62 @@ describe("CognitoModule", () => {
       }).compile();
 
       const cognito = module.get<CognitoIdentityProvider>(
-        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
+        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
       );
       expect(cognito).toBeDefined();
+    });
+
+    it("should provide the cognito jwt verifier", async () => {
+      const module = await Test.createTestingModule({
+        imports: [
+          CognitoModule.register({
+            jwtVerifier: {
+              userPoolId: "us-east-1_123456789",
+            },
+          }),
+        ],
+      }).compile();
+
+      const cognito = module.get<CognitoJwtVerifier>(
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+      );
+      expect(cognito).toBeDefined();
+    });
+
+    it("should provide the cognito identity provider adapter", async () => {
+      const module = await Test.createTestingModule({
+        imports: [
+          CognitoModule.register({
+            identityProvider: {
+              region: "us-east-1",
+            },
+          }),
+        ],
+      }).compile();
+
+      const cognito = module.get<CognitoIdentityProvider>(
+        COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
+      );
+      expect(cognito).toBeDefined();
+      expect(cognito).toBeInstanceOf(CognitoIdentityProviderAdapter);
+    });
+
+    it("should provide the cognito identity provider client adapter", async () => {
+      const module = await Test.createTestingModule({
+        imports: [
+          CognitoModule.register({
+            identityProvider: {
+              region: "us-east-1",
+            },
+          }),
+        ],
+      }).compile();
+
+      const cognito = module.get<CognitoIdentityProvider>(
+        COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
+      );
+      expect(cognito).toBeDefined();
+      expect(cognito).toBeInstanceOf(CognitoIdentityProviderClientAdapter);
     });
   });
 
@@ -48,11 +107,11 @@ describe("CognitoModule", () => {
 
         expect(
           module.get<CognitoIdentityProvider>(
-            COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
-          )
+            COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+          ),
         ).toBeDefined();
         expect(
-          module.get<CognitoJwtVerifier>(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+          module.get<CognitoJwtVerifier>(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN),
         ).toBeNull();
       });
 
@@ -70,12 +129,12 @@ describe("CognitoModule", () => {
         }).compile();
 
         expect(
-          module.get<CognitoJwtVerifier>(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+          module.get<CognitoJwtVerifier>(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN),
         ).toBeDefined();
         expect(
           module.get<CognitoIdentityProvider>(
-            COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
-          )
+            COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+          ),
         ).toBeNull();
       });
     });
@@ -101,7 +160,7 @@ describe("CognitoModule", () => {
         }).compile();
 
         const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
+          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         );
         expect(cognito).toBeDefined();
       });
