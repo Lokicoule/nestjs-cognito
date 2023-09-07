@@ -174,7 +174,11 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 import {
   InjectCognitoIdentityProvider,
+  InjectMutableCognitoIdentityProviderAdapter,
   InjectCognitoIdentityProviderClient,
+  InjectMutableCognitoIdentityProviderClientAdapter,
+  CognitoIdentityProviderAdapter,
+  CognitoIdentityProviderClientAdapter,
 } from "@nestjs-cognito/core";
 
 export class MyService {
@@ -182,7 +186,11 @@ export class MyService {
     @InjectCognitoIdentityProvider()
     private readonly client: CognitoIdentityProvider,
     @InjectCognitoIdentityProviderClient()
-    private readonly cognitoIdentityProviderClient: CognitoIdentityProviderClient
+    private readonly cognitoIdentityProviderClient: CognitoIdentityProviderClient,
+    @InjectMutableCognitoIdentityProviderAdapter()
+    private readonly clientMutable: CognitoIdentityProviderAdapter,
+    @InjectCognitoIdentityProviderClient()
+    private readonly cognitoIdentityProviderClientMutable: CognitoIdentityProviderClientAdapter
   ) {}
 }
 ```

@@ -9,15 +9,18 @@ import {
   CognitoJwtVerifierProperties,
   CognitoJwtVerifierSingleUserPool,
 } from "aws-jwt-verify/cognito-verifier";
+import {
+  CognitoIdentityProviderAdapter,
+  CognitoIdentityProviderClientAdapter,
+} from "../adapters";
 import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
-
 /**
  * Get the CognitoJwtVerifier instance
  * @param {CognitoModuleOptions} options - The CognitoModuleOptions
  * @returns {CognitoJwtVerifier} - The CognitoJwtVerifier instance
  */
 export const createCognitoJwtVerifierInstance = (
-  cognitoModuleOptions: CognitoModuleOptions
+  cognitoModuleOptions: CognitoModuleOptions,
 ): CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties> => {
   const jwtVerifier = cognitoModuleOptions.jwtVerifier;
 
@@ -37,13 +40,13 @@ export const createCognitoJwtVerifierInstance = (
 
   if (!Boolean(userPoolId)) {
     logger.warn(
-      "The userPoolId is missing in the CognitoJwtVerifier configuration"
+      "The userPoolId is missing in the CognitoJwtVerifier configuration",
     );
   }
 
   if (!Boolean(clientId)) {
     logger.warn(
-      "The clientId is missing in the CognitoJwtVerifier configuration"
+      "The clientId is missing in the CognitoJwtVerifier configuration",
     );
   }
 
@@ -54,7 +57,7 @@ export const createCognitoJwtVerifierInstance = (
       tokenUse,
       ...others,
     },
-    additionalProperties
+    additionalProperties,
   );
 };
 
@@ -64,7 +67,7 @@ export const createCognitoJwtVerifierInstance = (
  * @returns {CognitoIdentityProvider} - The CognitoIdentityProvider instance
  */
 export const createCognitoIdentityProviderInstance = (
-  cognitoModuleOptions: CognitoModuleOptions
+  cognitoModuleOptions: CognitoModuleOptions,
 ): CognitoIdentityProvider => {
   if (!Boolean(cognitoModuleOptions.identityProvider)) {
     return null;
@@ -73,8 +76,8 @@ export const createCognitoIdentityProviderInstance = (
   return new CognitoIdentityProvider(
     buildConfigurationFromOptions(
       cognitoModuleOptions.identityProvider,
-      "CognitoIdentityProvider"
-    )
+      "CognitoIdentityProvider",
+    ),
   );
 };
 
@@ -84,7 +87,7 @@ export const createCognitoIdentityProviderInstance = (
  * @returns {CognitoIdentityProviderClient} - The CognitoIdentityProviderClient instance
  */
 export const createCognitoIdentityProviderClientInstance = (
-  cognitoModuleOptions: CognitoModuleOptions
+  cognitoModuleOptions: CognitoModuleOptions,
 ): CognitoIdentityProviderClient => {
   if (!Boolean(cognitoModuleOptions.identityProvider)) {
     return null;
@@ -93,8 +96,48 @@ export const createCognitoIdentityProviderClientInstance = (
   return new CognitoIdentityProviderClient(
     buildConfigurationFromOptions(
       cognitoModuleOptions.identityProvider,
-      "CognitoIdentityProviderClient"
-    )
+      "CognitoIdentityProviderClient",
+    ),
+  );
+};
+
+/**
+ * Get the mutable CognitoIdentityProviderAdapter instance
+ * @param {CognitoModuleOptions} options - The CognitoModuleOptions
+ * @returns {CognitoIdentityProviderAdapter} - The CognitoIdentityProviderAdapter instance
+ */
+export const createMutableCognitoIdentityProviderInstance = (
+  cognitoModuleOptions: CognitoModuleOptions,
+): CognitoIdentityProviderAdapter => {
+  if (!Boolean(cognitoModuleOptions.identityProvider)) {
+    return null;
+  }
+
+  return new CognitoIdentityProviderAdapter(
+    buildConfigurationFromOptions(
+      cognitoModuleOptions.identityProvider,
+      "CognitoIdentityProviderAdapter",
+    ),
+  );
+};
+
+/**
+ * Get the mutable CognitoIdentityProviderClientAdapter instance
+ * @param {CognitoModuleOptions} options - The CognitoModuleOptions
+ * @returns {CognitoIdentityProviderClientAdapter} - The CognitoIdentityProviderClientAdapter instance
+ */
+export const createMutableCognitoIdentityProviderClientInstance = (
+  cognitoModuleOptions: CognitoModuleOptions,
+): CognitoIdentityProviderClientAdapter => {
+  if (!Boolean(cognitoModuleOptions.identityProvider)) {
+    return null;
+  }
+
+  return new CognitoIdentityProviderClientAdapter(
+    buildConfigurationFromOptions(
+      cognitoModuleOptions.identityProvider,
+      "CognitoIdentityProviderClientAdapter",
+    ),
   );
 };
 
@@ -105,7 +148,7 @@ export const createCognitoIdentityProviderClientInstance = (
  */
 function buildConfigurationFromOptions(
   cognitoModuleOptions: CognitoIdentityProviderClientConfig,
-  from: string
+  from: string,
 ): CognitoIdentityProviderClientConfig {
   const logger = new Logger(from);
   const { region, ...options } = cognitoModuleOptions;
