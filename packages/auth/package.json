@@ -32,7 +32,7 @@
   "devDependencies": {
     "@nestjs-cognito/testing": "^1.0.10",
     "@nestjs/jwt": "^10.0.1",
-    "@nestjs/testing": "10.2.5"
+    "@nestjs/testing": "10.2.6"
   },
   "dependencies": {
     "@nestjs-cognito/core": "^1.1.5",
