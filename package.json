@@ -26,7 +26,7 @@
     "cw": "commitizard -s conventional"
   },
   "devDependencies": {
-    "@commitlint/cli": "18.1.0",
+    "@commitlint/cli": "18.2.0",
     "@commitlint/config-angular": "18.1.0",
     "@golevelup/ts-jest": "0.4.0",
     "@nestjs/config": "3.1.1",
