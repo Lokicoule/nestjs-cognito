@@ -41,7 +41,7 @@
     "@types/ws": "8.5.8",
     "@typescript-eslint/eslint-plugin": "6.9.1",
     "@typescript-eslint/parser": "6.9.1",
-    "@apollo/server": "4.9.4",
+    "@apollo/server": "4.9.5",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
     "coveralls": "3.1.1",
