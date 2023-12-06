@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/auth",
-  "version": "1.0.11",
+  "version": "1.1.0",
   "description": "Auth Module for NestJS and Cognito",
   "author": "Loik Fekkai",
   "license": "MIT",
@@ -30,12 +30,12 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
-    "@nestjs-cognito/testing": "^1.0.11",
+    "@nestjs-cognito/testing": "^1.1.0",
     "@nestjs/jwt": "^10.0.1",
     "@nestjs/testing": "10.2.10"
   },
   "dependencies": {
-    "@nestjs-cognito/core": "^1.1.7",
+    "@nestjs-cognito/core": "^1.2.0",
     "aws-jwt-verify": "^4.0.0"
   },
   "lint-staged": {
