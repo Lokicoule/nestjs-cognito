@@ -26,6 +26,7 @@
     "cw": "commitizard -s conventional"
   },
   "devDependencies": {
+    "@apollo/server": "4.9.5",
     "@commitlint/cli": "18.4.3",
     "@commitlint/config-angular": "18.4.3",
     "@golevelup/ts-jest": "0.4.0",
@@ -41,7 +42,6 @@
     "@types/ws": "8.5.10",
     "@typescript-eslint/eslint-plugin": "6.13.2",
     "@typescript-eslint/parser": "6.13.2",
-    "@apollo/server": "4.9.5",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
     "coveralls": "3.1.1",
@@ -63,7 +63,8 @@
     "supertest": "6.3.3",
     "ts-jest": "29.1.1",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "whoami": "^0.0.3"
   },
   "jest": {
     "collectCoverage": true,
