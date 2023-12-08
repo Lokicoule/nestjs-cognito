@@ -7,6 +7,24 @@ import { AuthorizationOptions } from "./authorization.options";
  * @returns {ClassDecorator} - The decorator
  * @param {AuthorizationOptions} options - The options
  */
-export function Authorization(options: AuthorizationOptions): ClassDecorator {
-  return applyDecorators(UseGuards(AuthorizationGuard(options)));
+export function Authorization(
+  options: AuthorizationOptions,
+): ClassDecorator & MethodDecorator {
+  return (
+    target: object,
+    propertyKey?: string | symbol,
+    descriptor?: TypedPropertyDescriptor<any>,
+  ) => {
+    if (propertyKey && descriptor) {
+      // MethodDecorator
+      return applyDecorators(UseGuards(AuthorizationGuard(options)))(
+        target,
+        propertyKey,
+        descriptor,
+      );
+    } else {
+      // ClassDecorator
+      return applyDecorators(UseGuards(AuthorizationGuard(options)))(target);
+    }
+  };
 }

@@ -1,8 +1,7 @@
-import { Authentication, AuthorizationGuard } from "../../lib";
 import { Controller, Get, UseGuards } from "@nestjs/common";
+import { AuthorizationGuard } from "../../lib";
 
 @Controller("dolphin")
-@Authentication()
 export class DolphinController {
   @Get("flipper")
   @UseGuards(AuthorizationGuard(["dolphin"]))
@@ -16,7 +15,7 @@ export class DolphinController {
   @UseGuards(
     AuthorizationGuard({
       prohibitedGroups: ["shark"],
-    })
+    }),
   )
   getPosition() {
     return {

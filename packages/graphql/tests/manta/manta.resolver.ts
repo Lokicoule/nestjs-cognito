@@ -3,11 +3,11 @@ import { GqlAuthorization } from "../../lib";
 import { Response } from "../common/response.dto";
 
 @Resolver(() => Response)
-@GqlAuthorization({
-  requiredGroups: ["manta"],
-  prohibitedGroups: ["dolphin", "shark", "whale"],
-})
 export class MantaResolver {
+  @GqlAuthorization({
+    requiredGroups: ["manta"],
+    prohibitedGroups: ["dolphin", "shark", "whale"],
+  })
   @Query(() => Response)
   getRay(): Response {
     return {
