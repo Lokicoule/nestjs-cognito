@@ -77,6 +77,23 @@ describe("Cognito Module : Auth", () => {
     });
   });
 
+  describe("auth/iampublic", () => {
+    it("should be available to everyone", async () => {
+      await spec()
+        .get("/auth/iampublic")
+        .expectStatus(200)
+        .expectBody("public");
+      await spec()
+        .get("/auth/iampublic")
+        .withBody({
+          username: config.get("FLIPPER_EMAIL"),
+          password: config.get("FLIPPER_PASSWORD"),
+          clientId: config.get("COGNITO_CLIENT_ID"),
+        })
+        .expectStatus(200);
+    });
+  });
+
   describe("dolphin: authorization", () => {
     describe("flipper", () => {
       it("should be unsuccessful because ray is not in the dolphin group", async () => {

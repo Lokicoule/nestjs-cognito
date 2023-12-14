@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import { AbstractGuard } from "./abstract.guard";
 import { User } from "./user/user.model";
+import { Reflector } from "@nestjs/core";
 
 class TestGuard extends AbstractGuard {
   public onValidate(user: User): boolean {
@@ -40,7 +41,13 @@ describe("AbstractGuard", () => {
           "cognito:groups": ["test"],
           email: "email",
         }),
-      })
+      }),
+      createMock<Reflector>({
+        get: jest.fn().mockReturnValue(false),
+        getAll: jest.fn().mockReturnValue(false),
+        getAllAndMerge: jest.fn().mockReturnValue(false),
+        getAllAndOverride: jest.fn().mockReturnValue(false),
+      }),
     );
   });
 
@@ -55,9 +62,15 @@ describe("AbstractGuard", () => {
 
     it("should be undefined", () => {
       expect(
-        new BadTestGuard(createMock<CognitoJwtVerifier>()).getRequest(
-          createMock<ExecutionContext>()
-        )
+        new BadTestGuard(
+          createMock<CognitoJwtVerifier>(),
+          createMock<Reflector>({
+            get: jest.fn().mockReturnValue(false),
+            getAll: jest.fn().mockReturnValue(false),
+            getAllAndMerge: jest.fn().mockReturnValue(false),
+            getAllAndOverride: jest.fn().mockReturnValue(false),
+          }),
+        ).getRequest(createMock<ExecutionContext>()),
       ).toBeUndefined();
     });
 
@@ -71,9 +84,17 @@ describe("AbstractGuard", () => {
       });
 
       expect(() =>
-        new BadTestGuard(createMock<CognitoJwtVerifier>()).canActivate(context)
+        new BadTestGuard(
+          createMock<CognitoJwtVerifier>(),
+          createMock<Reflector>({
+            get: jest.fn().mockReturnValue(false),
+            getAll: jest.fn().mockReturnValue(false),
+            getAllAndMerge: jest.fn().mockReturnValue(false),
+            getAllAndOverride: jest.fn().mockReturnValue(false),
+          }),
+        ).canActivate(context),
       ).rejects.toThrow(
-        new ServiceUnavailableException("Request is undefined or null.")
+        new ServiceUnavailableException("Request is undefined or null."),
       );
     });
   });
@@ -94,8 +115,8 @@ describe("AbstractGuard", () => {
     it("should throw error without authorization header", () => {
       const context = createMock<ExecutionContext>();
 
-      expect(() => guard.canActivate(context)).rejects.toThrowError(
-        new UnauthorizedException("Authorization header is missing.")
+      expect(() => guard.canActivate(context)).rejects.toThrow(
+        new UnauthorizedException("Authorization header is missing."),
       );
     });
   });

@@ -4,6 +4,7 @@ import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { CognitoAuthModule } from "../cognito-auth.module";
 import { AuthenticationGuard } from "./authentication.guard";
+import { Reflector } from "@nestjs/core";
 
 describe("AuthenticationGuard", () => {
   let authenticationGuard: AuthenticationGuard;
@@ -35,7 +36,13 @@ describe("AuthenticationGuard", () => {
             sub: "sub",
             "cognito:username": "test",
           }),
-        })
+        }),
+        createMock<Reflector>({
+          get: jest.fn().mockReturnValue(false),
+          getAll: jest.fn().mockReturnValue(false),
+          getAllAndMerge: jest.fn().mockReturnValue(false),
+          getAllAndOverride: jest.fn().mockReturnValue(false),
+        }),
       );
 
       mockContext.switchToHttp().getRequest.mockReturnValue({
@@ -55,7 +62,13 @@ describe("AuthenticationGuard", () => {
       authenticationGuard = new AuthenticationGuard(
         createMock<CognitoJwtVerifier>({
           verify: jest.fn().mockReturnValue(undefined),
-        })
+        }),
+        createMock<Reflector>({
+          get: jest.fn().mockReturnValue(false),
+          getAll: jest.fn().mockReturnValue(false),
+          getAllAndMerge: jest.fn().mockReturnValue(false),
+          getAllAndOverride: jest.fn().mockReturnValue(false),
+        }),
       );
       mockContext.switchToHttp().getRequest.mockReturnValue({
         headers: {
@@ -65,7 +78,7 @@ describe("AuthenticationGuard", () => {
       });
 
       expect(authenticationGuard.canActivate(mockContext)).rejects.toThrow(
-        UnauthorizedException
+        UnauthorizedException,
       );
     });
   });

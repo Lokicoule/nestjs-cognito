@@ -9,18 +9,21 @@ import {
   ServiceUnavailableException,
   UnauthorizedException,
 } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import {
   COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY,
   COGNITO_USER_CONTEXT_PROPERTY,
 } from "./user/user.constants";
 import { UserMapper } from "./user/user.mapper";
 import { User } from "./user/user.model";
+import { IS_PUBLIC_KEY } from "./whitelist";
 
 @Injectable()
 export abstract class AbstractGuard implements CanActivate {
   constructor(
     @InjectCognitoJwtVerifier()
-    private readonly jwtVerifier: CognitoJwtVerifier
+    private readonly jwtVerifier: CognitoJwtVerifier,
+    private readonly reflector: Reflector,
   ) {}
 
   /**
@@ -29,6 +32,10 @@ export abstract class AbstractGuard implements CanActivate {
    * @returns {Promise<boolean>} - True or false if the user is authenticated or not and has the required roles
    */
   public async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (this.isWhitelisted(context)) {
+      return true;
+    }
+
     const request = this.getRequest(context);
     const authorization = this.getAuthorizationToken(request);
 
@@ -97,5 +104,9 @@ export abstract class AbstractGuard implements CanActivate {
     }
 
     return authorization.replace("Bearer ", "");
+  }
+
+  private isWhitelisted(context: ExecutionContext): boolean {
+    return this.reflector.get<boolean>(IS_PUBLIC_KEY, context.getHandler());
   }
 }
