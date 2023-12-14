@@ -7,6 +7,24 @@ on:
   release:
     types: [created]
 
+env:
+  BLUE_EMAIL: ${{ secrets.BLUE_EMAIL }}
+  BLUE_PASSWORD: ${{ secrets.BLUE_PASSWORD }}
+  COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+  COGNITO_REGION: ${{ secrets.COGNITO_REGION }}
+  COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
+  COGNITO_USER_EMAIL: ${{ secrets.COGNITO_USER_EMAIL }}
+  COGNITO_USER_EMAIL_ADMIN: ${{ secrets.COGNITO_USER_EMAIL_ADMIN }}
+  COGNITO_USER_PASSWORD: ${{ secrets.COGNITO_USER_PASSWORD }}
+  COGNITO_USER_PASSWORD_ADMIN: ${{ secrets.COGNITO_USER_PASSWORD_ADMIN }}
+  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+  FLIPPER_EMAIL: ${{ secrets.FLIPPER_EMAIL }}
+  FLIPPER_PASSWORD: ${{ secrets.FLIPPER_PASSWORD }}
+  MOBY_EMAIL: ${{ secrets.MOBY_EMAIL }}
+  MOBY_PASSWORD: ${{ secrets.MOBY_PASSWORD }}
+  RAY_EMAIL: ${{ secrets.RAY_EMAIL }}
+  RAY_PASSWORD: ${{ secrets.RAY_PASSWORD }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,6 +37,7 @@ jobs:
         run: npm i --package-lock
       - name: Install dependencies
         run: npm ci && lerna exec npm i
+      - run: npm build
       - run: npm test
 
   publish-npm:
