@@ -385,6 +385,43 @@ export class YourController {
 }
 ```
 
+### `@PublicRoute`
+
+This decorator is used to allow route to bypass auth validation process.
+In the following example, because we use class decorator `@Authentication` we can't access to endpoint `iampublic` without using the `@PublicRoute` decorator.
+
+```ts
+@Controller("auth")
+@Authentication()
+export class AuthController {
+  @Get("iampublic")
+  @PublicRoute()
+  getPublic() {
+    return "public";
+  }
+
+  @Get("me-from-payload")
+  getMeFromPayload(
+    @CognitoUser(["username", "email", "groups"])
+    {
+      username,
+      email,
+      groups,
+    }: {
+      username: string;
+      email: string;
+      groups: string[];
+    }
+  ) {
+    return {
+      username,
+      email,
+      groups,
+    };
+  }
+}
+```
+
 ## License
 
 <b>@nestjs-cognito/auth</b> is [MIT licensed](LICENSE).
