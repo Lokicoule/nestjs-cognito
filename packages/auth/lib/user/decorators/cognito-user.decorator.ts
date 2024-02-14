@@ -14,6 +14,10 @@ export const CognitoUser = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
     const payload = request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY];
 
+    if (!Boolean(payload)) {
+      return undefined;
+    }
+
     if (!data) {
       return payload;
     }
@@ -26,5 +30,5 @@ export const CognitoUser = createParamDecorator(
     }
 
     return payload[`cognito:${data}`] || payload[data];
-  }
+  },
 );
