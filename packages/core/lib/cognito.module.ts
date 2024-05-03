@@ -3,10 +3,9 @@ import { cognitoProviders } from "./cognito.providers";
 import {
   COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
-  COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
-  COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
   COGNITO_MODULE_OPTIONS,
-  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+  COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
+  COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
 } from "./cognito.constants";
 import {
   CognitoModuleAsyncOptions,
@@ -16,9 +15,8 @@ import {
 import {
   createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
-  createMutableCognitoIdentityProviderClientInstance,
-  createMutableCognitoIdentityProviderInstance,
-  createCognitoJwtVerifierInstance,
+  createCognitoJwtVerifierSingleUserPoolInstance,
+  createCognitoJwtVerifierMultiUserPoolInstance,
 } from "./utils/cognito.utils";
 
 @Module({})
@@ -41,24 +39,19 @@ export class CognitoModule {
           useValue: createCognitoIdentityProviderClientInstance(options),
         },
         {
-          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-          useValue: createCognitoJwtVerifierInstance(options),
+          provide: COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
+          useValue: createCognitoJwtVerifierSingleUserPoolInstance(options),
         },
         {
-          provide: COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
-          useValue: createMutableCognitoIdentityProviderInstance(options),
-        },
-        {
-          provide: COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
-          useValue: createMutableCognitoIdentityProviderClientInstance(options),
+          provide: COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
+          useValue: createCognitoJwtVerifierMultiUserPoolInstance(options),
         },
       ],
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
-        COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
-        COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
-        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
       ],
     };
   }
@@ -80,9 +73,8 @@ export class CognitoModule {
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
-        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-        COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
-        COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
       ],
     };
   }

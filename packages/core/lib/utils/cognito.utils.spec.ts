@@ -3,7 +3,7 @@ import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
 import {
   createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
-  createCognitoJwtVerifierInstance,
+  createCognitoJwtVerifierSingleUserPoolInstance,
 } from "./cognito.utils";
 
 describe("CognitoUtils", () => {
@@ -44,14 +44,32 @@ describe("CognitoUtils", () => {
     );
   });
 
-  it("should get cognito jwt verifier instance", async () => {
+  it("should get cognito jwt verifier single user pool instance", async () => {
     const options: CognitoModuleOptions = {
       jwtVerifier: {
         userPoolId: "us-east-1_123456789",
       },
     };
 
-    const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);
+    const cognitoJwtVerifier =
+      createCognitoJwtVerifierSingleUserPoolInstance(options);
+
+    expect(cognitoJwtVerifier).toBeDefined();
+  });
+
+  it("should get cognito jwt verifier multi user pool instance", async () => {
+    const options: CognitoModuleOptions = {
+      jwtVerifier: [
+        {
+          userPoolId: "us-east-1_123456789",
+          clientId: "123456789",
+          tokenUse: "id",
+        },
+      ],
+    };
+
+    const cognitoJwtVerifier =
+      createCognitoJwtVerifierSingleUserPoolInstance(options);
 
     expect(cognitoJwtVerifier).toBeDefined();
   });

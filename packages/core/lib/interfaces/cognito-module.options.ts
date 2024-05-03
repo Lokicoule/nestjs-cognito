@@ -1,34 +1,71 @@
-import { CognitoIdentityProviderClientConfig } from "@aws-sdk/client-cognito-identity-provider";
-import { ModuleMetadata, Provider, Type } from "@nestjs/common";
-import {
+import type { CognitoIdentityProviderClientConfig } from "@aws-sdk/client-cognito-identity-provider";
+import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
+import type {
   CognitoJwtVerifierProperties,
-  CognitoJwtVerifierSingleUserPool,
+  CognitoJwtVerifierSingleUserPool as BaseCognitoJwtVerifierSingleUserPool,
+  CognitoJwtVerifierMultiUserPool as BaseCognitoJwtVerifierMultiUserPool,
+  CognitoJwtVerifierMultiProperties,
 } from "aws-jwt-verify/cognito-verifier";
-import { JwksCache } from "aws-jwt-verify/jwk";
+import type { JwksCache } from "aws-jwt-verify/jwk";
 
 /**
- * @type CognitoJwtVerifier - The CognitoJwtVerifier instance
- * @property {CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>} - The CognitoJwtVerifierSingleUserPool instance
+ * Represents a type for Cognito JWT verifier with a single user pool.
+ * It is a generic type that takes `CognitoJwtVerifierProperties` as a parameter.
+ * @deprecated Use CognitoJwtVerifierSingleUserPool instead
  */
 export type CognitoJwtVerifier =
-  CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>;
+  BaseCognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>;
 
 /**
- * @type CognitoModuleOptions - Options for the CognitoModule
- * @property {CognitoIdentityProviderClientConfig} region - The region to use
- * @property {CognitoJwtVerifierProperties} userPoolId - The user pool id to use
- * @property {CognitoJwtVerifierProperties} clientId - The client id to use
- * @property {CognitoJwtVerifierProperties} tokenUse - The token use to use
- * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#constructor-property
- * @see https://github.com/awslabs/aws-jwt-verify#readme
+ * Represents a type for Cognito JWT verifier with a single user pool.
+ * It is a generic type that takes `CognitoJwtVerifierProperties` as a parameter.
+ */
+export type CognitoJwtVerifierSingleUserPool =
+  BaseCognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>;
+
+/**
+ * Represents a type for Cognito JWT verifier with multiple user pools.
+ * It is a generic type that takes `CognitoJwtVerifierMultiProperties` as a parameter.
+ */
+export type CognitoJwtVerifierMultiUserPool =
+  BaseCognitoJwtVerifierMultiUserPool<CognitoJwtVerifierMultiProperties>;
+
+/**
+ * Represents the options for the Cognito module.
  */
 export type CognitoModuleOptions = {
+  /**
+   * The configuration for the Cognito identity provider.
+   */
   identityProvider?: CognitoIdentityProviderClientConfig;
-  jwtVerifier?: CognitoJwtVerifierProperties & {
-    additionalProperties?: {
-      jwksCache: JwksCache;
-    };
-  };
+
+  /**
+   * The configuration for the JWT verifier.
+   * It can be a single object or an array of objects for multiple verifiers.
+   */
+  jwtVerifier?:
+    | (CognitoJwtVerifierProperties & {
+        /**
+         * Additional properties for the JWT verifier.
+         */
+        additionalProperties?: {
+          /**
+           * The cache for storing JWKS (JSON Web Key Set) data.
+           */
+          jwksCache: JwksCache;
+        };
+      })
+    | (CognitoJwtVerifierMultiProperties & {
+        /**
+         * Additional properties for the JWT verifier.
+         */
+        additionalProperties?: {
+          /**
+           * The cache for storing JWKS (JSON Web Key Set) data.
+           */
+          jwksCache: JwksCache;
+        };
+      })[];
 };
 
 /**
