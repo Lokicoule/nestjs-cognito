@@ -1,4 +1,4 @@
-import { DynamicModule, Module, Provider } from "@nestjs/common";
+import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import {
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
   COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
@@ -19,6 +19,7 @@ import {
  * The Cognito module
  * It provides the Cognito Identity Provider and the Cognito JWT Verifier
  */
+@Global()
 @Module({})
 export class CognitoModule {
   /**
