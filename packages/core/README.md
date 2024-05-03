@@ -1,14 +1,41 @@
-<h1 align="center">@nestjs-cognito/core</h1>
+# @nestjs-cognito/core
 
 [![Node.js CI](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
 ![npm](https://img.shields.io/npm/dt/%40nestjs-cognito%2Fcore)
 
+## Changelog
+
+- `CognitoIdentityProviderClient` has been removed from the `@nestjs-cognito/core` package.
+- `InjectCognitoIdentityProviderClient` has been removed from the `@nestjs-cognito/core` package.
+- `JwtRsaVerifier` support has been added to the `@nestjs-cognito/core` package.
+- `InjectCognitoJwtVerifier` provides access to the `JwtRsaVerifier` and `JwtVerifier` instances from the adapter [`CognitoJwtVerifier`](#cognitojwtverifier).
+
+## Table of contents
+
+- [Description](#description)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Options Parameters](#options-parameters)
+  - [`JwtVerifier`](#jwtverifier)
+  - [`JwtRsaVerifier`](#jwtrsaverifier)
+  - [Synchronously](#synchronously)
+  - [Asynchronously](#asynchronously)
+- [Usage](#usage)
+  - [Cognito Identity Provider](#cognito-identity-provider)
+  - [AWS JWT Verify](#aws-jwt-verify)
+    - [CognitoJwtVerifier](#cognitojwtverifier)
+      - [Methods](#methods)
+      - [Properties](#properties)
+
 ## Description
 
-A wrapper package for the [@aws-sdk/client-cognito-identity-provider](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-cognito-identity-provider/index.html) and [aws-jwt-verify](https://www.npmjs.com/package/aws-jwt-verify) packages for use with NestJS applications.
+The `@nestjs-cognito/core` package simplifies integrating Amazon Cognito user pools into your NestJS applications. It provides a user-friendly interface for:
 
-This package provides a simplified and NestJS-friendly interface for integrating Amazon Cognito into your application. With this package, you can easily make API requests to Amazon Cognito and verify JWT tokens from Amazon Cognito.
+- Verifying JWT tokens issued by Amazon Cognito.
+- (Optional) Interacting with the Amazon Cognito Identity Provider for actions like creating user pools or managing users.
+
+This package leverages the `@aws-sdk/client-cognito-identity-provider` and `aws-jwt-verify` packages under the hood. It streamlines their usage within the NestJS framework.
 
 ## Installation
 
@@ -18,104 +45,97 @@ To install the `@nestjs-cognito/core` module, run the following command:
 npm install @nestjs-cognito/core
 ```
 
-In addition to the `@nestjs-cognito/core` package, you will also need to install the `@aws-sdk/client-cognito-identity-provider` and/or `aws-jwt-verify`.
+**Note:** In addition to `@nestjs-cognito/core`, you might need to install one or both of the following packages depending on your use case:
 
-<strong>It's important to note that if you use the `@nestjs-cognito/auth` module, you won't need to install `aws-jwt-verify` manually. The choice of which package to use depends on your specific needs.</strong>
+- `@aws-sdk/client-cognito-identity-provider`: Required if you intend to interact with the Cognito Identity Provider.
+- `aws-jwt-verify`: Required for verifying JWT tokens if you're not using the `@nestjs-cognito/auth` module.
 
-```bash
-npm install @aws-sdk/client-cognito-identity-provider aws-jwt-verify
-```
+**Important:** If you choose to use the `@nestjs-cognito/auth` module for authentication and authorization functionalities, you won't need to install `aws-jwt-verify` separately. `@nestjs-cognito/auth` depends on `@nestjs-cognito/core` and includes `aws-jwt-verify` internally.
 
 ## Configuration
 
-### Options params
+### Options Parameters
 
-The <strong>CognitoModuleOptions</strong> interface is the configuration options for the `@nestjs-cognito/core` module. It contains two properties: _identityProvider_ and _jwtVerifier_.
+The `CognitoModuleOptions` interface defines the configuration options for the `@nestjs-cognito/core` module. It consists of three properties:
 
-- <strong>identityProvider</strong> is an optional configuration object for the `@aws-sdk/client-cognito-identity-provider` package.
-- <strong>jwtVerifier</strong> is an optional configuration object for the `aws-jwt-verify` package. It can be either a single user pool configuration or an array of configurations for multi-user pool support.
+- `identityProvider` (Optional): Configuration object for the `@aws-sdk/client-cognito-identity-provider` package.
+- `jwtVerifier` (Optional): Configuration object for the `aws-jwt-verify` package (supports single or multiple user pools).
+- `jwtRsaVerifier` (Optional): Configuration object for the `aws-jwt-verify` package (supports single or multiple issuers).
 
-You can use the <strong>CognitoModuleOptionsFactory</strong> interface for creating the <strong>CognitoModuleOptions</strong> in an asynchronous way, using _imports, providers, exports_, and _name_ properties.
+You can use the `CognitoModuleOptionsFactory` interface to create the `CognitoModuleOptions` asynchronously using properties like `imports`, `providers`, `exports`, and `name`.
 
-<strong>CognitoModuleAsyncOptions</strong> is another interface for creating the <strong>CognitoModuleOptions</strong> asynchronously. It contains properties such as _imports, inject, useFactory_, and _extraProviders_.
+`CognitoModuleAsyncOptions` is another interface for asynchronous configuration. It includes properties like `imports`, `inject`, `useFactory`, and `extraProviders`.
 
-#### CognitoModuleOptionsFactory
+### `JwtVerifier`
 
-| Name                       | Type                                | Description                                           |
-| -------------------------- | ----------------------------------- | ----------------------------------------------------- |
-| createCognitoModuleOptions | () => Promise<CognitoModuleOptions> | A factory function to create the CognitoModuleOptions |
-| imports                    | Type<any>[]                         | The imports to be used by the module                  |
-| providers                  | Provider[]                          | The providers to be used by the module                |
-| exports                    | (string \| Provider)[]              | The exports to be used by the module                  |
-| name                       | string                              | The name of the module                                |
+| Option Name           | Description                                                                                                                                                                    | Required | Default Value |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------- |
+| userPoolId            | The ID of the Cognito User Pool you want to verify JWTs for.                                                                                                                   | Yes      | N/A           |
+| clientId              | The expected client ID in the JWT's aud (audience) claim (or client_id claim for access tokens). Can be a string or an array of strings (one must match).                      | Optional | N/A           |
+| tokenUse              | The expected token use (id or access) specified in the JWT's token_use claim.                                                                                                  | Optional | N/A           |
+| groups                | An optional string or array of strings representing groups that must be present in the JWT's "cognito:groups" claim (at least one must match).                                 | Optional | N/A           |
+| scope                 | An optional string or array of strings representing scopes that must be present in the JWT's scope claim (at least one must match).                                            | Optional | N/A           |
+| graceSeconds          | The number of seconds of grace period to account for clock skew between systems during verification (e.g., to allow for a slight time difference).                             | Optional | 0             |
+| customJwtCheck        | An optional custom function to perform additional checks on the decoded JWT header, payload, and JWK used for verification. Throw an error in this function to reject the JWT. | Optional | N/A           |
+| includeRawJwtInErrors | A boolean flag indicating whether to include the raw decoded contents of an invalid JWT in the error object when verification fails. Useful for debugging purposes.            | Optional | false         |
+| additionalProperties  | An optional object containing `jwksCache` for caching JWKS keys for faster verification.                                                                                       | Optional | N/A           |
 
-#### CognitoModuleAsyncOptions
+### `JwtRsaVerifier`
 
-| Name        | Type                 | Description                                             |
-| ----------- | -------------------- | ------------------------------------------------------- |
-| imports     | Function             | Imports the module asyncronously                        |
-| inject      | Function             | Injects the module asyncronously                        |
-| useFactory  | CognitoModuleOptions | The factory function to create the CognitoModuleOptions |
-| useClass    | CognitoModuleOptions | The class to create the CognitoModuleOptions            |
-| useExisting | CognitoModuleOptions | The existing instance of the CognitoModuleOptions       |
+<!-- Option Name	Description	Required	Default Value
+audience	The expected audience(s) in the JWT's aud claim (one must match). Can be a string or an array of strings.	Optional	N/A
+scope	An optional string or array of strings representing scopes that must be present in the JWT's scope claim (at least one must match).	Optional	N/A
+graceSeconds	The number of seconds of grace period to allow for clock skew between systems during verification (e.g., to account for a slight time difference).	Optional	0
+customJwtCheck	An optional custom function to perform additional checks on the decoded JWT header, payload, and JWK used for verification. Throw an error in this function to reject the JWT.	Optional	N/A
+includeRawJwtInErrors	A boolean flag indicating whether to include the raw decoded contents of an invalid JWT in the error object when verification fails. Useful for debugging purposes.	Optional	false -->
 
-#### CognitoJwtVerifierSingleUserPool
+| Option Name           | Description                                                                                                                                                                    | Required | Default Value |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------- |
+| audience              | The expected audience(s) in the JWT's aud claim (one must match). Can be a string or an array of strings.                                                                      | Optional | N/A           |
+| scope                 | An optional string or array of strings representing scopes that must be present in the JWT's scope claim (at least one must match).                                            | Optional | N/A           |
+| graceSeconds          | The number of seconds of grace period to allow for clock skew between systems during verification (e.g., to account for a slight time difference).                             | Optional | 0             |
+| customJwtCheck        | An optional custom function to perform additional checks on the decoded JWT header, payload, and JWK used for verification. Throw an error in this function to reject the JWT. | Optional | N/A           |
+| includeRawJwtInErrors | A boolean flag indicating whether to include the raw decoded contents of an invalid JWT in the error object when verification fails. Useful for debugging purposes.            | Optional | false         |
+| additionalProperties  | An optional object containing `jwksCache` for caching JWKS keys for faster verification.                                                                                       | Optional | N/A           |
 
-You can use a single user pool by providing a configuration for the _jwtVerifier_ property.
-You will need to use the dedicated decorator `@CognitoJwtVerifierSingleUserPool` to inject the JWT verifier for a single user pool.
-
-| Name        | Type                         | Description                               |
-| ----------- | ---------------------------- | ----------------------------------------- |
-| jwtVerifier | CognitoJwtVerifierProperties | The JWT verifier for the single user pool |
-
-#### CognitoJwtVerifierMultiUserPool
-
-You can use multiple user pools by providing an array of configurations for the _jwtVerifier_ property.
-You will need to use the dedicated decorator `@CognitoJwtVerifierMultiUserPool` to inject the JWT verifier for multiple user pools.
-
-| Name        | Type                              | Description                                  |
-| ----------- | --------------------------------- | -------------------------------------------- |
-| jwtVerifier | CognitoJwtVerifierMultiProperties | The JWT verifier for the multiple user pools |
-
-#### CognitoModuleOptions
-
-| Name             | Type                                                                                                                                                                                    | Description                                                                                                     |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| identityProvider | CognitoIdentityProviderClientConfig                                                                                                                                                     | The configuration for the Cognito identity provider                                                             |
-| jwtVerifier      | (CognitoJwtVerifierProperties & { additionalProperties?: { jwksCache: JwksCache; }; }) \| (CognitoJwtVerifierMultiProperties & { additionalProperties?: { jwksCache: JwksCache; }; })[] | The configuration for the JWT verifier. It can be a single object or an array of objects for multiple verifiers |
+**Note:** The `jwtVerifier` and `jwtRsaVerifier` properties are mutually exclusive. You can use either one of them, but not both simultaneously.
 
 ### Synchronously
 
-Use `CognitoModule.register` method with options of [CognitoModuleOptions interface](#options-params)
-The method takes an options object that implements the _CognitoModuleOptions_ interface as a parameter. This options object can contain configurations for both the _jwtVerifier_ and _identityProvider_.
+The `CognitoModule.register` method takes an options object that implements the `CognitoModuleOptions` interface as a parameter. This options object can contain configurations for both the `jwtVerifier` and `identityProvider`.
 
-It's important to note that the _identityProvider_ is used in the case where you want to use the Cognito identity provider. If you don't want to use the identity provider, you can omit this configuration from the options object and only specify the _jwtVerifier_ configuration and vice-versa.
+**Important:**
 
-```ts
+- Use the `identityProvider` configuration if you plan to interact with the Cognito Identity Provider functions.
+- Omit the `identityProvider` if you only need JWT verification functionality.
+
+```typescript
 import { CognitoModule } from "@nestjs-cognito/core";
 import { Module } from "@nestjs/common";
 
 @Module({
   imports: [
     CognitoModule.register({
+      // JWT verification for a single user pool
       jwtVerifier: {
-        userPoolId: "user_pool_id",
-        clientId: "client_id",
+        userPoolId: "your_user_pool_id",
+        clientId: "your_client_id",
         tokenUse: "id",
       },
-      // Or you can use multiple user pools
+      // OR (Multiple user pools)
       /* jwtVerifier: [
         {
-          userPoolId: "user_pool_id",
-          clientId: "client_id",
+          userPoolId: "user_pool_id_1",
+          clientId: "client_id_1",
           tokenUse: "id",
         },
         {
-          userPoolId: "user_pool_id",
-          clientId: "client_id",
+          userPoolId: "user_pool_id_2",
+          clientId: "client_id_2",
           tokenUse: "id",
         },
       ], */
+      // Identity Provider configuration (optional)
       identityProvider: {
         region: "us-east-1",
       },
@@ -127,11 +147,7 @@ export class AppModule {}
 
 ### Asynchronously
 
-With `CognitoModule.registerAsync` you can import your ConfigModule and inject ConfigService to use it in `useFactory` method.
-It's also possible to use `useExisting` or `useClass`.
-You can find more details [here](https://docs.nestjs.com/techniques/configuration).
-
-Here's an example:
+For asynchronous configuration, use `CognitoModule.registerAsync`. This allows you to import your `ConfigModule` and inject `ConfigService` for utilizing environment variables:
 
 ```ts
 import { CognitoModule } from "@nestjs-cognito/core";
@@ -148,22 +164,20 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
           clientId: configService.get("COGNITO_CLIENT_ID"),
           tokenUse: "id",
         },
-        // Or you can use multiple user pools
+        // OR (Multiple user pools)
         /* jwtVerifier: [
           {
-            userPoolId: configService.get("COGNITO_USER_POOL_ID") as string,
-            clientId: configService.get("COGNITO_CLIENT_ID"),
+            userPoolId: configService.get("COGNITO_USER_POOL_ID_1") as string,
+            clientId: configService.get("COGNITO_CLIENT_ID_1"),
             tokenUse: "id",
           },
           {
-            userPoolId: configService.get("COGNITO_USER_POOL_ID") as string,
-            clientId: configService.get("COGNITO_CLIENT_ID"),
+            userPoolId: configService.get("COGNITO_USER_POOL_ID_2") as string,
+            clientId: configService.get("COGNITO_CLIENT_ID_2"),
             tokenUse: "id",
           },
         ], */
-        identityProvider: {
-          region: configService.get("COGNITO_REGION"),
-        },
+        // You can also use jwtRsaVerifier instead of jwtVerifier
       }),
       inject: [ConfigService],
     }),
@@ -174,58 +188,53 @@ export class AppModule {}
 
 ## Usage
 
-You can use this module to interact with Amazon Cognito and make use of its functionality. In case you need to handle _authentication_ and _authorization_, you may consider using the `@nestjs-cognito/auth` module, which is built on top of `@nestjs-cognito/core`. In this case, you won't need to install `aws-jwt-verify` manually, as it is already included in the `@nestjs-cognito/auth` module.
+This module allows you to interact with Amazon Cognito for functionalities like:
+
+- Verifying JWT tokens issued by your Cognito user pool.
+- (Optional) Utilizing the Cognito Identity Provider for managing user pools or users (if configured).
+
+Consider using the `@nestjs-cognito/auth` module for authentication and authorization functionalities. It builds upon `@nestjs-cognito/core` and includes JWT verification functionality, eliminating the need to install `aws-jwt-verify` separately.
 
 ### Cognito Identity Provider
 
 ```ts
-import {
-  CognitoIdentityProvider,
-  CognitoIdentityProviderClient,
-} from "@aws-sdk/client-cognito-identity-provider";
-import {
-  InjectCognitoIdentityProvider,
-  InjectCognitoIdentityProviderClient,
-} from "@nestjs-cognito/core";
+import { CognitoIdentityProvider } from "@aws-sdk/client-cognito-identity-provider";
+import { InjectCognitoIdentityProvider } from "@nestjs-cognito/core";
 
 export class MyService {
   constructor(
     @InjectCognitoIdentityProvider()
-    private readonly client: CognitoIdentityProvider,
-    @InjectCognitoIdentityProviderClient()
-    private readonly cognitoIdentityProviderClient: CognitoIdentityProviderClient
+    private readonly client: CognitoIdentityProvider
   ) {}
 }
 ```
 
 ### AWS JWT Verify
 
-As mentioned earlier, the choice between using the dedicated `CognitoJwtVerifierSingleUserPool` or `CognitoJwtVerifierMultiUserPool` depends on your previous configuration in the `CognitoModuleOptions`.
-
-If you have configured a single user pool, you should use the `CognitoJwtVerifierSingleUserPool` and the `@InjectCognitoJwtVerifierSingleUserPool` decorator. If you have configured multiple user pools, you should use the `CognitoJwtVerifierMultiUserPool` and the `@InjectCognitoJwtVerifierMultiUserPool` decorator.
-
-In case you have configured multiple user pools, you can not use the `CognitoJwtVerifierSingleUserPool` and vice-versa.
-
 ```ts
 import {
-  CognitoJwtVerifierSingleUserPool,
-  CognitoJwtVerifierMultiUserPool,
-  InjectCognitoJwtVerifierSingleUserPool,
-  InjectCognitoJwtVerifierMultiUserPool,
+  CognitoJwtVerifier,
+  InjectCognitoJwtVerifier
 } from "@nestjs-cognito/core";
 
 export class MyService {
   constructor(
-    @InjectCognitoJwtVerifierSingleUserPool()
-    private readonly jwtVerifier CognitoJwtVerifierSingleUserPool
-
-    // Or you can use multiple user pools
-    /* @InjectCognitoJwtVerifierMultiUserPool()
-    private readonly jwtVerifier CognitoJwtVerifierMultiUserPool */
+    @InjectCognitoJwtVerifier()
+    private readonly jwtVerifier CognitoJwtVerifier
   ) {}
 }
 ```
 
-## License
+#### CognitoJwtVerifier
 
-<b>@nestjs-cognito/core</b> is [MIT licensed](LICENSE).
+It's a wrapper for the `aws-jwt-verify` package. It provides a simplified interface for verifying JWT tokens from Amazon Cognito.
+
+#### Methods
+
+- `verify(token: string): Promise<CognitoJwtPayload> | Promise<JwtPayload>` - Verifies the given token.
+
+#### Properties
+
+- `jwtVerifier: JwtVerifier` - The instance of the `JwtVerifier` class from the `aws-jwt-verify` package.
+
+- `jwtRsaVerifier: JwtRsaVerifier` - The instance of the `JwtRsaVerifier` class from the `aws-jwt-verify` package.
