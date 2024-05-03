@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/core",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "Cognito Provider for NestJS",
   "author": "Loik Fekkai",
   "license": "MIT",
