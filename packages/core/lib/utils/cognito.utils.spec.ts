@@ -1,9 +1,8 @@
 import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
 import {
-  createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
-  createCognitoJwtVerifierSingleUserPoolInstance,
+  createCognitoJwtVerifierInstance,
 } from "./cognito.utils";
 
 describe("CognitoUtils", () => {
@@ -25,25 +24,6 @@ describe("CognitoUtils", () => {
     );
   });
 
-  it("should get cognito identity provider client instance", async () => {
-    const options = {
-      identityProvider: {
-        region: "us-east-1",
-      },
-    } as CognitoModuleOptions;
-
-    const cognitoIdentityProviderClient =
-      createCognitoIdentityProviderClientInstance(options);
-
-    expect(cognitoIdentityProviderClient).toBeDefined();
-    expect(cognitoIdentityProviderClient).toBeInstanceOf(
-      CognitoIdentityProviderClient,
-    );
-    expect(await cognitoIdentityProviderClient.config.region()).toEqual(
-      options!.identityProvider!.region,
-    );
-  });
-
   it("should get cognito jwt verifier single user pool instance", async () => {
     const options: CognitoModuleOptions = {
       jwtVerifier: {
@@ -51,8 +31,7 @@ describe("CognitoUtils", () => {
       },
     };
 
-    const cognitoJwtVerifier =
-      createCognitoJwtVerifierSingleUserPoolInstance(options);
+    const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);
 
     expect(cognitoJwtVerifier).toBeDefined();
   });
@@ -68,8 +47,7 @@ describe("CognitoUtils", () => {
       ],
     };
 
-    const cognitoJwtVerifier =
-      createCognitoJwtVerifierSingleUserPoolInstance(options);
+    const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);
 
     expect(cognitoJwtVerifier).toBeDefined();
   });
@@ -92,23 +70,37 @@ describe("CognitoUtils", () => {
       options!.identityProvider!.region,
     );
   });
+});
+it("should create a CognitoJwtVerifier instance with jwtVerifier", () => {
+  const options: CognitoModuleOptions = {
+    jwtVerifier: {
+      userPoolId: "us-east-1_123456789",
+    },
+  };
 
-  it("should create a CognitoIdentityProviderClient instance", async () => {
-    const options = {
-      identityProvider: {
-        region: "us-east-1",
-      },
-    } as CognitoModuleOptions;
+  const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);
 
-    const cognitoIdentityProviderClient =
-      createCognitoIdentityProviderClientInstance(options);
+  expect(cognitoJwtVerifier).toBeDefined();
+  expect(cognitoJwtVerifier.jwtVerifier).toBeDefined();
+});
 
-    expect(cognitoIdentityProviderClient).toBeDefined();
-    expect(cognitoIdentityProviderClient).toBeInstanceOf(
-      CognitoIdentityProviderClient,
-    );
-    expect(await cognitoIdentityProviderClient.config.region()).toEqual(
-      options!.identityProvider!.region,
-    );
-  });
+it("should create a CognitoJwtVerifier instance with jwtRsaVerifier", () => {
+  const options: CognitoModuleOptions = {
+    jwtRsaVerifier: {
+      issuer: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_123456789",
+    },
+  };
+
+  const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);
+
+  expect(cognitoJwtVerifier).toBeDefined();
+  expect(cognitoJwtVerifier.jwtRsaVerifier).toBeDefined();
+});
+
+it("should return null when neither jwtVerifier nor jwtRsaVerifier is provided", () => {
+  const options: CognitoModuleOptions = {};
+
+  const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);
+
+  expect(cognitoJwtVerifier).toBeNull();
 });

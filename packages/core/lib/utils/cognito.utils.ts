@@ -1,7 +1,4 @@
-import {
-  CognitoIdentityProvider,
-  CognitoIdentityProviderClient,
-} from "@aws-sdk/client-cognito-identity-provider";
+import { CognitoIdentityProvider } from "@aws-sdk/client-cognito-identity-provider";
 import { Logger } from "@nestjs/common";
 import {
   JwtRsaVerifier,
@@ -47,22 +44,6 @@ export const createCognitoJwtVerifierInstance = (
   return null;
 };
 
-export const createCognitoJwtRsaVerifierInstance = (
-  cognitoModuleOptions: CognitoModuleOptions,
-) => {
-  const jwtRsaVerifier = cognitoModuleOptions?.jwtRsaVerifier;
-
-  if (!jwtRsaVerifier) {
-    return null;
-  }
-
-  if (Array.isArray(jwtRsaVerifier)) {
-    return JwtRsaVerifier.create(jwtRsaVerifier);
-  }
-
-  return JwtRsaVerifier.create(jwtRsaVerifier);
-};
-
 /**
  * Get the CognitoIdentityProvider instance
  * @param {CognitoModuleOptions} options - The CognitoModuleOptions
@@ -79,26 +60,6 @@ export const createCognitoIdentityProviderInstance = (
     buildConfigurationFromOptions(
       cognitoModuleOptions.identityProvider,
       "CognitoIdentityProvider",
-    ),
-  );
-};
-
-/**
- * Get the CognitoIdentityProviderClient instance
- * @param {CognitoModuleOptions} options - The CognitoModuleOptions
- * @returns {CognitoIdentityProviderClient} - The CognitoIdentityProviderClient instance
- */
-export const createCognitoIdentityProviderClientInstance = (
-  cognitoModuleOptions: CognitoModuleOptions,
-): CognitoIdentityProviderClient => {
-  if (!Boolean(cognitoModuleOptions.identityProvider)) {
-    return null;
-  }
-
-  return new CognitoIdentityProviderClient(
-    buildConfigurationFromOptions(
-      cognitoModuleOptions.identityProvider,
-      "CognitoIdentityProviderClient",
     ),
   );
 };

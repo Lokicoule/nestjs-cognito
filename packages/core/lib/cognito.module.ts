@@ -1,6 +1,5 @@
 import { DynamicModule, Module, Provider } from "@nestjs/common";
 import {
-  COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
   COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
   COGNITO_MODULE_OPTIONS,
@@ -12,15 +11,18 @@ import {
   CognitoModuleOptionsFactory,
 } from "./interfaces/cognito-module.options";
 import {
-  createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
   createCognitoJwtVerifierInstance,
 } from "./utils/cognito.utils";
 
+/**
+ * The Cognito module
+ * It provides the Cognito Identity Provider and the Cognito JWT Verifier
+ */
 @Module({})
 export class CognitoModule {
   /**
-   * Register the module
+   * Register the module synchronously
    * @param {CognitoModuleOptions} options - The CognitoModuleOptions
    * @returns {DynamicModule} - The CognitoModule
    */
@@ -32,10 +34,7 @@ export class CognitoModule {
           provide: COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
           useValue: createCognitoIdentityProviderInstance(options),
         },
-        {
-          provide: COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
-          useValue: createCognitoIdentityProviderClientInstance(options),
-        },
+
         {
           provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
           useValue: createCognitoJwtVerifierInstance(options),
@@ -43,14 +42,13 @@ export class CognitoModule {
       ],
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
-        COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
         COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
       ],
     };
   }
 
   /**
-   * Register the module
+   * Register the module asynchronously
    * @param {CognitoModuleAsyncOptions} options - The CognitoModuleAsyncOptions
    * @returns {DynamicModule} - The CognitoModule
    */
@@ -65,7 +63,6 @@ export class CognitoModule {
       ],
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
-        COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
         COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
       ],
     };
