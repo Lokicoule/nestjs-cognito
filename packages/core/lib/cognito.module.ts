@@ -1,12 +1,11 @@
 import { DynamicModule, Module, Provider } from "@nestjs/common";
-import { cognitoProviders } from "./cognito.providers";
 import {
   COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
   COGNITO_MODULE_OPTIONS,
-  COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
-  COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
 } from "./cognito.constants";
+import { cognitoProviders } from "./cognito.providers";
 import {
   CognitoModuleAsyncOptions,
   CognitoModuleOptions,
@@ -15,8 +14,7 @@ import {
 import {
   createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
-  createCognitoJwtVerifierSingleUserPoolInstance,
-  createCognitoJwtVerifierMultiUserPoolInstance,
+  createCognitoJwtVerifierInstance,
 } from "./utils/cognito.utils";
 
 @Module({})
@@ -39,19 +37,14 @@ export class CognitoModule {
           useValue: createCognitoIdentityProviderClientInstance(options),
         },
         {
-          provide: COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
-          useValue: createCognitoJwtVerifierSingleUserPoolInstance(options),
-        },
-        {
-          provide: COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
-          useValue: createCognitoJwtVerifierMultiUserPoolInstance(options),
+          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+          useValue: createCognitoJwtVerifierInstance(options),
         },
       ],
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
-        COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
-        COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
       ],
     };
   }
@@ -73,8 +66,7 @@ export class CognitoModule {
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
-        COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
-        COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
       ],
     };
   }

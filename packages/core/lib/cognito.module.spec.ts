@@ -1,15 +1,15 @@
 import { CognitoIdentityProvider } from "@aws-sdk/client-cognito-identity-provider";
 import { Test } from "@nestjs/testing";
 import {
-  CognitoJwtVerifier,
+  COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+} from "./cognito.constants";
+import { CognitoModule } from "./cognito.module";
+import {
   CognitoModuleOptions,
   CognitoModuleOptionsFactory,
 } from "./interfaces/cognito-module.options";
-import { CognitoModule } from "./cognito.module";
-import {
-  COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
-  COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
-} from "./cognito.constants";
+import { CognitoJwtVerifier } from "./adapters/cognito-jwt-verifier.adapter";
 
 describe("CognitoModule", () => {
   describe("register", () => {
@@ -42,7 +42,7 @@ describe("CognitoModule", () => {
       }).compile();
 
       const cognito = module.get<CognitoJwtVerifier>(
-        COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
       );
       expect(cognito).toBeDefined();
     });
@@ -69,9 +69,7 @@ describe("CognitoModule", () => {
           ),
         ).toBeDefined();
         expect(
-          module.get<CognitoJwtVerifier>(
-            COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
-          ),
+          module.get<CognitoJwtVerifier>(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN),
         ).toBeNull();
       });
 
@@ -89,9 +87,7 @@ describe("CognitoModule", () => {
         }).compile();
 
         expect(
-          module.get<CognitoJwtVerifier>(
-            COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
-          ),
+          module.get<CognitoJwtVerifier>(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN),
         ).toBeDefined();
         expect(
           module.get<CognitoIdentityProvider>(

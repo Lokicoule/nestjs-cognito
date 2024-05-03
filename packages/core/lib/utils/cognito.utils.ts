@@ -3,50 +3,64 @@ import {
   CognitoIdentityProviderClient,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { Logger } from "@nestjs/common";
-import { CognitoJwtVerifier as CognitoJwtVerifierAWS } from "aws-jwt-verify";
+import {
+  JwtRsaVerifier,
+  CognitoJwtVerifier as JwtVerifier,
+} from "aws-jwt-verify";
+import { CognitoJwtVerifier } from "../adapters/cognito-jwt-verifier.adapter";
 
 import type { CognitoIdentityProviderClientConfig } from "@aws-sdk/client-cognito-identity-provider";
-import type {
-  CognitoJwtVerifierProperties,
-  CognitoJwtVerifierSingleUserPool,
-  CognitoJwtVerifierMultiUserPool,
-  CognitoJwtVerifierMultiProperties,
-} from "aws-jwt-verify/cognito-verifier";
 import type { CognitoModuleOptions } from "../interfaces/cognito-module.options";
 
 /**
- * Get the CognitoJwtVerifier instance
- * @param {CognitoModuleOptions} options - The CognitoModuleOptions
- * @returns {CognitoJwtVerifier} - The CognitoJwtVerifier instance
+ * Creates an instance of CognitoJwtVerifier based on the provided Cognito module options.
+ * @param cognitoModuleOptions - The Cognito module options.
+ * @returns An instance of CognitoJwtVerifier or null if no verifier is specified.
  */
-
-export const createCognitoJwtVerifierSingleUserPoolInstance = (
+export const createCognitoJwtVerifierInstance = (
   cognitoModuleOptions: CognitoModuleOptions,
-): CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties> => {
-  const jwtVerifier = cognitoModuleOptions.jwtVerifier;
+): CognitoJwtVerifier => {
+  const { jwtVerifier, jwtRsaVerifier } = cognitoModuleOptions;
 
-  if (!jwtVerifier || Array.isArray(jwtVerifier)) {
-    return null;
+  if (jwtVerifier) {
+    if (Array.isArray(jwtVerifier)) {
+      return CognitoJwtVerifier.create({
+        jwtVerifier: JwtVerifier.create(jwtVerifier),
+      });
+    }
+
+    return CognitoJwtVerifier.create({
+      jwtVerifier: JwtVerifier.create(jwtVerifier),
+    });
+  } else if (jwtRsaVerifier) {
+    if (Array.isArray(jwtRsaVerifier)) {
+      return CognitoJwtVerifier.create({
+        JwtRsaVerifier: JwtRsaVerifier.create(jwtRsaVerifier),
+      });
+    }
+
+    return CognitoJwtVerifier.create({
+      JwtRsaVerifier: JwtRsaVerifier.create(jwtRsaVerifier),
+    });
   }
 
-  return CognitoJwtVerifierAWS.create(jwtVerifier);
+  return null;
 };
 
-/**
- * Get the CognitoJwtVerifierMultiUserPool instance
- * @param {CognitoModuleOptions} options - The CognitoModuleOptions
- * @returns {CognitoJwtVerifierMultiUserPool} - The CognitoJwtVerifierMultiUserPool instance
- */
-export const createCognitoJwtVerifierMultiUserPoolInstance = (
+export const createCognitoJwtRsaVerifierInstance = (
   cognitoModuleOptions: CognitoModuleOptions,
-): CognitoJwtVerifierMultiUserPool<CognitoJwtVerifierMultiProperties> => {
-  const jwtVerifier = cognitoModuleOptions.jwtVerifier;
+) => {
+  const jwtRsaVerifier = cognitoModuleOptions?.jwtRsaVerifier;
 
-  if (!jwtVerifier || !Array.isArray(jwtVerifier)) {
+  if (!jwtRsaVerifier) {
     return null;
   }
 
-  return CognitoJwtVerifierAWS.create(jwtVerifier);
+  if (Array.isArray(jwtRsaVerifier)) {
+    return JwtRsaVerifier.create(jwtRsaVerifier);
+  }
+
+  return JwtRsaVerifier.create(jwtRsaVerifier);
 };
 
 /**

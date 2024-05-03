@@ -20,11 +20,17 @@ import { IS_PUBLIC_KEY } from "./whitelist";
 
 @Injectable()
 export abstract class AbstractGuard implements CanActivate {
+  #jwtVerifier: CognitoJwtVerifier;
+  #reflector: Reflector;
+
   constructor(
     @InjectCognitoJwtVerifier()
-    private readonly jwtVerifier: CognitoJwtVerifier,
-    private readonly reflector: Reflector,
-  ) {}
+    jwtVerifier: CognitoJwtVerifier,
+    reflector: Reflector,
+  ) {
+    this.#jwtVerifier = jwtVerifier;
+    this.#reflector = reflector;
+  }
 
   /**
    * Check if the user is authenticated
@@ -40,7 +46,7 @@ export abstract class AbstractGuard implements CanActivate {
     const authorization = this.getAuthorizationToken(request);
 
     try {
-      const payload = await this.jwtVerifier.verify(authorization);
+      const payload = await this.#jwtVerifier.verify(authorization);
       if (!Boolean(payload) || !Boolean(payload["sub"])) {
         throw new UnauthorizedException("User is not authenticated.");
       }
@@ -107,6 +113,6 @@ export abstract class AbstractGuard implements CanActivate {
   }
 
   private isWhitelisted(context: ExecutionContext): boolean {
-    return this.reflector.get<boolean>(IS_PUBLIC_KEY, context.getHandler());
+    return this.#reflector.get<boolean>(IS_PUBLIC_KEY, context.getHandler());
   }
 }
