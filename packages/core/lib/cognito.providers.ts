@@ -1,17 +1,15 @@
 import {
   COGNITO_IDENTITY_PROVIDER_CLIENT_INSTANCE_TOKEN,
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
-  COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
-  COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
-  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+  COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
+  COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
   COGNITO_MODULE_OPTIONS,
 } from "./cognito.constants";
 import {
   createCognitoIdentityProviderClientInstance,
   createCognitoIdentityProviderInstance,
-  createMutableCognitoIdentityProviderClientInstance,
-  createMutableCognitoIdentityProviderInstance,
-  createCognitoJwtVerifierInstance,
+  createCognitoJwtVerifierSingleUserPoolInstance,
+  createCognitoJwtVerifierMultiUserPoolInstance,
 } from "./utils/cognito.utils";
 
 export const cognitoProviders = [
@@ -26,18 +24,13 @@ export const cognitoProviders = [
     inject: [COGNITO_MODULE_OPTIONS],
   },
   {
-    provide: COGNITO_IDENTITY_PROVIDER_ADAPTER_INSTANCE_TOKEN,
-    useFactory: createMutableCognitoIdentityProviderInstance,
+    provide: COGNITO_JWT_VERIFIER_SINGLE_USER_POOL_INSTANCE_TOKEN,
+    useFactory: createCognitoJwtVerifierSingleUserPoolInstance,
     inject: [COGNITO_MODULE_OPTIONS],
   },
   {
-    provide: COGNITO_IDENTITY_PROVIDER_CLIENT_ADAPTER_INSTANCE_TOKEN,
-    useFactory: createMutableCognitoIdentityProviderClientInstance,
-    inject: [COGNITO_MODULE_OPTIONS],
-  },
-  {
-    provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-    useFactory: createCognitoJwtVerifierInstance,
+    provide: COGNITO_JWT_VERIFIER_MULTI_USER_POOL_INSTANCE_TOKEN,
+    useFactory: createCognitoJwtVerifierMultiUserPoolInstance,
     inject: [COGNITO_MODULE_OPTIONS],
   },
 ];
