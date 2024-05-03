@@ -33,72 +33,56 @@ npm install @aws-sdk/client-cognito-identity-provider aws-jwt-verify
 The <strong>CognitoModuleOptions</strong> interface is the configuration options for the `@nestjs-cognito/core` module. It contains two properties: _identityProvider_ and _jwtVerifier_.
 
 - <strong>identityProvider</strong> is an optional configuration object for the `@aws-sdk/client-cognito-identity-provider` package.
-- <strong>jwtVerifier</strong> is an optional configuration object for the `aws-jwt-verify` package.
+- <strong>jwtVerifier</strong> is an optional configuration object for the `aws-jwt-verify` package. It can be either a single user pool configuration or an array of configurations for multi-user pool support.
 
 You can use the <strong>CognitoModuleOptionsFactory</strong> interface for creating the <strong>CognitoModuleOptions</strong> in an asynchronous way, using _imports, providers, exports_, and _name_ properties.
 
 <strong>CognitoModuleAsyncOptions</strong> is another interface for creating the <strong>CognitoModuleOptions</strong> asynchronously. It contains properties such as _imports, inject, useFactory_, and _extraProviders_.
 
-<details>
-<summary>Definition</summary>
+#### CognitoModuleOptionsFactory
 
-```ts
-/**
- * @type CognitoJwtVerifier - The CognitoJwtVerifier instance
- * @property {CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>} - The CognitoJwtVerifierSingleUserPool instance
- */
-export type CognitoJwtVerifier =
-  CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>;
+| Name                       | Type                                | Description                                           |
+| -------------------------- | ----------------------------------- | ----------------------------------------------------- |
+| createCognitoModuleOptions | () => Promise<CognitoModuleOptions> | A factory function to create the CognitoModuleOptions |
+| imports                    | Type<any>[]                         | The imports to be used by the module                  |
+| providers                  | Provider[]                          | The providers to be used by the module                |
+| exports                    | (string \| Provider)[]              | The exports to be used by the module                  |
+| name                       | string                              | The name of the module                                |
 
-/**
- * @type CognitoModuleOptions - Options for the CognitoModule
- * @property {CognitoIdentityProviderClientConfig} region - The region to use
- * @property {CognitoJwtVerifierProperties} userPoolId - The user pool id to use
- * @property {CognitoJwtVerifierProperties} clientId - The client id to use
- * @property {CognitoJwtVerifierProperties} tokenUse - The token use to use
- * @see https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#constructor-property
- * @see https://github.com/awslabs/aws-jwt-verify#readme
- */
-export type CognitoModuleOptions = {
-  identityProvider?: CognitoIdentityProviderClientConfig;
-  jwtVerifier?: CognitoJwtVerifierProperties;
-};
+#### CognitoModuleAsyncOptions
 
-/**
- * @interface CognitoModuleOptionsFactory - Metadata for the CognitoModule
- * @property {() => Promise<CognitoModuleOptions>} createCognitoModuleOptions - A factory function to create the CognitoModuleOptions
- * @property {Type<any>[]} imports - The imports to be used by the module
- * @property {Provider[]} providers - The providers to be used by the module
- * @property {(string | Provider)[]} exports - The exports to be used by the module
- * @property {string} name - The name of the module
- */
-export interface CognitoModuleOptionsFactory {
-  createCognitoModuleOptions():
-    | Promise<CognitoModuleOptions>
-    | CognitoModuleOptions;
-}
+| Name        | Type                 | Description                                             |
+| ----------- | -------------------- | ------------------------------------------------------- |
+| imports     | Function             | Imports the module asyncronously                        |
+| inject      | Function             | Injects the module asyncronously                        |
+| useFactory  | CognitoModuleOptions | The factory function to create the CognitoModuleOptions |
+| useClass    | CognitoModuleOptions | The class to create the CognitoModuleOptions            |
+| useExisting | CognitoModuleOptions | The existing instance of the CognitoModuleOptions       |
 
-/**
- * @interface CognitoModuleAsyncOptions - Options for the CognitoModule
- * @property {Function} imports - Imports the module asyncronously
- * @property {Function} inject - Injects the module asyncronously
- * @property {CognitoModuleOptions} useFactory - The factory function to create the CognitoModuleOptions
- * @property {CognitoModuleOptions} useClass - The class to create the CognitoModuleOptions
- * @property {CognitoModuleOptions} useExisting - The existing instance of the CognitoModuleOptions
- */
-export interface CognitoModuleAsyncOptions
-  extends Pick<ModuleMetadata, "imports"> {
-  extraProviders?: Provider[];
-  inject?: any[];
-  useClass?: Type<CognitoModuleOptionsFactory>;
-  useExisting?: Type<CognitoModuleOptionsFactory>;
-  useFactory?: (
-    ...args: any[]
-  ) => Promise<CognitoModuleOptions> | CognitoModuleOptions;
-}
-```
+#### CognitoJwtVerifierSingleUserPool
 
-</details>
+You can use a single user pool by providing a configuration for the _jwtVerifier_ property.
+You will need to use the dedicated decorator `@CognitoJwtVerifierSingleUserPool` to inject the JWT verifier for a single user pool.
+
+| Name        | Type                         | Description                               |
+| ----------- | ---------------------------- | ----------------------------------------- |
+| jwtVerifier | CognitoJwtVerifierProperties | The JWT verifier for the single user pool |
+
+#### CognitoJwtVerifierMultiUserPool
+
+You can use multiple user pools by providing an array of configurations for the _jwtVerifier_ property.
+You will need to use the dedicated decorator `@CognitoJwtVerifierMultiUserPool` to inject the JWT verifier for multiple user pools.
+
+| Name        | Type                              | Description                                  |
+| ----------- | --------------------------------- | -------------------------------------------- |
+| jwtVerifier | CognitoJwtVerifierMultiProperties | The JWT verifier for the multiple user pools |
+
+#### CognitoModuleOptions
+
+| Name             | Type                                                                                                                                                                                    | Description                                                                                                     |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| identityProvider | CognitoIdentityProviderClientConfig                                                                                                                                                     | The configuration for the Cognito identity provider                                                             |
+| jwtVerifier      | (CognitoJwtVerifierProperties & { additionalProperties?: { jwksCache: JwksCache; }; }) \| (CognitoJwtVerifierMultiProperties & { additionalProperties?: { jwksCache: JwksCache; }; })[] | The configuration for the JWT verifier. It can be a single object or an array of objects for multiple verifiers |
 
 ### Synchronously
 
@@ -119,6 +103,19 @@ import { Module } from "@nestjs/common";
         clientId: "client_id",
         tokenUse: "id",
       },
+      // Or you can use multiple user pools
+      /* jwtVerifier: [
+        {
+          userPoolId: "user_pool_id",
+          clientId: "client_id",
+          tokenUse: "id",
+        },
+        {
+          userPoolId: "user_pool_id",
+          clientId: "client_id",
+          tokenUse: "id",
+        },
+      ], */
       identityProvider: {
         region: "us-east-1",
       },
@@ -151,6 +148,19 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
           clientId: configService.get("COGNITO_CLIENT_ID"),
           tokenUse: "id",
         },
+        // Or you can use multiple user pools
+        /* jwtVerifier: [
+          {
+            userPoolId: configService.get("COGNITO_USER_POOL_ID") as string,
+            clientId: configService.get("COGNITO_CLIENT_ID"),
+            tokenUse: "id",
+          },
+          {
+            userPoolId: configService.get("COGNITO_USER_POOL_ID") as string,
+            clientId: configService.get("COGNITO_CLIENT_ID"),
+            tokenUse: "id",
+          },
+        ], */
         identityProvider: {
           region: configService.get("COGNITO_REGION"),
         },
@@ -175,11 +185,7 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 import {
   InjectCognitoIdentityProvider,
-  InjectMutableCognitoIdentityProviderAdapter,
   InjectCognitoIdentityProviderClient,
-  InjectMutableCognitoIdentityProviderClientAdapter,
-  CognitoIdentityProviderAdapter,
-  CognitoIdentityProviderClientAdapter,
 } from "@nestjs-cognito/core";
 
 export class MyService {
@@ -187,27 +193,35 @@ export class MyService {
     @InjectCognitoIdentityProvider()
     private readonly client: CognitoIdentityProvider,
     @InjectCognitoIdentityProviderClient()
-    private readonly cognitoIdentityProviderClient: CognitoIdentityProviderClient,
-    @InjectMutableCognitoIdentityProviderAdapter()
-    private readonly clientMutable: CognitoIdentityProviderAdapter,
-    @InjectCognitoIdentityProviderClient()
-    private readonly cognitoIdentityProviderClientMutable: CognitoIdentityProviderClientAdapter
+    private readonly cognitoIdentityProviderClient: CognitoIdentityProviderClient
   ) {}
 }
 ```
 
 ### AWS JWT Verify
 
+As mentioned earlier, the choice between using the dedicated `CognitoJwtVerifierSingleUserPool` or `CognitoJwtVerifierMultiUserPool` depends on your previous configuration in the `CognitoModuleOptions`.
+
+If you have configured a single user pool, you should use the `CognitoJwtVerifierSingleUserPool` and the `@InjectCognitoJwtVerifierSingleUserPool` decorator. If you have configured multiple user pools, you should use the `CognitoJwtVerifierMultiUserPool` and the `@InjectCognitoJwtVerifierMultiUserPool` decorator.
+
+In case you have configured multiple user pools, you can not use the `CognitoJwtVerifierSingleUserPool` and vice-versa.
+
 ```ts
 import {
-  CognitoJwtVerifier,
-  InjectCognitoJwtVerifier,
+  CognitoJwtVerifierSingleUserPool,
+  CognitoJwtVerifierMultiUserPool,
+  InjectCognitoJwtVerifierSingleUserPool,
+  InjectCognitoJwtVerifierMultiUserPool,
 } from "@nestjs-cognito/core";
 
 export class MyService {
   constructor(
-    @InjectCognitoJwtVerifier()
-    private readonly jwtVerifier: CognitoJwtVerifier
+    @InjectCognitoJwtVerifierSingleUserPool()
+    private readonly jwtVerifier CognitoJwtVerifierSingleUserPool
+
+    // Or you can use multiple user pools
+    /* @InjectCognitoJwtVerifierMultiUserPool()
+    private readonly jwtVerifier CognitoJwtVerifierMultiUserPool */
   ) {}
 }
 ```

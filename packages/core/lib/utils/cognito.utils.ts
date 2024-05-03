@@ -1,64 +1,52 @@
 import {
   CognitoIdentityProvider,
   CognitoIdentityProviderClient,
-  CognitoIdentityProviderClientConfig,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { Logger } from "@nestjs/common";
 import { CognitoJwtVerifier as CognitoJwtVerifierAWS } from "aws-jwt-verify";
-import {
+
+import type { CognitoIdentityProviderClientConfig } from "@aws-sdk/client-cognito-identity-provider";
+import type {
   CognitoJwtVerifierProperties,
   CognitoJwtVerifierSingleUserPool,
+  CognitoJwtVerifierMultiUserPool,
+  CognitoJwtVerifierMultiProperties,
 } from "aws-jwt-verify/cognito-verifier";
-import {
-  CognitoIdentityProviderAdapter,
-  CognitoIdentityProviderClientAdapter,
-} from "../adapters";
-import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
+import type { CognitoModuleOptions } from "../interfaces/cognito-module.options";
+
 /**
  * Get the CognitoJwtVerifier instance
  * @param {CognitoModuleOptions} options - The CognitoModuleOptions
  * @returns {CognitoJwtVerifier} - The CognitoJwtVerifier instance
  */
-export const createCognitoJwtVerifierInstance = (
+
+export const createCognitoJwtVerifierSingleUserPoolInstance = (
   cognitoModuleOptions: CognitoModuleOptions,
 ): CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties> => {
   const jwtVerifier = cognitoModuleOptions.jwtVerifier;
 
-  if (!jwtVerifier) {
+  if (!jwtVerifier || Array.isArray(jwtVerifier)) {
     return null;
   }
 
-  const logger = new Logger("CognitoJwtVerifier");
+  return CognitoJwtVerifierAWS.create(jwtVerifier);
+};
 
-  const {
-    userPoolId,
-    clientId,
-    tokenUse = "id",
-    additionalProperties,
-    ...others
-  } = jwtVerifier;
+/**
+ * Get the CognitoJwtVerifierMultiUserPool instance
+ * @param {CognitoModuleOptions} options - The CognitoModuleOptions
+ * @returns {CognitoJwtVerifierMultiUserPool} - The CognitoJwtVerifierMultiUserPool instance
+ */
+export const createCognitoJwtVerifierMultiUserPoolInstance = (
+  cognitoModuleOptions: CognitoModuleOptions,
+): CognitoJwtVerifierMultiUserPool<CognitoJwtVerifierMultiProperties> => {
+  const jwtVerifier = cognitoModuleOptions.jwtVerifier;
 
-  if (!Boolean(userPoolId)) {
-    logger.warn(
-      "The userPoolId is missing in the CognitoJwtVerifier configuration",
-    );
+  if (!jwtVerifier || !Array.isArray(jwtVerifier)) {
+    return null;
   }
 
-  if (!Boolean(clientId)) {
-    logger.warn(
-      "The clientId is missing in the CognitoJwtVerifier configuration",
-    );
-  }
-
-  return CognitoJwtVerifierAWS.create(
-    {
-      clientId,
-      userPoolId,
-      tokenUse,
-      ...others,
-    },
-    additionalProperties,
-  );
+  return CognitoJwtVerifierAWS.create(jwtVerifier);
 };
 
 /**
@@ -97,46 +85,6 @@ export const createCognitoIdentityProviderClientInstance = (
     buildConfigurationFromOptions(
       cognitoModuleOptions.identityProvider,
       "CognitoIdentityProviderClient",
-    ),
-  );
-};
-
-/**
- * Get the mutable CognitoIdentityProviderAdapter instance
- * @param {CognitoModuleOptions} options - The CognitoModuleOptions
- * @returns {CognitoIdentityProviderAdapter} - The CognitoIdentityProviderAdapter instance
- */
-export const createMutableCognitoIdentityProviderInstance = (
-  cognitoModuleOptions: CognitoModuleOptions,
-): CognitoIdentityProviderAdapter => {
-  if (!Boolean(cognitoModuleOptions.identityProvider)) {
-    return null;
-  }
-
-  return new CognitoIdentityProviderAdapter(
-    buildConfigurationFromOptions(
-      cognitoModuleOptions.identityProvider,
-      "CognitoIdentityProviderAdapter",
-    ),
-  );
-};
-
-/**
- * Get the mutable CognitoIdentityProviderClientAdapter instance
- * @param {CognitoModuleOptions} options - The CognitoModuleOptions
- * @returns {CognitoIdentityProviderClientAdapter} - The CognitoIdentityProviderClientAdapter instance
- */
-export const createMutableCognitoIdentityProviderClientInstance = (
-  cognitoModuleOptions: CognitoModuleOptions,
-): CognitoIdentityProviderClientAdapter => {
-  if (!Boolean(cognitoModuleOptions.identityProvider)) {
-    return null;
-  }
-
-  return new CognitoIdentityProviderClientAdapter(
-    buildConfigurationFromOptions(
-      cognitoModuleOptions.identityProvider,
-      "CognitoIdentityProviderClientAdapter",
     ),
   );
 };
