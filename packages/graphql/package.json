@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/graphql",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Auth Module for NestJS, GraphQL and Cognito",
   "author": "Loik Fekkai",
   "license": "MIT",
@@ -39,6 +39,6 @@
     "@nestjs/testing": "10.3.7"
   },
   "dependencies": {
-    "@nestjs-cognito/auth": "^1.1.4"
+    "@nestjs-cognito/auth": "^1.1.5"
   }
 }
