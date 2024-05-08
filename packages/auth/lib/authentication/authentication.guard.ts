@@ -1,7 +1,10 @@
-import { ExecutionContext, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { AbstractGuard } from "../abstract.guard";
 import { User } from "../user/user.model";
 import { AuthenticationValidator } from "./authentication.validator";
+
+import type { ExecutionContext } from "@nestjs/common";
+
 @Injectable()
 export class AuthenticationGuard extends AbstractGuard {
   /**
@@ -10,7 +13,11 @@ export class AuthenticationGuard extends AbstractGuard {
    * @returns {Request} - The request
    */
   public getRequest(context: ExecutionContext) {
-    return context.switchToHttp().getRequest();
+    if (context.getType() === "ws") {
+      return context.switchToWs().getClient();
+    }
+
+    return context.switchToHttp().getRequest<Request>();
   }
 
   /**
