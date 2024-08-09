@@ -115,14 +115,14 @@ export class DogsController {
 }
 ```
 
-#### `AuthenticationGard`
+#### `AuthenticationGuard`
 
 You can also use the `AuthenticationGuard` to secure individual routes or endpoint.
 
 To use the `AuthenticationGuard`, you'll need to use the `@UseGuards` decorator:
 
 ```ts
-import { Authentication } from "@nestjs-cognito/auth";
+import { AuthenticationGuard } from "@nestjs-cognito/auth";
 import { UseGuards } from "@nestjs/common";
 
 @Controller("dogs")
