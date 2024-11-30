@@ -26,7 +26,7 @@
     "cw": "commitizard -s conventional"
   },
   "devDependencies": {
-    "@apollo/server": "4.11.0",
+    "@apollo/server": "4.11.2",
     "@commitlint/cli": "19.6.0",
     "@commitlint/config-angular": "19.6.0",
     "@golevelup/ts-jest": "0.5.0",
