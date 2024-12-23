@@ -38,12 +38,12 @@ export abstract class AbstractGuard implements CanActivate {
    * @returns {Promise<boolean>} - True or false if the user is authenticated or not and has the required roles
    */
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (this.isWhitelisted(context)) {
+    if (this.#isWhitelisted(context)) {
       return true;
     }
 
     const request = this.getRequest(context);
-    const authorization = this.getAuthorizationToken(request);
+    const authorization = this.#getAuthorizationToken(request);
 
     try {
       const payload = await this.#jwtVerifier.verify(authorization);
@@ -54,7 +54,7 @@ export abstract class AbstractGuard implements CanActivate {
       request[COGNITO_USER_CONTEXT_PROPERTY] =
         UserMapper.fromCognitoJwtPayload(payload);
 
-      return this.onValidate(this.getAuthenticatedUser(request));
+      return this.onValidate(this.#getAuthenticatedUser(request));
     } catch (error) {
       throw new UnauthorizedException("Authentication failed.", {
         cause: error,
@@ -82,7 +82,7 @@ export abstract class AbstractGuard implements CanActivate {
    * @returns {User} - The user
    * @throws {UnauthorizedException} - If the user is not found
    */
-  private getAuthenticatedUser(request): User {
+  #getAuthenticatedUser(request): User {
     const user = request[COGNITO_USER_CONTEXT_PROPERTY];
 
     if (!Boolean(user)) {
@@ -98,7 +98,7 @@ export abstract class AbstractGuard implements CanActivate {
    * @returns {string} - The authorization token
    * @throws {UnauthorizedException} - If the authorization token is not found
    */
-  private getAuthorizationToken(request): string {
+  #getAuthorizationToken(request): string {
     if (!Boolean(request)) {
       throw new ServiceUnavailableException("Request is undefined or null.");
     }
@@ -118,7 +118,7 @@ export abstract class AbstractGuard implements CanActivate {
     return authorization.replace("Bearer ", "");
   }
 
-  private isWhitelisted(context: ExecutionContext): boolean {
+  #isWhitelisted(context: ExecutionContext): boolean {
     return this.#reflector.get<boolean>(IS_PUBLIC_KEY, context.getHandler());
   }
 }
