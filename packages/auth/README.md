@@ -387,40 +387,45 @@ export class YourController {
 
 ### `@PublicRoute`
 
-This decorator is used to allow route to bypass auth validation process.
-In the following example, because we use class decorator `@Authentication` we can't access to endpoint `iampublic` without using the `@PublicRoute` decorator.
+Makes routes public while keeping authentication optional. Perfect for "login to see more" features.
 
 ```ts
-@Controller("auth")
-@Authentication()
-export class AuthController {
-  @Get("iampublic")
+@Controller("api")
+@Authentication() // All routes require auth by default
+export class AppController {
+  // Basic usage - public route with optional auth
+  @Get("welcome")
   @PublicRoute()
-  getPublic() {
-    return "public";
+  welcomeUser(@CognitoUser() user?: User) {
+    if (user) {
+      return `Welcome back ${user.username}!`;
+    }
+    return "Hello! Login to see your dashboard";
   }
 
-  @Get("me-from-payload")
-  getMeFromPayload(
-    @CognitoUser(["username", "email", "groups"])
-    {
-      username,
-      email,
-      groups,
-    }: {
-      username: string;
-      email: string;
-      groups: string[];
-    }
-  ) {
+  // Real-world example - product page
+  @Get("products/:id")
+  @PublicRoute()
+  getProduct(@CognitoUser() user?: User) {
+    const product = this.getProduct(id);
+
     return {
-      username,
-      email,
-      groups,
+      ...product,
+      price: user ? this.getMemberPrice(product) : product.normalPrice,
+      // Only show stock to logged in users
+      stock: user?.stock,
     };
   }
 }
 ```
+
+#### When to use it
+
+- Public pages that show extra stuff for logged-in users
+- Landing pages with personalized content when possible
+- "Preview" features that get better with login
+
+That's it! Just add `@PublicRoute()` and handle both cases in your code.
 
 ## License
 
