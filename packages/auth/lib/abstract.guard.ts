@@ -6,7 +6,6 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  ServiceUnavailableException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
@@ -18,6 +17,14 @@ import { UserMapper } from "./user/user.mapper";
 import { User } from "./user/user.model";
 import { IS_PUBLIC_KEY } from "./whitelist";
 
+/**
+ * Abstract guard class that implements authentication logic for routes.
+ * Handles both public and protected routes with JWT verification.
+ *
+ * @abstract
+ * @class AbstractGuard
+ * @implements {CanActivate}
+ */
 @Injectable()
 export abstract class AbstractGuard implements CanActivate {
   #jwtVerifier: CognitoJwtVerifier;
@@ -26,36 +33,48 @@ export abstract class AbstractGuard implements CanActivate {
   constructor(
     @InjectCognitoJwtVerifier()
     jwtVerifier: CognitoJwtVerifier,
-    reflector: Reflector,
+    reflector: Reflector
   ) {
     this.#jwtVerifier = jwtVerifier;
     this.#reflector = reflector;
   }
 
   /**
-   * Check if the user is authenticated
-   * @param {ExecutionContext} context - The execution context
-   * @returns {Promise<boolean>} - True or false if the user is authenticated or not and has the required roles
+   * Determines if a request can activate a route.
+   * Handles authentication for both public and protected routes.
+   *
+   * @param {ExecutionContext} context - The execution context of the request
+   * @returns {Promise<boolean>} True if the request is authorized, false otherwise
+   * @throws {UnauthorizedException} When authentication fails on a protected route
    */
-  public async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (this.#isWhitelisted(context)) {
-      return true;
-    }
-
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.#isWhitelisted(context);
     const request = this.getRequest(context);
-    const authorization = this.#getAuthorizationToken(request);
 
     try {
-      const payload = await this.#jwtVerifier.verify(authorization);
-      if (!Boolean(payload) || !Boolean(payload["sub"])) {
-        throw new UnauthorizedException("User is not authenticated.");
+      if (this.#hasAuthHeaders(request)) {
+        const authorization = this.#getAuthorizationToken(request);
+        if (authorization) {
+          const payload = await this.#jwtVerifier.verify(authorization);
+          if (Boolean(payload) && Boolean(payload["sub"])) {
+            request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
+            request[COGNITO_USER_CONTEXT_PROPERTY] =
+              UserMapper.fromCognitoJwtPayload(payload);
+            return this.onValidate(this.#getAuthenticatedUser(request));
+          }
+        }
       }
-      request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
-      request[COGNITO_USER_CONTEXT_PROPERTY] =
-        UserMapper.fromCognitoJwtPayload(payload);
 
-      return this.onValidate(this.#getAuthenticatedUser(request));
+      if (isPublic) {
+        return true;
+      }
+
+      throw new UnauthorizedException("User is not authenticated.");
     } catch (error) {
+      if (isPublic) {
+        return true;
+      }
+
       throw new UnauthorizedException("Authentication failed.", {
         cause: error,
       });
@@ -63,25 +82,27 @@ export abstract class AbstractGuard implements CanActivate {
   }
 
   /**
-   * Validate the user
-   * @param {User} user - The user
-   * @returns {boolean} - True if the user is authenticated
+   * Abstract method to validate the authenticated user.
+   * Implementations should define specific validation logic.
+   *
+   * @abstract
+   * @protected
+   * @param {User} user - The authenticated user to validate
+   * @returns {boolean} True if the user is valid, false otherwise
    */
   protected abstract onValidate(user: User): boolean;
 
   /**
-   * Get the request from the execution context
+   * Abstract method to extract the request object from the execution context.
+   * Implementations should handle different types of requests (HTTP, WebSocket, etc.).
+   *
+   * @abstract
+   * @protected
    * @param {ExecutionContext} context - The execution context
-   * @returns {Request} - The request
+   * @returns {any} The request object
    */
   protected abstract getRequest(context: ExecutionContext): any;
 
-  /**
-   * Get the authenticated user from the request
-   * @param {Request} request - The request
-   * @returns {User} - The user
-   * @throws {UnauthorizedException} - If the user is not found
-   */
   #getAuthenticatedUser(request): User {
     const user = request[COGNITO_USER_CONTEXT_PROPERTY];
 
@@ -92,27 +113,20 @@ export abstract class AbstractGuard implements CanActivate {
     return request[COGNITO_USER_CONTEXT_PROPERTY];
   }
 
-  /**
-   * Get the authorization token from the request
-   * @param {Request} request - The request
-   * @returns {string} - The authorization token
-   * @throws {UnauthorizedException} - If the authorization token is not found
-   */
-  #getAuthorizationToken(request): string {
+  #hasAuthHeaders(request): boolean {
     if (!Boolean(request)) {
-      throw new ServiceUnavailableException("Request is undefined or null.");
+      return false;
     }
+    return Boolean(request.headers) || Boolean(request?.handshake?.headers);
+  }
 
-    if (!Boolean(request.headers) && !Boolean(request?.handshake?.headers)) {
-      throw new UnauthorizedException("Headers are missing.");
-    }
-
+  #getAuthorizationToken(request): string | null {
     const authorization =
       request?.headers?.authorization ||
       request?.handshake?.headers?.authorization;
 
     if (!authorization) {
-      throw new UnauthorizedException("Authorization header is missing.");
+      return null;
     }
 
     return authorization.replace("Bearer ", "");

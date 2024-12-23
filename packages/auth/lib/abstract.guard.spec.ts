@@ -1,13 +1,9 @@
 import { createMock } from "@golevelup/ts-jest";
 import { CognitoJwtVerifier } from "@nestjs-cognito/core";
-import {
-  ExecutionContext,
-  ServiceUnavailableException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import { AbstractGuard } from "./abstract.guard";
 import { User } from "./user/user.model";
-import { Reflector } from "@nestjs/core";
 
 class TestGuard extends AbstractGuard {
   public onValidate(user: User): boolean {
@@ -31,24 +27,24 @@ class BadTestGuard extends AbstractGuard {
 
 describe("AbstractGuard", () => {
   let guard: TestGuard;
+  let jwtVerifier: jest.Mocked<CognitoJwtVerifier>;
+  let reflector: jest.Mocked<Reflector>;
 
   beforeEach(() => {
-    guard = new TestGuard(
-      createMock<CognitoJwtVerifier>({
-        verify: jest.fn().mockReturnValue({
-          sub: "sub",
-          "cognito:username": "test",
-          "cognito:groups": ["test"],
-          email: "email",
-        }),
+    jwtVerifier = createMock<CognitoJwtVerifier>({
+      verify: jest.fn().mockResolvedValue({
+        sub: "sub",
+        "cognito:username": "test",
+        "cognito:groups": ["test"],
+        email: "email",
       }),
-      createMock<Reflector>({
-        get: jest.fn().mockReturnValue(false),
-        getAll: jest.fn().mockReturnValue(false),
-        getAllAndMerge: jest.fn().mockReturnValue(false),
-        getAllAndOverride: jest.fn().mockReturnValue(false),
-      }),
-    );
+    });
+
+    reflector = createMock<Reflector>({
+      get: jest.fn().mockReturnValue(false),
+    });
+
+    guard = new TestGuard(jwtVerifier, reflector);
   });
 
   it("should be defined", () => {
@@ -61,63 +57,107 @@ describe("AbstractGuard", () => {
     });
 
     it("should be undefined", () => {
+      const badGuard = new BadTestGuard(jwtVerifier, reflector);
       expect(
-        new BadTestGuard(
-          createMock<CognitoJwtVerifier>(),
-          createMock<Reflector>({
-            get: jest.fn().mockReturnValue(false),
-            getAll: jest.fn().mockReturnValue(false),
-            getAllAndMerge: jest.fn().mockReturnValue(false),
-            getAllAndOverride: jest.fn().mockReturnValue(false),
-          }),
-        ).getRequest(createMock<ExecutionContext>()),
+        badGuard.getRequest(createMock<ExecutionContext>()),
       ).toBeUndefined();
-    });
-
-    it("should throw  ServiceUnavailableException", () => {
-      const context = createMock<ExecutionContext>();
-
-      context.switchToHttp().getRequest.mockReturnValue({
-        headers: {
-          authorization: "auth",
-        },
-      });
-
-      expect(() =>
-        new BadTestGuard(
-          createMock<CognitoJwtVerifier>(),
-          createMock<Reflector>({
-            get: jest.fn().mockReturnValue(false),
-            getAll: jest.fn().mockReturnValue(false),
-            getAllAndMerge: jest.fn().mockReturnValue(false),
-            getAllAndOverride: jest.fn().mockReturnValue(false),
-          }),
-        ).canActivate(context),
-      ).rejects.toThrow(
-        new ServiceUnavailableException("Request is undefined or null."),
-      );
     });
   });
 
-  describe("Header", () => {
-    it("should return true with authorization header", async () => {
-      const context = createMock<ExecutionContext>();
-
-      context.switchToHttp().getRequest.mockReturnValue({
-        headers: {
-          authorization: "fake-token",
-        },
+  describe("Authentication", () => {
+    describe("Protected Routes", () => {
+      beforeEach(() => {
+        reflector.get.mockReturnValue(false);
       });
 
-      expect(await guard.canActivate(context)).toBeTruthy();
+      it("should return true with valid token", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            authorization: "Bearer valid-token",
+          },
+        });
+
+        expect(await guard.canActivate(context)).toBeTruthy();
+      });
+
+      it("should throw UnauthorizedException when no headers present", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({});
+
+        await expect(guard.canActivate(context)).rejects.toMatchObject({
+          message: "Authentication failed.",
+          cause: new UnauthorizedException("User is not authenticated."),
+        });
+      });
+
+      it("should throw UnauthorizedException when token verification fails", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            authorization: "Bearer invalid-token",
+          },
+        });
+
+        jwtVerifier.verify.mockRejectedValue(new Error("Token invalid"));
+
+        await expect(guard.canActivate(context)).rejects.toMatchObject({
+          message: "Authentication failed.",
+          cause: new Error("Token invalid"),
+        });
+      });
     });
 
-    it("should throw error without authorization header", () => {
-      const context = createMock<ExecutionContext>();
+    describe("Public Routes", () => {
+      beforeEach(() => {
+        reflector.get.mockReturnValue(true);
+      });
 
-      expect(() => guard.canActivate(context)).rejects.toThrow(
-        new UnauthorizedException("Authorization header is missing."),
-      );
+      it("should return true without token", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({});
+
+        expect(await guard.canActivate(context)).toBeTruthy();
+      });
+
+      it("should return true with valid token", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            authorization: "Bearer valid-token",
+          },
+        });
+
+        expect(await guard.canActivate(context)).toBeTruthy();
+      });
+
+      it("should return true even with invalid token", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            authorization: "Bearer invalid-token",
+          },
+        });
+
+        jwtVerifier.verify.mockRejectedValue(new Error("Token invalid"));
+
+        expect(await guard.canActivate(context)).toBeTruthy();
+      });
+    });
+
+    describe("WebSocket Support", () => {
+      it("should handle WebSocket handshake headers", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          handshake: {
+            headers: {
+              authorization: "Bearer valid-token",
+            },
+          },
+        });
+
+        expect(await guard.canActivate(context)).toBeTruthy();
+      });
     });
   });
 });
