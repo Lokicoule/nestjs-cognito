@@ -77,20 +77,35 @@ describe("Cognito Module : Auth", () => {
     });
   });
 
-  describe("auth/iampublic", () => {
-    it("should be available to everyone", async () => {
-      await spec()
-        .get("/auth/iampublic")
-        .expectStatus(200)
-        .expectBody("public");
-      await spec()
-        .get("/auth/iampublic")
+  describe("Public route access", () => {
+    let authToken: string;
+
+    beforeAll(async () => {
+      const loginResponse = await spec()
+        .post("/cognito-testing-login")
         .withBody({
           username: config.get("FLIPPER_EMAIL"),
           password: config.get("FLIPPER_PASSWORD"),
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
-        .expectStatus(200);
+        .expectStatus(201);
+
+      authToken = loginResponse.body.IdToken;
+    });
+
+    it("should be available to everyone - unauthenticated", async () => {
+      await spec()
+        .get("/auth/iampublic")
+        .expectStatus(200)
+        .expectBody("public");
+    });
+
+    it("should be available to everyone - authenticated", async () => {
+      await spec()
+        .get("/auth/iampublic")
+        .withHeaders("Authorization", `Bearer ${authToken}`)
+        .expectStatus(200)
+        .expectBody("public");
     });
   });
 

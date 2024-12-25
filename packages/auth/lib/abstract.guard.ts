@@ -33,7 +33,7 @@ export abstract class AbstractGuard implements CanActivate {
   constructor(
     @InjectCognitoJwtVerifier()
     jwtVerifier: CognitoJwtVerifier,
-    reflector: Reflector
+    reflector: Reflector,
   ) {
     this.#jwtVerifier = jwtVerifier;
     this.#reflector = reflector;
@@ -43,39 +43,44 @@ export abstract class AbstractGuard implements CanActivate {
    * Determines if a request can activate a route.
    * Handles authentication for both public and protected routes.
    *
-   * @param {ExecutionContext} context - The execution context of the request
-   * @returns {Promise<boolean>} True if the request is authorized, false otherwise
-   * @throws {UnauthorizedException} When authentication fails on a protected route
+   * @param {ExecutionContext} context - The execution context
+   * @returns {Promise<boolean>} True if the request can activate the route, false otherwise
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.#isWhitelisted(context);
     const request = this.getRequest(context);
 
+    if (!this.#hasAuthHeaders(request)) {
+      if (isPublic) {
+        return true;
+      }
+      throw new UnauthorizedException("Invalid request");
+    }
+
     try {
-      if (this.#hasAuthHeaders(request)) {
-        const authorization = this.#getAuthorizationToken(request);
-        if (authorization) {
-          const payload = await this.#jwtVerifier.verify(authorization);
-          if (Boolean(payload) && Boolean(payload["sub"])) {
-            request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
-            request[COGNITO_USER_CONTEXT_PROPERTY] =
-              UserMapper.fromCognitoJwtPayload(payload);
-            return this.onValidate(this.#getAuthenticatedUser(request));
-          }
-        }
+      const authorization = this.#getAuthorizationToken(request);
+      if (!authorization) {
+        throw new UnauthorizedException(
+          "Missing token in Authorization header",
+        );
       }
 
-      if (isPublic) {
-        return true;
+      const payload = await this.#jwtVerifier.verify(authorization);
+      if (!payload || !payload["sub"]) {
+        throw new UnauthorizedException("Invalid token payload");
       }
 
-      throw new UnauthorizedException("User is not authenticated.");
+      request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
+      request[COGNITO_USER_CONTEXT_PROPERTY] =
+        UserMapper.fromCognitoJwtPayload(payload);
+
+      if (!isPublic) {
+        return this.onValidate(this.#getAuthenticatedUser(request));
+      }
+
+      return true;
     } catch (error) {
-      if (isPublic) {
-        return true;
-      }
-
-      throw new UnauthorizedException("Authentication failed.", {
+      throw new UnauthorizedException("Authentication failed", {
         cause: error,
       });
     }
@@ -114,10 +119,14 @@ export abstract class AbstractGuard implements CanActivate {
   }
 
   #hasAuthHeaders(request): boolean {
-    if (!Boolean(request)) {
+    if (!request) {
       return false;
     }
-    return Boolean(request.headers) || Boolean(request?.handshake?.headers);
+
+    const headers = request.headers || request?.handshake?.headers;
+    const authorization = headers?.authorization;
+
+    return Boolean(authorization && authorization.trim());
   }
 
   #getAuthorizationToken(request): string | null {
@@ -133,6 +142,15 @@ export abstract class AbstractGuard implements CanActivate {
   }
 
   #isWhitelisted(context: ExecutionContext): boolean {
-    return this.#reflector.get<boolean>(IS_PUBLIC_KEY, context.getHandler());
+    const isHandlerPublic = this.#reflector.get<boolean>(
+      IS_PUBLIC_KEY,
+      context.getHandler(),
+    );
+    const isClassPublic = this.#reflector.get<boolean>(
+      IS_PUBLIC_KEY,
+      context.getClass(),
+    );
+
+    return isHandlerPublic || isClassPublic;
   }
 }

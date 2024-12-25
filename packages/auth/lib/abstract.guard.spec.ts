@@ -1,6 +1,6 @@
 import { createMock } from "@golevelup/ts-jest";
 import { CognitoJwtVerifier } from "@nestjs-cognito/core";
-import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AbstractGuard } from "./abstract.guard";
 import { User } from "./user/user.model";
@@ -86,8 +86,7 @@ describe("AbstractGuard", () => {
         context.switchToHttp().getRequest.mockReturnValue({});
 
         await expect(guard.canActivate(context)).rejects.toMatchObject({
-          message: "Authentication failed.",
-          cause: new UnauthorizedException("User is not authenticated."),
+          message: "Invalid request",
         });
       });
 
@@ -102,7 +101,7 @@ describe("AbstractGuard", () => {
         jwtVerifier.verify.mockRejectedValue(new Error("Token invalid"));
 
         await expect(guard.canActivate(context)).rejects.toMatchObject({
-          message: "Authentication failed.",
+          message: "Authentication failed",
           cause: new Error("Token invalid"),
         });
       });
@@ -113,25 +112,14 @@ describe("AbstractGuard", () => {
         reflector.get.mockReturnValue(true);
       });
 
-      it("should return true without token", async () => {
+      it("should allow access without auth headers", async () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({});
 
-        expect(await guard.canActivate(context)).toBeTruthy();
+        await expect(guard.canActivate(context)).resolves.toBe(true);
       });
 
-      it("should return true with valid token", async () => {
-        const context = createMock<ExecutionContext>();
-        context.switchToHttp().getRequest.mockReturnValue({
-          headers: {
-            authorization: "Bearer valid-token",
-          },
-        });
-
-        expect(await guard.canActivate(context)).toBeTruthy();
-      });
-
-      it("should return true even with invalid token", async () => {
+      it("should throw UnauthorizedException with invalid token", async () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({
           headers: {
@@ -139,14 +127,73 @@ describe("AbstractGuard", () => {
           },
         });
 
-        jwtVerifier.verify.mockRejectedValue(new Error("Token invalid"));
+        jwtVerifier.verify.mockRejectedValue(new Error("Invalid token"));
 
-        expect(await guard.canActivate(context)).toBeTruthy();
+        await expect(guard.canActivate(context)).rejects.toMatchObject({
+          message: "Authentication failed",
+          cause: new Error("Invalid token"),
+        });
+      });
+
+      it("should allow access with empty authorization header (treated as no auth)", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            authorization: "",
+          },
+        });
+
+        await expect(guard.canActivate(context)).resolves.toBe(true);
+      });
+
+      it("should allow access with no authorization header", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {},
+        });
+
+        await expect(guard.canActivate(context)).resolves.toBe(true);
+      });
+
+      it("should allow access with spaces-only authorization header", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            authorization: "   ",
+          },
+        });
+
+        await expect(guard.canActivate(context)).resolves.toBe(true);
+      });
+
+      it("should validate token if Bearer prefix is present", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            authorization: "Bearer ",
+          },
+        });
+
+        await expect(guard.canActivate(context)).rejects.toMatchObject({
+          message: "Authentication failed",
+          cause: new Error("Missing token in Authorization header"),
+        });
+      });
+
+      it("should allow access with valid token", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            authorization: "Bearer valid-token",
+          },
+        });
+
+        await expect(guard.canActivate(context)).resolves.toBe(true);
       });
     });
 
     describe("WebSocket Support", () => {
-      it("should handle WebSocket handshake headers", async () => {
+      it("should handle WebSocket handshake headers with valid token", async () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({
           handshake: {
@@ -157,6 +204,24 @@ describe("AbstractGuard", () => {
         });
 
         expect(await guard.canActivate(context)).toBeTruthy();
+      });
+
+      it("should throw UnauthorizedException for WebSocket with invalid token", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          handshake: {
+            headers: {
+              authorization: "Bearer invalid-token",
+            },
+          },
+        });
+
+        jwtVerifier.verify.mockRejectedValue(new Error("Token invalid"));
+
+        await expect(guard.canActivate(context)).rejects.toMatchObject({
+          message: "Authentication failed",
+          cause: new Error("Token invalid"),
+        });
       });
     });
   });

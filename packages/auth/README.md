@@ -387,9 +387,17 @@ export class YourController {
 
 ### `@PublicRoute`
 
-Makes routes public while keeping authentication optional. Perfect for "login to see more" features.
+Makes routes public while still enforcing valid authentication when credentials are provided. This decorator is perfect for implementing "login to see more" features while maintaining security.
 
-```ts
+#### How it works
+
+- Without authentication token: Route is accessible
+- With valid token: Route is accessible and user information is available
+- With invalid token: Returns 401 Unauthorized (security is never compromised)
+
+#### Example
+
+```typescript
 @Controller("api")
 @Authentication() // All routes require auth by default
 export class AppController {
@@ -403,29 +411,62 @@ export class AppController {
     return "Hello! Login to see your dashboard";
   }
 
-  // Real-world example - product page
+  // Real-world example - product page with member benefits
   @Get("products/:id")
   @PublicRoute()
-  getProduct(@CognitoUser() user?: User) {
+  getProduct(@Param("id") id: string, @CognitoUser() user?: User) {
     const product = this.getProduct(id);
 
     return {
       ...product,
+      // Show different prices based on authentication
       price: user ? this.getMemberPrice(product) : product.normalPrice,
-      // Only show stock to logged in users
-      stock: user?.stock,
+      // Additional data only for authenticated users
+      memberDetails: user
+        ? {
+            inWishlist: this.isInWishlist(user.id, id),
+            stock: this.getStockLevel(id),
+            reviews: this.getMemberReviews(id),
+          }
+        : null,
     };
+  }
+
+  // Example with both @Authentication and @PublicRoute
+  @Get("dashboard")
+  @Authentication()
+  @PublicRoute()
+  getDashboard(@CognitoUser() user?: User) {
+    // If token is provided, it MUST be valid
+    // Invalid tokens will return 401 even though route is public
+    if (user) {
+      return this.getUserDashboard(user);
+    }
+    return this.getPublicDashboard();
   }
 }
 ```
 
 #### When to use it
 
-- Public pages that show extra stuff for logged-in users
-- Landing pages with personalized content when possible
-- "Preview" features that get better with login
+- Public pages that offer enhanced features for authenticated users
+- Landing pages with personalization opportunities
+- Preview functionality that expands with authentication
+- Hybrid public/private APIs where authentication is optional but must be valid when provided
 
-That's it! Just add `@PublicRoute()` and handle both cases in your code.
+#### Authentication Flow
+
+```mermaid
+
+flowchart LR
+    A[Request] --> B{Has Token?}
+    B -->|Yes| C{Token Valid?}
+    C -->|Yes| D[Return with User]
+    C -->|No| E[401 Unauthorized]
+    B -->|No| F{Is Public?}
+    F -->|Yes| G[Return without User]
+    F -->|No| H[401 Unauthorized]
+```
 
 ## License
 
