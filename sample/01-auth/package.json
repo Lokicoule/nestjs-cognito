@@ -22,7 +22,7 @@
     "@nestjs/cli": "10.4.9",
     "@nestjs/schematics": "10.2.3",
     "@types/express": "5.0.0",
-    "@types/node": "22.10.7",
+    "@types/node": "22.10.10",
     "@typescript-eslint/eslint-plugin": "8.21.0",
     "@typescript-eslint/parser": "8.21.0",
     "eslint": "9.18.0",
