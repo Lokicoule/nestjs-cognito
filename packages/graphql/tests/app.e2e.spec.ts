@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { handler, request, spec } from "pactum";
+import * as express from "express";
 import { AppModule } from "./app.module";
 
 describe("Cognito Module : GraphQL", () => {
@@ -19,6 +20,7 @@ describe("Cognito Module : GraphQL", () => {
     config = moduleFixture.get<ConfigService>(ConfigService);
     jwt = moduleFixture.get<JwtService>(JwtService);
 
+    app.use(express.json());
     await app.listen(0);
     const url = (await app.getUrl()).replace("[::1]", "localhost");
     request.setBaseUrl(url);

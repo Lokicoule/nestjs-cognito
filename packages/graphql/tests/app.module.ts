@@ -11,7 +11,6 @@ import { MantaModule } from "./manta/manta.module";
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      playground: true,
     }),
     AuthModule,
     DolphinModule,
