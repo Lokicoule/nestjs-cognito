@@ -30,13 +30,18 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
-    "@nestjs-cognito/testing": "^1.1.6",
-    "@nestjs/jwt": "^11.0.0",
-    "@nestjs/testing": "10.4.15"
+    "@aws-sdk/client-cognito-identity-provider": "3.741.0",
+    "@nestjs-cognito/testing": "workspace:*",
+    "@nestjs/common": "11.0.8",
+    "@nestjs/jwt": "11.0.0",
+    "@nestjs/testing": "11.0.8"
   },
   "dependencies": {
-    "@nestjs-cognito/core": "^1.3.2",
+    "@nestjs-cognito/core": "workspace:*",
     "aws-jwt-verify": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.0.0"
   },
   "lint-staged": {
     "*.ts": [
