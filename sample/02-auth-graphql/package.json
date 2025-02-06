@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@nestjs-cognito/auth": "^2.0.0",
-    "@nestjs-cognito/graphql": "^2.0.0",
+    "@nestjs-cognito/graphql": "^3.0.0",
     "@nestjs/apollo": "13.0.2",
     "@nestjs/common": "11.0.8",
     "@nestjs/core": "11.0.8",
