@@ -15,18 +15,20 @@
     "coverage": "jest --coverage && coveralls < coverage/lcov.info",
     "format": "prettier packages/**/*.ts --ignore-path ./.prettierignore --write",
     "lint": "eslint 'packages/**/*.ts' --fix",
-    "prepublish:npm": "pnpm build",
-    "publish:npm": "pnpm -r publish",
     "test": "jest",
     "test:e2e": "pnpm -r run test:e2e",
     "test:e2e:auth": "pnpm --filter @nestjs-cognito/auth run test:e2e",
     "test:e2e:core": "pnpm --filter @nestjs-cognito/core run test:e2e",
     "test:e2e:graphql": "pnpm --filter @nestjs-cognito/graphql run test:e2e",
     "prepare": "husky install",
-    "cw": "commitizard -s conventional"
+    "cw": "commitizard -s conventional",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@apollo/server": "4.11.3",
+    "@changesets/cli": "^2.27.12",
     "@commitlint/cli": "19.7.1",
     "@commitlint/config-angular": "19.7.1",
     "@golevelup/ts-jest": "0.6.2",
@@ -38,8 +40,10 @@
     "@types/jest": "29.5.14",
     "@types/node": "22.13.1",
     "@types/node-fetch": "3.0.3",
+    "tslib": "^2.6.2",
     "@types/normalize-path": "3.0.2",
     "@types/ws": "8.5.14",
+    "@types/express": "4.17.21",
     "@typescript-eslint/eslint-plugin": "8.23.0",
     "@typescript-eslint/parser": "8.23.0",
     "class-transformer": "0.5.1",
@@ -97,6 +101,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Lokicoule/nestjs-cognito.git"
-  },
-  "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
+  }
 }

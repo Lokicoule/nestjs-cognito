@@ -1,4 +1,4 @@
-name: Test
+name: Coverage
 
 on:
   push:
@@ -35,18 +35,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Install dependencies
-        run: pnpm install
+      - uses: ./.github/actions/ci-setup
 
       - name: Build
         run: pnpm run build
