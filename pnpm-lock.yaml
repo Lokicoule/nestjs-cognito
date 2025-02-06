@@ -35,6 +35,9 @@ importers:
       '@nestjs/testing':
         specifier: 11.0.8
         version: 11.0.8(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(@nestjs/platform-express@11.0.8)
+      '@types/express':
+        specifier: 4.17.21
+        version: 4.17.21
       '@types/graphql':
         specifier: 14.5.0
         version: 14.5.0
@@ -83,9 +86,6 @@ importers:
       graphql:
         specifier: 16.10.0
         version: 16.10.0
-      husky:
-        specifier: 9.1.7
-        version: 9.1.7
       jest:
         specifier: 29.7.0
         version: 29.7.0(@types/node@22.13.1)(ts-node@10.9.2)
@@ -122,6 +122,9 @@ importers:
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@22.13.1)(typescript@5.7.3)
+      tslib:
+        specifier: ^2.6.2
+        version: 2.8.1
       typescript:
         specifier: 5.7.3
         version: 5.7.3
@@ -138,6 +141,9 @@ importers:
         specifier: ^4.0.0
         version: 4.0.1
     devDependencies:
+      '@aws-sdk/client-cognito-identity-provider':
+        specifier: 3.741.0
+        version: 3.741.0
       '@nestjs-cognito/testing':
         specifier: workspace:*
         version: link:../testing
@@ -182,14 +188,14 @@ importers:
         specifier: workspace:*
         version: link:../testing
       '@nestjs/apollo':
-        specifier: 13.0.0
-        version: 13.0.0(@apollo/server@4.11.3)(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(@nestjs/graphql@13.0.0)(graphql@16.10.0)
+        specifier: 13.0.2
+        version: 13.0.2(@apollo/server@4.11.3)(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(@nestjs/graphql@13.0.2)(graphql@16.10.0)
       '@nestjs/common':
         specifier: 11.0.8
         version: 11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/graphql':
-        specifier: 13.0.0
-        version: 13.0.0(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2)
+        specifier: 13.0.2
+        version: 13.0.2(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2)
       '@nestjs/jwt':
         specifier: 11.0.0
         version: 11.0.0(@nestjs/common@11.0.8)
@@ -2125,8 +2131,8 @@ packages:
       '@tybys/wasm-util': 0.9.0
     dev: true
 
-  /@nestjs/apollo@13.0.0(@apollo/server@4.11.3)(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(@nestjs/graphql@13.0.0)(graphql@16.10.0):
-    resolution: {integrity: sha512-FA1Ez6stvGMRPtlJHq76ChGGTYDV//qfIvbYagK395p6TjJj9Y8XJQVBMBOgXrrt9on9bsSYD1Cs2PSyb8qJXQ==}
+  /@nestjs/apollo@13.0.2(@apollo/server@4.11.3)(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(@nestjs/graphql@13.0.2)(graphql@16.10.0):
+    resolution: {integrity: sha512-p8yvBiQGhErJSyc3PGamaVq5d/jHhBDzllOGRMgv6YrecGEKZItuTIC4RpQyczh2vJeJdmFx5BLwEdNUbzde1Q==}
     peerDependencies:
       '@apollo/gateway': ^2.0.0
       '@apollo/server': ^4.11.3
@@ -2134,7 +2140,7 @@ packages:
       '@as-integrations/fastify': ^2.1.1
       '@nestjs/common': ^11.0.1
       '@nestjs/core': ^11.0.1
-      '@nestjs/graphql': ^12.2.2
+      '@nestjs/graphql': ^13.0.0
       graphql: ^16.10.0
     peerDependenciesMeta:
       '@apollo/gateway':
@@ -2148,7 +2154,7 @@ packages:
       '@apollo/server-plugin-landing-page-graphql-playground': 4.0.1(@apollo/server@4.11.3)
       '@nestjs/common': 11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 11.0.8(@nestjs/common@11.0.8)(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/graphql': 13.0.0(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2)
+      '@nestjs/graphql': 13.0.2(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2)
       graphql: 16.10.0
       iterall: 1.3.0
       lodash.omit: 4.5.0
@@ -2221,8 +2227,8 @@ packages:
       uid: 2.0.2
     dev: true
 
-  /@nestjs/graphql@13.0.0(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2):
-    resolution: {integrity: sha512-umLaV4RSME/+aO5BlXSof+PD/r2Ow5ypq1++X2EVeQOAGfS8E2UTyEkZvFSrjVEGbg7Xl2H6PJi8s4JGYg8NbA==}
+  /@nestjs/graphql@13.0.2(@nestjs/common@11.0.8)(@nestjs/core@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.10.0)(reflect-metadata@0.2.2):
+    resolution: {integrity: sha512-nwKGOpgKnjS6dVN3a5qB9Qkm8MZA/29KSBk/ru+V0sU9UgDUYkcJq+83tTRC7eHH22pyXd043mtlc+MONJtS7A==}
     peerDependencies:
       '@apollo/subgraph': ^2.9.3
       '@nestjs/common': ^11.0.1
@@ -2247,7 +2253,7 @@ packages:
       '@graphql-tools/utils': 10.7.2(graphql@16.10.0)
       '@nestjs/common': 11.0.8(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 11.0.8(@nestjs/common@11.0.8)(@nestjs/platform-express@11.0.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/mapped-types': 2.0.6(@nestjs/common@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+      '@nestjs/mapped-types': 2.1.0(@nestjs/common@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
       chokidar: 4.0.3
       class-transformer: 0.5.1
       class-validator: 0.14.1
@@ -2278,10 +2284,10 @@ packages:
       jsonwebtoken: 9.0.2
     dev: true
 
-  /@nestjs/mapped-types@2.0.6(@nestjs/common@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2):
-    resolution: {integrity: sha512-84ze+CPfp1OWdpRi1/lOu59hOhTz38eVzJvRKrg9ykRFwDz+XleKfMsG0gUqNZYFa6v53XYzeD+xItt8uDW7NQ==}
+  /@nestjs/mapped-types@2.1.0(@nestjs/common@11.0.8)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2):
+    resolution: {integrity: sha512-W+n+rM69XsFdwORF11UqJahn4J3xi4g/ZEOlJNL6KoW5ygWSmBB2p0S2BZ4FQeS/NDH72e6xIcu35SfJnE8bXw==}
     peerDependencies:
-      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
+      '@nestjs/common': ^10.0.0 || ^11.0.0
       class-transformer: ^0.4.0 || ^0.5.0
       class-validator: ^0.13.0 || ^0.14.0
       reflect-metadata: ^0.1.12 || ^0.2.0
@@ -6625,12 +6631,6 @@ packages:
       ms: 2.1.3
     dev: true
 
-  /husky@9.1.7:
-    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
-    engines: {node: '>=18'}
-    hasBin: true
-    dev: true
-
   /iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -8141,6 +8141,7 @@ packages:
 
   /lodash.omit@4.5.0:
     resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
+    deprecated: This package is deprecated. Use destructuring assignment syntax instead.
     dev: true
 
   /lodash.once@4.1.1:
