@@ -3,6 +3,7 @@ import {
   InjectCognitoJwtVerifier,
 } from "@nestjs-cognito/core";
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
   Injectable,
@@ -33,7 +34,7 @@ export abstract class AbstractGuard implements CanActivate {
   constructor(
     @InjectCognitoJwtVerifier()
     jwtVerifier: CognitoJwtVerifier,
-    reflector: Reflector,
+    reflector: Reflector
   ) {
     this.#jwtVerifier = jwtVerifier;
     this.#reflector = reflector;
@@ -54,20 +55,19 @@ export abstract class AbstractGuard implements CanActivate {
       if (isPublic) {
         return true;
       }
-      throw new UnauthorizedException("Invalid request");
+      throw new BadRequestException("Invalid request");
     }
 
     try {
       const authorization = this.#getAuthorizationToken(request);
       if (!authorization) {
-        throw new UnauthorizedException(
-          "Missing token in Authorization header",
-        );
+        throw new BadRequestException("Missing token in Authorization header");
       }
 
       const payload = await this.#jwtVerifier.verify(authorization);
+
       if (!payload || !payload["sub"]) {
-        throw new UnauthorizedException("Invalid token payload");
+        throw new BadRequestException("Invalid token payload");
       }
 
       request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
@@ -80,8 +80,10 @@ export abstract class AbstractGuard implements CanActivate {
 
       return true;
     } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+
       throw new UnauthorizedException("Authentication failed", {
-        cause: error,
+        cause: error as Error,
       });
     }
   }
@@ -144,11 +146,11 @@ export abstract class AbstractGuard implements CanActivate {
   #isWhitelisted(context: ExecutionContext): boolean {
     const isHandlerPublic = this.#reflector.get<boolean>(
       IS_PUBLIC_KEY,
-      context.getHandler(),
+      context.getHandler()
     );
     const isClassPublic = this.#reflector.get<boolean>(
       IS_PUBLIC_KEY,
-      context.getClass(),
+      context.getClass()
     );
 
     return isHandlerPublic || isClassPublic;

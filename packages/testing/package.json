@@ -35,5 +35,8 @@
     "@nestjs-cognito/core": "workspace:*",
     "@nestjs/common": "11.0.8",
     "@nestjs/testing": "11.0.8"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
   }
 }

@@ -44,7 +44,7 @@ describe("Cognito Module : GraphQL", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .withHeaders("Content-Type", "application/json")
-        .expectStatus(201)
+        .expectStatus(200)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken")
         .stores("flipperUsername", "#username from identity token");
@@ -84,7 +84,7 @@ describe("Cognito Module : GraphQL", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .withHeaders("Content-Type", "application/json")
-        .expectStatus(201)
+        .expectStatus(200)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken");
       await spec()
@@ -112,7 +112,7 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .withHeaders("Content-Type", "application/json")
-          .expectStatus(201)
+          .expectStatus(200)
           .expectBodyContains("IdToken")
           .stores("flipperToken", "IdToken");
         await spec()
@@ -140,7 +140,7 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .withHeaders("Content-Type", "application/json")
-          .expectStatus(201)
+          .expectStatus(200)
           .expectBodyContains("IdToken")
           .stores("flipperToken", "IdToken");
         await spec()
@@ -174,7 +174,7 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .withHeaders("Content-Type", "application/json")
-          .expectStatus(201)
+          .expectStatus(200)
           .expectBodyContains("IdToken")
           .stores("flipperToken", "IdToken");
         await spec()
@@ -204,7 +204,7 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .withHeaders("Content-Type", "application/json")
-          .expectStatus(201)
+          .expectStatus(200)
           .expectBodyContains("IdToken")
           .stores("rayToken", "IdToken");
 
@@ -235,7 +235,7 @@ describe("Cognito Module : GraphQL", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .withHeaders("Content-Type", "application/json")
-          .expectStatus(201)
+          .expectStatus(200)
           .expectBodyContains("IdToken")
           .stores("blueToken", "IdToken");
         await spec()
@@ -267,7 +267,7 @@ describe("Cognito Module : GraphQL", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .withHeaders("Content-Type", "application/json")
-        .expectStatus(201)
+        .expectStatus(200)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken");
       await spec()
@@ -295,7 +295,7 @@ describe("Cognito Module : GraphQL", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .withHeaders("Content-Type", "application/json")
-        .expectStatus(201)
+        .expectStatus(200)
         .expectBodyContains("IdToken")
         .stores("rayToken", "IdToken");
       await spec()
