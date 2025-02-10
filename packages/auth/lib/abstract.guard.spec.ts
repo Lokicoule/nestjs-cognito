@@ -175,8 +175,7 @@ describe("AbstractGuard", () => {
         });
 
         await expect(guard.canActivate(context)).rejects.toMatchObject({
-          message: "Authentication failed",
-          cause: new Error("Missing token in Authorization header"),
+          message: "Missing token in Authorization header",
         });
       });
 

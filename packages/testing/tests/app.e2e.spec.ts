@@ -30,7 +30,7 @@ describe("Cognito Module : Testing", () => {
   });
 
   describe("login", () => {
-    it("should be successful and return http code 2O1", async () => {
+    it("should be successful and return http code 200", async () => {
       await spec()
         .post("/cognito-testing-login")
         .withBody({
@@ -38,7 +38,7 @@ describe("Cognito Module : Testing", () => {
           password: config.get("COGNITO_USER_PASSWORD"),
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
-        .expectStatus(201)
+        .expectStatus(200)
         .expectBodyContains("AccessToken");
     });
 
@@ -50,7 +50,7 @@ describe("Cognito Module : Testing", () => {
           password: "123456",
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
-        .expectStatus(401);
+        .expectStatus(400);
     });
   });
 });

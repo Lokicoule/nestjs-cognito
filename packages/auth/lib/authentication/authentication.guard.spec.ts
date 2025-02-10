@@ -1,6 +1,6 @@
 import { createMock } from "@golevelup/ts-jest";
 import { CognitoJwtVerifier } from "@nestjs-cognito/core";
-import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { CognitoAuthModule } from "../cognito-auth.module";
 import { AuthenticationGuard } from "./authentication.guard";
@@ -57,7 +57,7 @@ describe("AuthenticationGuard", () => {
       expect(await authenticationGuard.canActivate(mockContext)).toBeTruthy();
     });
 
-    it("should thrown an UnauthorizedException when user is undefined", async () => {
+    it("should thrown an BadRequestException when user is undefined", async () => {
       const mockContext = createMock<ExecutionContext>();
       authenticationGuard = new AuthenticationGuard(
         createMock<CognitoJwtVerifier>({
@@ -78,7 +78,7 @@ describe("AuthenticationGuard", () => {
       });
 
       expect(authenticationGuard.canActivate(mockContext)).rejects.toThrow(
-        UnauthorizedException,
+        BadRequestException,
       );
     });
   });

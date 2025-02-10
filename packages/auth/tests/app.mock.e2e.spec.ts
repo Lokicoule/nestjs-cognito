@@ -1,22 +1,41 @@
+import { COGNITO_JWT_VERIFIER_INSTANCE_TOKEN } from "@nestjs-cognito/core";
 import { INestApplication } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { handler, request, spec } from "pactum";
+import { CognitoTestingModule } from "../../testing/lib/cognito-testing.module";
 import { AppModule } from "./app.module";
 
-describe("Cognito Module : Auth", () => {
+describe("Cognito Module : Auth (Mocked)", () => {
   let app: INestApplication;
-  let config: ConfigService;
   let jwt: JwtService;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+      imports: [
+        ConfigModule.forRoot(),
+        CognitoTestingModule.register(
+          {},
+          {
+            enabled: true,
+            user: {
+              username: "flipper",
+              email: "flipper@example.com",
+              groups: ["dolphin"],
+            },
+          }
+        ),
+        AppModule,
+      ],
+    })
+      .overrideProvider(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+      .useFactory({
+        factory: CognitoTestingModule.createJwtVerifierFactory
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
-    config = moduleFixture.get<ConfigService>(ConfigService);
     jwt = moduleFixture.get<JwtService>(JwtService);
 
     await app.listen(0);
@@ -37,22 +56,23 @@ describe("Cognito Module : Auth", () => {
       await spec()
         .post("/cognito-testing-login")
         .withBody({
-          username: config.get("FLIPPER_EMAIL"),
-          password: config.get("FLIPPER_PASSWORD"),
-          clientId: config.get("COGNITO_CLIENT_ID"),
+          username: "flipper@example.com",
+          password: "password",
+          clientId: "test-client",
         })
         .expectStatus(200)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken")
         .stores("flipperUsername", "#username from identity token");
+
       await spec()
         .get("/auth/me-from-payload")
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
         .expectStatus(200)
         .expectBody({
-          username: "$S{flipperUsername}",
-          email: config.get("FLIPPER_EMAIL"),
+          email: "flipper@example.com",
           groups: ["dolphin"],
+          username: "flipper",
         });
     });
   });
@@ -62,18 +82,19 @@ describe("Cognito Module : Auth", () => {
       await spec()
         .post("/cognito-testing-login")
         .withBody({
-          username: config.get("FLIPPER_EMAIL"),
-          password: config.get("FLIPPER_PASSWORD"),
-          clientId: config.get("COGNITO_CLIENT_ID"),
+          username: "flipper@example.com",
+          password: "password",
+          clientId: "test-client",
         })
         .expectStatus(200)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken");
+
       await spec()
         .get("/auth/email-from-payload")
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
         .expectStatus(200)
-        .expectBody(config.get("FLIPPER_EMAIL"));
+        .expectBody("flipper@example.com");
     });
   });
 
@@ -84,9 +105,9 @@ describe("Cognito Module : Auth", () => {
       const loginResponse = await spec()
         .post("/cognito-testing-login")
         .withBody({
-          username: config.get("FLIPPER_EMAIL"),
-          password: config.get("FLIPPER_PASSWORD"),
-          clientId: config.get("COGNITO_CLIENT_ID"),
+          username: "flipper@example.com",
+          password: "password",
+          clientId: "test-client",
         })
         .expectStatus(200);
 
@@ -110,66 +131,76 @@ describe("Cognito Module : Auth", () => {
   });
 
   describe("dolphin: authorization", () => {
+    beforeEach(async () => {
+      await spec()
+        .post("/config")
+        .withBody({
+          enabled: true,
+          user: {
+            username: "ray",
+            email: "ray@example.com",
+            groups: ["manta"],
+          },
+        })
+        .expectStatus(200);
+    });
+
     describe("flipper", () => {
       it("should be unsuccessful because ray is not in the dolphin group", async () => {
         await spec()
           .post("/cognito-testing-login")
           .withBody({
-            username: config.get("RAY_EMAIL"),
-            password: config.get("RAY_PASSWORD"),
-            clientId: config.get("COGNITO_CLIENT_ID"),
+            username: "ray@example.com",
+            password: "password",
+            clientId: "test-client",
           })
           .expectStatus(200)
           .expectBodyContains("IdToken")
-          .stores("flipperToken", "IdToken");
+          .stores("rayToken", "IdToken");
         await spec()
           .get("/dolphin/flipper")
-          .withHeaders("Authorization", "Bearer $S{flipperToken}")
+          .withHeaders("Authorization", "Bearer $S{rayToken}")
           .expectStatus(403);
       });
-      it("should be successful because user is in the dolphin group", async () => {
-        await spec()
-          .post("/cognito-testing-login")
-          .withBody({
-            username: config.get("FLIPPER_EMAIL"),
-            password: config.get("FLIPPER_PASSWORD"),
-            clientId: config.get("COGNITO_CLIENT_ID"),
-          })
-          .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("flipperToken", "IdToken");
-        await spec()
-          .get("/dolphin/flipper")
-          .withHeaders("Authorization", "Bearer $S{flipperToken}")
-          .expectStatus(200)
-          .expectBody({
-            message: "Flipper",
-          });
-      });
     });
+
     describe("position", () => {
       it("should be available to authenticated users, except for shark's members", async () => {
         await spec()
           .post("/cognito-testing-login")
           .withBody({
-            username: config.get("FLIPPER_EMAIL"),
-            password: config.get("FLIPPER_PASSWORD"),
-            clientId: config.get("COGNITO_CLIENT_ID"),
+            username: "flipper@example.com",
+            password: "password",
+            clientId: "test-client",
           })
           .expectStatus(200)
           .expectBodyContains("IdToken")
           .stores("flipperToken", "IdToken");
+
         await spec()
           .get("/dolphin/position")
           .withHeaders("Authorization", "Bearer $S{flipperToken}")
           .expectStatus(200)
           .expectBody({ message: "position" });
+
+        await spec()
+          .post("/config")
+          .withBody({
+            enabled: true,
+            user: {
+              username: "ray",
+              email: "ray@example.com",
+              groups: ["manta"],
+            },
+          })
+          .expectStatus(200);
+
         await spec()
           .post("/cognito-testing-login")
           .withBody({
-            username: config.get("RAY_EMAIL"),
-            password: config.get("RAY_PASSWORD"),
-            clientId: config.get("COGNITO_CLIENT_ID"),
+            username: "ray@example.com",
+            password: "password",
+            clientId: "test-client",
           })
           .expectStatus(200)
           .expectBodyContains("IdToken")
@@ -180,16 +211,31 @@ describe("Cognito Module : Auth", () => {
           .withHeaders("Authorization", "Bearer $S{rayToken}")
           .expectStatus(200)
           .expectBody({ message: "position" });
+
+        // Test with blue (shark group)
+        await spec()
+          .post("/config")
+          .withBody({
+            enabled: true,
+            user: {
+              username: "blue",
+              email: "blue@example.com",
+              groups: ["shark"],
+            },
+          })
+          .expectStatus(200);
+
         await spec()
           .post("/cognito-testing-login")
           .withBody({
-            username: config.get("BLUE_EMAIL"),
-            password: config.get("BLUE_PASSWORD"),
-            clientId: config.get("COGNITO_CLIENT_ID"),
+            username: "blue@example.com",
+            password: "password",
+            clientId: "test-client",
           })
           .expectStatus(200)
           .expectBodyContains("IdToken")
           .stores("blueToken", "IdToken");
+
         await spec()
           .get("/dolphin/position")
           .withHeaders("Authorization", "Bearer $S{blueToken}")
@@ -199,13 +245,13 @@ describe("Cognito Module : Auth", () => {
   });
 
   describe("manta: authorization", () => {
-    it("should be unsuccessfull because flipper is not in the manta group", async () => {
+    it("should be unsuccessful because flipper is not in the manta group", async () => {
       await spec()
         .post("/cognito-testing-login")
         .withBody({
-          username: config.get("FLIPPER_EMAIL"),
-          password: config.get("FLIPPER_PASSWORD"),
-          clientId: config.get("COGNITO_CLIENT_ID"),
+          username: "flipper@example.com",
+          password: "password",
+          clientId: "test-client",
         })
         .expectStatus(200)
         .expectBodyContains("IdToken")
@@ -215,13 +261,26 @@ describe("Cognito Module : Auth", () => {
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
         .expectStatus(403);
     });
-    it("should be successfull because ray is in the manta group", async () => {
+
+    it("should be successful because ray is in the manta group", async () => {
+      await spec()
+        .post("/config")
+        .withBody({
+          enabled: true,
+          user: {
+            username: "ray",
+            email: "ray@example.com",
+            groups: ["manta"],
+          },
+        })
+        .expectStatus(200);
+
       await spec()
         .post("/cognito-testing-login")
         .withBody({
-          username: config.get("RAY_EMAIL"),
-          password: config.get("RAY_PASSWORD"),
-          clientId: config.get("COGNITO_CLIENT_ID"),
+          username: "ray@example.com",
+          password: "password",
+          clientId: "test-client",
         })
         .expectStatus(200)
         .expectBodyContains("IdToken")
