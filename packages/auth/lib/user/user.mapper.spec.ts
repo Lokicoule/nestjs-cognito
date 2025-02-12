@@ -1,13 +1,13 @@
 import { UnauthorizedException } from "@nestjs/common";
 import { UserMapper } from "./user.mapper";
-import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
 describe("UserMapper", () => {
   describe("fromCognitoJwtPayload", () => {
     it("should throw an error if the username is not present", () => {
       expect(() => {
         UserMapper.fromCognitoJwtPayload({} as CognitoJwtPayload);
-      }).toThrowError(UnauthorizedException);
+      }).toThrow(UnauthorizedException);
     });
     it("should return a user if the username is present", () => {
       const user = UserMapper.fromCognitoJwtPayload({

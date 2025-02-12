@@ -1,11 +1,14 @@
-<h1 align="center">@nestjs-cognito/testing</h1>
+# @nestjs-cognito/testing
 
-[![Node.js CI](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml)
-[![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
+Comprehensive testing utilities for NestJS applications using AWS Cognito authentication.
 
-## Description
+## Features
 
-This module is a solution for [NestJS](https://github.com/nestjs/nest) which facilitates the integration with [Amazon Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html) for end-to-end and integration testing purposes. It includes a module, a controller, and a service that simplify testing your authentication and authorization code based on [Amazon Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html).
+- 🔄 Real E2E testing with AWS Cognito services
+- 🎭 Mock testing capabilities for development
+- 🛠️ Test helpers for authentication flows
+- 🎯 Custom test decorators and utilities
+- 🔌 Seamless integration with @nestjs-cognito/auth
 
 ## Installation
 
@@ -13,118 +16,194 @@ This module is a solution for [NestJS](https://github.com/nestjs/nest) which fac
 npm install @nestjs-cognito/testing
 ```
 
+## Architecture Overview
+
+The testing module consists of three main components:
+
+### 1. CognitoTestingController
+Handles HTTP endpoints for test configuration and authentication:
+- `/cognito-testing-login` - Endpoint for test user authentication
+- `/config` - Endpoint for updating mock configuration
+
+### 2. CognitoTestingService
+Manages authentication flows and token handling:
+- Real AWS Cognito authentication
+- Mock authentication configuration
+- Token verification
+
+### 3. CognitoMockService
+Provides mock authentication capabilities:
+- JWT token generation
+- Mock user management
+- Token verification
+
 ## Usage
 
-### Module
+### Real E2E Testing
 
-To use the `CognitoTestingModule`, you will need to import it and use either the `register` or `registerAsync` method to set up its dependencies:
+```typescript
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CognitoTestingModule } from '@nestjs-cognito/testing';
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
 
-```ts
 @Module({
   imports: [
-    CognitoTestingModule.register({
-      identityProvider: {
-        region: "eu-west-1",
-      },
+    CognitoAuthModule.registerAsync({
+      imports: [ConfigModule.forRoot()],
+      useFactory: (config: ConfigService) => ({
+        jwtVerifier: {
+          userPoolId: config.get('COGNITO_USER_POOL_ID'),
+          clientId: config.get('COGNITO_CLIENT_ID'),
+          tokenUse: 'id',
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    CognitoTestingModule.registerAsync({
+      imports: [ConfigModule.forRoot()],
+      useFactory: (config: ConfigService) => ({
+        identityProvider: {
+          region: config.get('COGNITO_REGION'),
+        },
+      }),
+      inject: [ConfigService],
     }),
   ],
 })
-export class AppModule {}
-```
+export class TestModule {}
 
-### Controller
-
-The `CognitoTestingController` is a simple controller that accepts a username and password and returns an access token. The code is shown below:
-
-<details>
-<summary>Controller Source Code</summary>
-
-```ts
-import { Body, Controller, Post } from "@nestjs/common";
-import { CognitoTestingService } from "@nestjs-cognito/testing";
-
-@Controller()
-export class CognitoTestingController {
-  constructor(private readonly authService: CognitoTestingService) {}
-
-  @Post("cognito-testing-login")
-  login(@Body() body: Record<string, string>) {
-    return this.authService.getAccessToken(
-      {
-        username: body.username,
-        password: body.password,
-      },
-      body.clientId
-    );
-  }
-}
-```
-
-</details>
-
-### Service
-
-The `CognitoTestingService` is a service that uses the `CognitoIdentityProvider` client to get an access token. To call the method `cognito-testing-login`, you need to pass the following information in the request body:
-
-- `username`: The username of the test user
-- `password`: The password of the test user
-- `clientId`: Required for using the initiateAuth method provided by `@aws-sdk/client-cognito-identity-provider`.
-
-## Example using Jest and Pactum
-
-```ts
-import { CognitoTestingModule } from "@nestjs-cognito/testing";
-import { INestApplication } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { Test } from "@nestjs/testing";
-import { request, spec } from "pactum";
-
-describe("Cognito Module : Testing", () => {
+// Example test case using real AWS Cognito
+describe('Auth E2E Tests', () => {
   let app: INestApplication;
-  let config: ConfigService;
+  let cognitoTestingService: CognitoTestingService;
+
+  beforeAll(async () => {
+    const moduleFixture = await Test.createTestingModule({
+      imports: [TestModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    cognitoTestingService = moduleFixture.get<CognitoTestingService>(CognitoTestingService);
+    await app.init();
+  });
+
+  it('should authenticate with real Cognito', async () => {
+    const token = await cognitoTestingService.getAccessToken({
+      username: 'test@example.com',
+      password: 'TestPassword123!',
+    }, 'your-client-id');
+
+    expect(token).toBeDefined();
+    // Test protected routes with the token
+  });
+});
+```
+
+### Mock Testing
+
+```typescript
+import { CognitoTestingModule } from '@nestjs-cognito/testing';
+
+describe('Auth Tests', () => {
+  let app: INestApplication;
+  let cognitoTestingService: CognitoTestingService;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot(),
-        CognitoTestingModule.register({
-          region: "eu-west-1",
+        CognitoTestingModule.register({}, {
+          enabled: true,
+          user: {
+            username: 'test-user',
+            email: 'test@example.com',
+            groups: ['users'],
+          },
         }),
+        AppModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+      .useFactory({
+        factory: CognitoTestingModule.createJwtVerifierFactory
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
-    config = moduleFixture.get<ConfigService>(ConfigService);
-
-    await app.listen(0);
-    const url = (await app.getUrl()).replace("[::1]", "localhost");
-    request.setBaseUrl(url);
+    cognitoTestingService = moduleFixture.get<CognitoTestingService>(CognitoTestingService);
+    await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
+  it('should validate mock authentication', async () => {
+    // Test authentication using mock service
+    const response = await request(app.getHttpServer())
+      .post('/cognito-testing-login')
+      .send({
+        username: 'test-user',
+        password: 'any-password', // Password is not validated in mock mode
+        clientId: 'mock-client-id'
+      })
+      .expect(200);
 
-  describe("authentication", () => {
-    it("should be able to access the private route", async () => {
-      await spec()
-        .post("/cognito-testing-login")
-        .withBody({
-          username: config.get("COGNITO_USER_EMAIL"),
-          password: config.get("COGNITO_USER_PASSWORD"),
-          clientId: config.get("COGNITO_CLIENT_ID"),
-        })
-        .expectStatus(201)
-        .expectBodyContains("AccessToken").
-        .stores('token', 'AccessToken');
-      await spec()
-        .get('/private')
-        .withHeaders('Authorization', 'Bearer $S{token}')
-        .expectStatus(200);
-    });
+    // Test protected routes
+    await request(app.getHttpServer())
+      .get('/protected')
+      .set('Authorization', `Bearer ${response.body.AccessToken}`)
+      .expect(200)
+      .expect({
+        username: 'test-user',
+        email: 'test@example.com',
+        groups: ['users'],
+      });
   });
 });
 ```
+
+### Dynamic Configuration
+
+Update mock settings during test execution:
+
+```typescript
+await request(app.getHttpServer())
+  .post('/config')
+  .send({
+    user: {
+      username: 'new-user',
+      email: 'new@example.com',
+      groups: ['admin'],
+    },
+  })
+  .expect(200);
+```
+
+## API Reference
+
+### CognitoTestingService
+
+#### getAccessToken(credentials, clientId)
+- `credentials`: User credentials (username, password)
+- `clientId`: Cognito client ID
+- Returns: Promise with authentication tokens
+
+#### setMockConfig(config)
+- `config`: Mock configuration object
+- Updates the mock testing configuration
+
+#### verifyToken(token)
+- `token`: JWT token string
+- Verifies token authenticity
+
+### CognitoTestingModule
+
+#### register(options?, mockOptions?)
+- `options`: AWS Cognito configuration
+- `mockOptions`: Mock testing configuration
+  - `enabled`: Enable/disable mock mode
+  - `user`: Mock user configuration
+
+#### registerAsync(options)
+- Asynchronous module configuration
+- Supports dependency injection
 
 ## License
 

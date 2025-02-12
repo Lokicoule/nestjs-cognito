@@ -12,14 +12,17 @@ import type {
   JwtRsaVerifierSingleIssuer,
   VerifyProperties,
 } from "aws-jwt-verify/jwt-rsa";
+import type { CognitoJwtPayload as AwsCognitoJwtPayload } from 'aws-jwt-verify/jwt-model';
+
+export type CognitoJwtPayload = Prettify<AwsCognitoJwtPayload>;
 
 /**
  * Represents a type that can be used as a Cognito JWT RSA verifier.
  * It can be either a single issuer verifier or a multi-issuer verifier.
  */
-export type CognitoJwtRsaVerifier =
+export type CognitoJwtRsaVerifier = Prettify<
   | JwtRsaVerifierSingleIssuer<JwtRsaVerifierProperties<VerifyProperties>>
-  | JwtRsaVerifierMultiIssuer<JwtRsaVerifierMultiProperties<VerifyProperties>>;
+  | JwtRsaVerifierMultiIssuer<JwtRsaVerifierMultiProperties<VerifyProperties>>>;
 
 export type JwtVerifierOptions = {
   jwtVerifier: (
@@ -46,9 +49,9 @@ export type JwtRsaVerifierOptions = {
   };
 };
 
-export type CognitoModuleOptions = {
+export type CognitoModuleOptions = Prettify<{
   identityProvider?: CognitoIdentityProviderClientConfig;
-} & Partial<JwtVerifierOptions | JwtRsaVerifierOptions>;
+} & Partial<JwtVerifierOptions | JwtRsaVerifierOptions>>;
 
 /**
  * @interface CognitoModuleOptionsFactory - Metadata for the CognitoModule
@@ -82,3 +85,7 @@ export interface CognitoModuleAsyncOptions
     ...args: any[]
   ) => Promise<CognitoModuleOptions> | CognitoModuleOptions;
 }
+
+type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & unknown;

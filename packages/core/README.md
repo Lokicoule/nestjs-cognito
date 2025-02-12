@@ -1,5 +1,8 @@
 # @nestjs-cognito/core
 
+[![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
+![npm](https://img.shields.io/npm/dt/%40nestjs-cognito%2Fcore)
+
 This package provides the core functionality and adapters for AWS Cognito integration in NestJS applications. It serves as the foundation for other @nestjs-cognito packages.
 
 ## Key Features
@@ -39,7 +42,28 @@ export class MyService {
 }
 ```
 
-### AWS JWT Verify
+### JWT Verification
+
+The package provides two mutually exclusive JWT verification implementations that share the same injection token. The implementation you get depends on your module configuration:
+
+#### JWT Claims Verification
+
+Both implementations perform comprehensive JWT claims verification according to AWS Cognito standards:
+
+- **Expiration Check**: Verifies the `exp` claim to ensure the token hasn't expired
+- **Audience Validation**: 
+  - For ID tokens: Validates the `aud` claim matches the app's client ID
+  - For Access tokens: Validates the `client_id` claim matches the app's client ID
+- **Issuer Verification**: Validates the `iss` claim matches your Cognito User Pool's issuer URL format:
+  `https://cognito-idp.[REGION].amazonaws.com/[USER_POOL_ID]`
+- **Token Use Verification**: Validates the `token_use` claim:
+  - Must be `access` for access tokens
+  - Must be `id` for ID tokens
+  - Can be set to `null` to accept both token types
+
+#### Cognito JWT Verification
+
+When you configure `jwtVerifier` in your module, this implementation is used to verify JWTs issued by AWS Cognito:
 
 ```ts
 import {
@@ -52,8 +76,42 @@ export class MyService {
     @InjectCognitoJwtVerifier()
     private readonly jwtVerifier: CognitoJwtVerifier
   ) {}
+
+  async verifyToken(token: string) {
+    return this.jwtVerifier.verify(token);
+  }
 }
 ```
+
+#### RSA JWT Verification
+
+When you configure `jwtRsaVerifier` in your module, this implementation is used to verify JWTs using RSA public keys:
+
+```ts
+import {
+  JwtRsaVerifier,
+  InjectCognitoJwtVerifier
+} from "@nestjs-cognito/core";
+
+export class MyService {
+  constructor(
+    @InjectCognitoJwtVerifier()
+    private readonly jwtVerifier: JwtRsaVerifier
+  ) {}
+
+  async verifyToken(token: string) {
+    return this.jwtVerifier.verify(token);
+  }
+}
+```
+
+> **Important**: While both verifier types use the same `@InjectCognitoJwtVerifier()` decorator, they are mutually exclusive in configuration. The type of verifier you get (CognitoJwtVerifier or JwtRsaVerifier) is determined by which configuration option you use in your module:
+> - Use `jwtVerifier` for Cognito JWT verification
+> - Use `jwtRsaVerifier` for RSA JWT verification
+> 
+> You cannot configure both types simultaneously in the same module.
+
+> **Note**: Choose either Cognito JWT Verification or RSA JWT Verification based on your authentication requirements. The `InjectCognitoJwtVerifier` decorator works with both verifier types, but you should configure only one type in your module.
 
 ### Module Configuration
 
@@ -63,11 +121,7 @@ import { CognitoModule } from '@nestjs-cognito/core';
 @Module({
   imports: [
     CognitoModule.register({
-      // Configure both JWT verification and Identity Provider
-      jwtVerifier: {
-        userPoolId: 'us-east-1_xxxxx',
-        clientId: 'xxxxx',
-      },
+      // Required: Configure AWS Cognito Identity Provider
       identityProvider: {
         region: 'us-east-1',
         credentials: {
@@ -75,11 +129,77 @@ import { CognitoModule } from '@nestjs-cognito/core';
           secretAccessKey: 'xxxxx',
         },
       },
+
+      // Choose ONE of the following JWT verification methods:
+      
+      // Option 1A: Configure Cognito JWT verification (Single User Pool)
+      jwtVerifier: {
+        userPoolId: 'us-east-1_xxxxx',
+        clientId: 'xxxxx',
+        tokenUse: 'access', // 'access', 'id', or null to accept both
+        // Optional: Configure JWK cache
+        additionalProperties: {
+          jwksCache: {
+            // Cache configuration
+            expiryTimeInHours: 24
+          }
+        }
+      },
+
+      // Option 1B: Configure Cognito JWT verification (Multiple User Pools)
+      jwtVerifier: [
+        {
+          userPoolId: 'us-east-1_pool1',
+          clientId: 'client1',
+          tokenUse: 'access' // 'access', 'id', or null to accept both
+        },
+        {
+          userPoolId: 'us-east-1_pool2',
+          clientId: 'client2',
+          tokenUse: 'id',
+          additionalProperties: {
+            jwksCache: {
+              expiryTimeInHours: 24
+            }
+          }
+        }
+      ],
+      
+      // Option 2A: Configure RSA JWT verification (Single Issuer)
+      jwtRsaVerifier: {
+        issuer: 'https://your-issuer.com',
+        jwksUri: 'https://your-jwks-uri.com/.well-known/jwks.json',
+        // Optional: Configure JWK cache
+        additionalProperties: {
+          jwksCache: {
+            expiryTimeInHours: 24
+          }
+        }
+      },
+
+      // Option 2B: Configure RSA JWT verification (Multiple Issuers)
+      jwtRsaVerifier: [
+        {
+          issuer: 'https://issuer1.com',
+          jwksUri: 'https://issuer1.com/.well-known/jwks.json'
+        },
+        {
+          issuer: 'https://issuer2.com',
+          jwksUri: 'https://issuer2.com/.well-known/jwks.json',
+          additionalProperties: {
+            jwksCache: {
+              expiryTimeInHours: 24
+            }
+          }
+        }
+      ]
     }),
   ],
 })
 export class AppModule {}
 ```
+
+> **Note**: When using multiple user pools or issuers, you can configure each one independently with its own settings, including separate JWK cache configurations. The verifier will automatically handle token verification against all configured sources.
 
 ## Integration with @nestjs-cognito/auth
 

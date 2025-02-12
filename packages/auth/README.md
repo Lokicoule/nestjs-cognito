@@ -1,6 +1,5 @@
 <h1 align="center">@nestjs-cognito/auth</h1>
 
-[![Node.js CI](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
 ![npm](https://img.shields.io/npm/dt/%40nestjs-cognito%2Fauth)
 
@@ -51,7 +50,7 @@ In this example, the CognitoAuthModule is imported and registered with the follo
 - `jwtVerifier`:
   - `userPoolId`: The ID of your AWS Cognito user pool.
   - `clientId`: The client ID of your AWS Cognito user pool.
-  - `tokenUse`: The type of token to be used. It is recommended to use "id" instead of "access" token.
+  - `tokenUse`: The type of token to be used. Since December 2023, AWS Cognito supports access token customization, making it the recommended choice for RBAC implementation over ID tokens.
 
 Note: You can also define an identity provider without importing the [CognitoModule](https://www.npmjs.com/package/@nestjs-cognito/core) module by using the CognitoAuthModule.
 
@@ -144,7 +143,7 @@ import {
   CognitoUser,
 } from "@nestjs-cognito/auth";
 import { Controller, Get, UseGuards } from "@nestjs/common";
-import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
 @Controller("dogs")
 @Authentication()
@@ -270,7 +269,7 @@ import {
   CognitoUser,
 } from "@nestjs-cognito/auth";
 import { Controller, Get, UseGuards } from "@nestjs/common";
-import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
 @Controller("dogs")
 @Authorization({

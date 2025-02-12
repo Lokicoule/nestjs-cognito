@@ -1,6 +1,5 @@
 <h1 align="center">@nestjs-cognito/graphql</h1>
 
-[![Node.js CI](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml/badge.svg)](https://github.com/Lokicoule/nestjs-cognito/actions/workflows/node.js.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
 ![npm](https://img.shields.io/npm/dt/%40nestjs-cognito%2Fgraphql)
 
@@ -56,7 +55,7 @@ import {
   AuthenticationGuard,
   GqlCognitoUser,
 } from "@nestjs-cognito/graphql";
-import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
 @Resolver("dogs")
 @GqlAuthentication()
@@ -118,7 +117,7 @@ import {
   AuthorizationGuard,
   GqlCognitoUser,
 } from "@nestjs-cognito/graphql";
-import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
 @Resolver("dogs")
 @GqlAuthorization({
@@ -175,7 +174,7 @@ This is a decorator that can be used in your GraphQL resolvers to access the aut
 
 ```ts
 import { GqlCognitoUser } from "@nestjs-cognito/graphql";
-import { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
 @Resolver()
 export class MyResolver {
