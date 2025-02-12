@@ -25,8 +25,12 @@ describe("Cognito Module : GraphQL", () => {
     const url = (await app.getUrl()).replace("[::1]", "localhost");
     request.setBaseUrl(url);
 
-    handler.addCaptureHandler("username from identity token", (ctx) => {
-      return jwt.decode((ctx.res.json as any).IdToken)!["cognito:username"];
+    handler.addCaptureHandler("username from access token", (ctx) => {
+      return jwt.decode((ctx.res.json as any).AccessToken)["username"];
+    }); 
+
+    handler.addCaptureHandler("username from id token", (ctx) => {
+      return jwt.decode((ctx.res.json as any).IdToken)["cognito:username"];
     });
   });
 
@@ -47,7 +51,7 @@ describe("Cognito Module : GraphQL", () => {
         .expectStatus(200)
         .expectBodyContains("IdToken")
         .stores("flipperToken", "IdToken")
-        .stores("flipperUsername", "#username from identity token");
+        .stores("flipperUsername", "#username from id token");
       await spec()
         .get("/graphql")
         .withGraphQLQuery(
@@ -113,8 +117,8 @@ describe("Cognito Module : GraphQL", () => {
           })
           .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("flipperToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("flipperToken", "AccessToken");
         await spec()
           .get("/graphql")
           .withGraphQLQuery(
@@ -141,8 +145,8 @@ describe("Cognito Module : GraphQL", () => {
           })
           .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("flipperToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("flipperToken", "AccessToken");
         await spec()
           .post("/graphql")
           .withGraphQLQuery(
@@ -175,8 +179,8 @@ describe("Cognito Module : GraphQL", () => {
           })
           .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("flipperToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("flipperToken", "AccessToken");
         await spec()
           .get("/graphql")
           .withGraphQLQuery(
@@ -205,8 +209,8 @@ describe("Cognito Module : GraphQL", () => {
           })
           .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("rayToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("rayToken", "AccessToken");
 
         await spec()
           .get("/graphql")
@@ -236,8 +240,8 @@ describe("Cognito Module : GraphQL", () => {
           })
           .withHeaders("Content-Type", "application/json")
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("blueToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("blueToken", "AccessToken");
         await spec()
           .get("/graphql")
           .withGraphQLQuery(
@@ -268,8 +272,8 @@ describe("Cognito Module : GraphQL", () => {
         })
         .withHeaders("Content-Type", "application/json")
         .expectStatus(200)
-        .expectBodyContains("IdToken")
-        .stores("flipperToken", "IdToken");
+        .expectBodyContains("AccessToken")
+        .stores("flipperToken", "AccessToken");
       await spec()
         .get("/graphql")
         .withGraphQLQuery(
@@ -296,8 +300,8 @@ describe("Cognito Module : GraphQL", () => {
         })
         .withHeaders("Content-Type", "application/json")
         .expectStatus(200)
-        .expectBodyContains("IdToken")
-        .stores("rayToken", "IdToken");
+        .expectBodyContains("AccessToken")
+        .stores("rayToken", "AccessToken");
       await spec()
         .get("/graphql")
         .withGraphQLQuery(

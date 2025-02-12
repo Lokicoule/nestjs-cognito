@@ -23,8 +23,12 @@ describe("Cognito Module : Auth", () => {
     const url = (await app.getUrl()).replace("[::1]", "localhost");
     request.setBaseUrl(url);
 
+    handler.addCaptureHandler("username from access token", (ctx) => {
+      return jwt.decode((ctx.res.json as any).AccessToken)["username"];
+    }); 
+
     handler.addCaptureHandler("username from identity token", (ctx) => {
-      return jwt.decode((ctx.res.json as any).IdToken)!["cognito:username"];
+      return jwt.decode((ctx.res.json as any).IdToken)["cognito:username"];
     });
   });
 
@@ -42,16 +46,15 @@ describe("Cognito Module : Auth", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .expectStatus(200)
-        .expectBodyContains("IdToken")
-        .stores("flipperToken", "IdToken")
-        .stores("flipperUsername", "#username from identity token");
+        .expectBodyContains("AccessToken")
+        .stores("flipperToken", "AccessToken")
+        .stores("flipperUsername", "#username from access token");
       await spec()
         .get("/auth/me-from-payload")
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
         .expectStatus(200)
         .expectBody({
           username: "$S{flipperUsername}",
-          email: config.get("FLIPPER_EMAIL"),
           groups: ["dolphin"],
         });
     });
@@ -90,7 +93,7 @@ describe("Cognito Module : Auth", () => {
         })
         .expectStatus(200);
 
-      authToken = loginResponse.body.IdToken;
+      authToken = loginResponse.body.AccessToken;
     });
 
     it("should be available to everyone - unauthenticated", async () => {
@@ -120,8 +123,8 @@ describe("Cognito Module : Auth", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("flipperToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("flipperToken", "AccessToken");
         await spec()
           .get("/dolphin/flipper")
           .withHeaders("Authorization", "Bearer $S{flipperToken}")
@@ -136,8 +139,8 @@ describe("Cognito Module : Auth", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("flipperToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("flipperToken", "AccessToken");
         await spec()
           .get("/dolphin/flipper")
           .withHeaders("Authorization", "Bearer $S{flipperToken}")
@@ -157,8 +160,8 @@ describe("Cognito Module : Auth", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("flipperToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("flipperToken", "AccessToken");
         await spec()
           .get("/dolphin/position")
           .withHeaders("Authorization", "Bearer $S{flipperToken}")
@@ -172,8 +175,8 @@ describe("Cognito Module : Auth", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("rayToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("rayToken", "AccessToken");
 
         await spec()
           .get("/dolphin/position")
@@ -188,8 +191,8 @@ describe("Cognito Module : Auth", () => {
             clientId: config.get("COGNITO_CLIENT_ID"),
           })
           .expectStatus(200)
-          .expectBodyContains("IdToken")
-          .stores("blueToken", "IdToken");
+          .expectBodyContains("AccessToken")
+          .stores("blueToken", "AccessToken");
         await spec()
           .get("/dolphin/position")
           .withHeaders("Authorization", "Bearer $S{blueToken}")
@@ -208,8 +211,8 @@ describe("Cognito Module : Auth", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .expectStatus(200)
-        .expectBodyContains("IdToken")
-        .stores("flipperToken", "IdToken");
+        .expectBodyContains("AccessToken")
+        .stores("flipperToken", "AccessToken");
       await spec()
         .get("/manta/ray")
         .withHeaders("Authorization", "Bearer $S{flipperToken}")
@@ -224,8 +227,8 @@ describe("Cognito Module : Auth", () => {
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
         .expectStatus(200)
-        .expectBodyContains("IdToken")
-        .stores("rayToken", "IdToken");
+        .expectBodyContains("AccessToken")
+        .stores("rayToken", "AccessToken");
       await spec()
         .get("/manta/ray")
         .withHeaders("Authorization", "Bearer $S{rayToken}")

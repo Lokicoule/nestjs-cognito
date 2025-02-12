@@ -12,7 +12,7 @@ import { AuthController } from "./auth.controller";
         jwtVerifier: {
           userPoolId: configService.get("COGNITO_USER_POOL_ID") as string,
           clientId: configService.get("COGNITO_CLIENT_ID"),
-          tokenUse: "id",
+          tokenUse: null
         },
       }),
       inject: [ConfigService],

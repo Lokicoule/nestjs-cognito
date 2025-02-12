@@ -11,8 +11,8 @@ import { AuthResolver } from "./auth.resolver";
       useFactory: async (configService: ConfigService) => ({
         jwtVerifier: {
           userPoolId: configService.get("COGNITO_USER_POOL_ID"),
-          tokenUse: "id",
           clientId: configService.get("COGNITO_CLIENT_ID"),
+          tokenUse: null
         },
       }),
       inject: [ConfigService],
