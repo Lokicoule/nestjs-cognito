@@ -1,0 +1,118 @@
+export const metadata = {
+  title: 'Core Adapters Usage - NestJS Cognito',
+  description: 'Guide for using AWS JWT verification and Cognito Identity Provider adapters in NestJS applications'
+}
+
+# Integration Guide
+
+The @nestjs-cognito/core package provides two main adapters for AWS Cognito integration:
+
+1. **CognitoJwtVerifier**: An adapter for verifying JWT tokens issued by AWS Cognito
+2. **CognitoIdentityProvider**: An adapter for interacting with AWS Cognito user management services
+
+This guide demonstrates how to effectively use these adapters in your NestJS applications.
+
+## Common Integration Patterns
+
+### Using JWT Verification
+
+```ts
+import { CognitoJwtVerifier, InjectCognitoJwtVerifier } from '@nestjs-cognito/core';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    @InjectCognitoJwtVerifier()
+    private readonly jwtVerifier: CognitoJwtVerifier
+  ) {}
+
+  async validateToken(token: string) {
+    return this.jwtVerifier.verify(token);
+  }
+}
+```
+
+### Using Identity Provider
+
+```ts
+import { CognitoIdentityProvider } from '@aws-sdk/client-cognito-identity-provider';
+import { InjectCognitoIdentityProvider } from '@nestjs-cognito/core';
+
+@Injectable()
+export class UserService {
+  constructor(
+    @InjectCognitoIdentityProvider()
+    private readonly cognitoClient: CognitoIdentityProvider
+  ) {}
+
+  async getUser(username: string) {
+    return this.cognitoClient.adminGetUser({
+      UserPoolId: 'your-user-pool-id',
+      Username: username
+    });
+  }
+}
+```
+
+## Module Integration Examples
+
+### Using with @nestjs-cognito/auth Package
+
+When implementing authentication features using the auth package, use `CognitoAuthModule`:
+
+```ts
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
+
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      identityProvider: {
+        region: process.env.AWS_REGION,
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        },
+      },
+      jwtVerifier: {
+        userPoolId: process.env.COGNITO_USER_POOL_ID,
+        clientId: process.env.COGNITO_CLIENT_ID,
+        tokenUse: 'access',
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+### Using Core Package Only
+
+When you only need core functionality without authentication features, use `CognitoModule`:
+
+```ts
+import { CognitoModule } from '@nestjs-cognito/core';
+
+@Module({
+  imports: [
+    CognitoModule.register({
+      identityProvider: {
+        region: process.env.AWS_REGION,
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        },
+      },
+      jwtVerifier: {
+        userPoolId: process.env.COGNITO_USER_POOL_ID,
+        clientId: process.env.COGNITO_CLIENT_ID,
+        tokenUse: 'access',
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+Choose the appropriate module based on your implementation needs:
+
+- Use `CognitoAuthModule` when you need authentication features from the @nestjs-cognito/auth package
+- Use `CognitoModule` when you only need core functionality like JWT verification and Cognito Identity Provider integration
