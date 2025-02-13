@@ -19,6 +19,11 @@ const withMDX = nextMDX({
 const nextConfig = {
   output: 'export',
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
+  basePath: '/nestjs-cognito',
+  images: {
+    unoptimized: true
+  },
+  assetPrefix: '/nestjs-cognito'
 }
 
 export default withSearch(withMDX(nextConfig))
