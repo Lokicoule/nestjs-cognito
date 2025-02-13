@@ -1,0 +1,106 @@
+export const metadata = {
+  title: 'Authorization - NestJS Cognito',
+  description: 'Learn how to implement group-based authorization and access control with NestJS-Cognito.',
+}
+
+# Authorization
+
+Implement group-based access control using NestJS-Cognito's authorization features. The `@Authorization` decorator includes authentication functionality by default, so you don't need to add the `@Authentication` decorator when using authorization.
+
+## Basic Authorization
+
+Restrict access to specific Cognito user groups:
+
+```typescript
+import { Authorization } from '@nestjs-cognito/auth';
+
+@Controller('admin')
+export class AdminController {
+  @Authorization(['admin'])
+  @Get('settings')
+  manageSettings() {
+    return 'Admin settings panel';
+  }
+
+  @Authorization(['editor', 'admin'])
+  @Post('content')
+  createContent() {
+    return 'Create new content';
+  }
+}
+```
+
+## Advanced Rules
+
+Implement complex permission rules with multiple conditions:
+
+```typescript
+@Controller('projects')
+export class ProjectController {
+  @Authorization({
+    requiredGroups: ['project-member'],     // Must be a project member
+    allowedGroups: ['manager', 'lead'],     // AND either a manager or lead
+    prohibitedGroups: ['suspended']         // AND not suspended
+  })
+  @Put(':id')
+  updateProject() {
+    return 'Update project details';
+  }
+}
+```
+
+Apply authorization rules using the guard directly:
+
+```typescript
+import { AuthorizationGuard } from '@nestjs-cognito/auth';
+
+@Controller('cats')
+export class CatsController {
+  @UseGuards(
+    AuthorizationGuard({
+      allowedGroups: ['user', 'admin'],
+      requiredGroups: ['moderator'],
+      prohibitedGroups: ['visitor'],
+    })
+  )
+  @Get()
+  findAll() {
+    return 'This action requires specific permissions';
+  }
+}
+```
+
+## Best Practices
+
+### Group Structure
+
+1. **Hierarchical Groups**
+   - Create clear group hierarchies (e.g., 'admin' > 'manager' > 'user')
+   - Use descriptive group names that reflect roles
+   - Keep groups focused on specific responsibilities
+
+2. **Permission Management**
+   - Apply the principle of least privilege
+   - Use required groups for mandatory permissions
+   - Use allowed groups for optional access levels
+   - Use prohibited groups for explicit denials
+
+### Implementation Tips
+
+1. **Combining Rules**
+   ```typescript
+   @Authorization({
+     requiredGroups: ['authenticated'],
+     allowedGroups: ['premium', 'vip'],
+     prohibitedGroups: ['banned']
+   })
+   ```
+
+2. **Multiple Group Checks**
+   ```typescript
+   @Authorization(['admin', 'moderator'])
+   @Get('reports')
+   getReports() {
+     return 'Access granted to admins or moderators';
+   }
+   ```

@@ -1,0 +1,110 @@
+export const metadata = {
+  title: 'CognitoUser Decorator - NestJS Cognito',
+  description: 'Learn how to access authenticated user information using the CognitoUser decorator in NestJS-Cognito.',
+}
+
+# CognitoUser Decorator
+
+Learn how to access authenticated user information in your NestJS application using the `@CognitoUser` decorator.
+
+## Overview
+
+The `@CognitoUser` decorator provides convenient access to the authenticated user's information from AWS Cognito. It can be used in three different ways to retrieve user data:
+
+1. Full user object
+2. Single property access
+3. Multiple properties selection
+
+## Usage Patterns
+
+### 1. Full User Object
+
+Retrieve the complete user object containing all available Cognito user information:
+
+```typescript
+import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
+
+@Controller('user')
+export class UserController {
+  @Get('profile')
+  @Authentication()
+  getProfile(@CognitoUser() user: CognitoJwtPayload) {
+    return user;
+  }
+}
+```
+
+This approach gives you access to all user attributes available in the JWT token.
+
+### 2. Single Property Access
+
+Extract a specific property from the user object:
+
+```typescript
+@Authentication()
+@Controller('user')
+export class UserController {
+  @Get('email')
+  getEmail(@CognitoUser('email') email: string) {
+    return email;
+  }
+
+  @Get('username')
+  getUsername(@CognitoUser('username') username: string) {
+    return username;
+  }
+}
+```
+
+This method is useful when you only need one specific attribute, making your code more concise and explicit.
+
+### 3. Multiple Properties Selection
+
+Select multiple specific properties from the user object:
+
+```typescript
+@Authentication()
+@Controller('user')
+export class UserController {
+  @Get('details')
+  getDetails(@CognitoUser(['username', 'email', 'groups']) user) {
+    return user; // Returns object with only selected properties
+  }
+
+  @Get('preferences')
+  getPreferences(@CognitoUser(['locale', 'timezone']) preferences) {
+    return preferences;
+  }
+}
+```
+
+This approach allows you to select multiple specific attributes while excluding unnecessary data.
+
+## Available Properties
+
+Common properties available through the `@CognitoUser` decorator:
+
+- `sub` - The unique identifier for the user
+- `email` - User's email address
+- `email_verified` - Email verification status
+- `username` - Cognito username
+- `groups` - User's group memberships
+- `custom:*` - Any custom attributes defined in your user pool
+
+<Note>
+ **Authentication/Authorization**: Use either the `@Authentication()` decorator or `@Authorization()` decorator when using `@CognitoUser`. 
+</Note>
+
+4. **Error Handling**: Handle cases where requested properties might not exist in the token payload:
+
+```typescript
+@Get('preferences')
+@Authentication()
+async getPreferences(@CognitoUser(['locale']) preferences) {
+  if (!preferences.locale) {
+    return { locale: 'default' };
+  }
+  return preferences;
+}
+```

@@ -1,0 +1,119 @@
+export const metadata = {
+  title: 'Getting Started - NestJS Cognito',
+  description: 'Complete guide to get started with NestJS-Cognito integration.',
+}
+
+# Quick Start Guide
+
+Get up and running with @nestjs-cognito quickly. This guide covers essential setup and basic usage.
+
+## Installation
+
+<CodeGroup>
+```sh {{ title: 'pnpm' }}
+pnpm add @nestjs-cognito/auth
+```
+```sh {{ title: 'npm' }}
+npm i @nestjs-cognito/auth
+```
+```sh {{ title: 'yarn' }}
+yarn add @nestjs-cognito/auth
+```
+</CodeGroup>
+
+## Basic Setup
+
+### 1. Configure Environment Variables
+
+Create a `.env` file in your project root:
+
+```
+COGNITO_USER_POOL_ID=your-user-pool-id
+COGNITO_CLIENT_ID=your-client-id
+```
+
+### 2. Module Configuration
+
+Import and configure the CognitoAuthModule in your app.module.ts:
+
+```typescript
+import { Module } from '@nestjs/common';
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot(),
+    CognitoAuthModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        jwtVerifier: {
+          userPoolId: configService.get('COGNITO_USER_POOL_ID'),
+          clientId: configService.get('COGNITO_CLIENT_ID'),
+          tokenUse: 'access',
+        },
+      }),
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+## Basic Usage
+
+### Protected Routes
+
+Use the `@Authentication()` decorator to protect your routes:
+
+```typescript
+import { Controller, Get } from '@nestjs/common';
+import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
+
+@Authentication()
+@Controller('users')
+export class UsersController {
+  @Get('profile')
+  getProfile(@CognitoUser() user: CognitoJwtPayload) {
+    return user;
+  }
+}
+```
+
+### Public Routes
+
+Use `@PublicRoute()` for routes that don't require authentication:
+
+```typescript
+import { Controller, Get } from '@nestjs/common';
+import { Authentication, PublicRoute } from '@nestjs-cognito/auth';
+
+@Authentication()
+@Controller('auth')
+export class AuthController {
+  @PublicRoute()
+  @Get('health')
+  health() {
+    return { status: 'ok' };
+  }
+}
+```
+
+### Group-based Authorization
+
+Restrict access based on Cognito user groups:
+
+```typescript
+import { Controller, Get } from '@nestjs/common';
+import { Authentication, Authorization } from '@nestjs-cognito/auth';
+
+@Authorization(['admin'])
+@Controller('admin')
+export class AdminController {
+  @Get('dashboard')
+  adminDashboard() {
+    return { message: 'Admin dashboard' };
+  }
+}
+```

@@ -1,3 +1,6 @@
+[![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
+![npm](https://img.shields.io/npm/dt/%40nestjs-cognito%2Ftesting)
+
 # @nestjs-cognito/testing
 
 Comprehensive testing utilities for NestJS applications using AWS Cognito authentication.
@@ -102,7 +105,10 @@ describe('Auth E2E Tests', () => {
 
 ### Mock Testing
 
+> **Important**: When using mock testing with CognitoAuthModule or CognitoCoreModule, you MUST override the JWT verifier provider in your test setup to ensure proper mock functionality.
+
 ```typescript
+import { COGNITO_JWT_VERIFIER_INSTANCE_TOKEN } from '@nestjs-cognito/core';
 import { CognitoTestingModule } from '@nestjs-cognito/testing';
 
 describe('Auth Tests', () => {
@@ -148,62 +154,24 @@ describe('Auth Tests', () => {
     // Test protected routes
     await request(app.getHttpServer())
       .get('/protected')
-      .set('Authorization', `Bearer ${response.body.AccessToken}`)
-      .expect(200)
-      .expect({
-        username: 'test-user',
-        email: 'test@example.com',
-        groups: ['users'],
-      });
+      .set('Authorization', `Bearer ${response.body.token}`)
+      .expect(200);
   });
 });
-```
-
-### Dynamic Configuration
-
-Update mock settings during test execution:
-
-```typescript
-await request(app.getHttpServer())
-  .post('/config')
-  .send({
-    user: {
-      username: 'new-user',
-      email: 'new@example.com',
-      groups: ['admin'],
-    },
-  })
-  .expect(200);
 ```
 
 ## API Reference
 
 ### CognitoTestingService
-
-#### getAccessToken(credentials, clientId)
-- `credentials`: User credentials (username, password)
-- `clientId`: Cognito client ID
-- Returns: Promise with authentication tokens
-
-#### setMockConfig(config)
-- `config`: Mock configuration object
-- Updates the mock testing configuration
-
-#### verifyToken(token)
-- `token`: JWT token string
-- Verifies token authenticity
+Provides methods for test authentication:
+- `getAccessToken()` - Get access token for test user
+- `getIdToken()` - Get ID token for test user
+- `setMockConfig()` - Updates the mock testing configuration
 
 ### CognitoTestingModule
-
-#### register(options?, mockOptions?)
-- `options`: AWS Cognito configuration
+Module configuration options:
+- `identityProvider` - AWS Cognito configuration
 - `mockOptions`: Mock testing configuration
-  - `enabled`: Enable/disable mock mode
-  - `user`: Mock user configuration
-
-#### registerAsync(options)
-- Asynchronous module configuration
-- Supports dependency injection
 
 ## License
 
