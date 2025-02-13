@@ -72,7 +72,7 @@ function PageNavigation() {
 
 function SmallPrint() {
   return (
-    <div className="flex flex-col items-center justify-between gap-5 border-t border-zinc-900/5 pt-8 sm:flex-row dark:border-white/5">
+    <div className="flex flex-col items-center justify-center gap-3 border-t border-zinc-900/5 pt-8 dark:border-white/5">
       <p className="text-xs text-zinc-600 dark:text-zinc-400">
         &copy; {new Date().getFullYear()} NestJS-Cognito. All rights reserved.
       </p>

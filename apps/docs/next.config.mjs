@@ -20,6 +20,7 @@ const nextConfig = {
   output: 'export',
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'mdx'],
   basePath: '/nestjs-cognito',
+  trailingSlash: true,
   images: {
     unoptimized: true
   },

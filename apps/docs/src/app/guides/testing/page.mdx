@@ -11,20 +11,43 @@ The testing package provides comprehensive utilities and helpers for testing Nes
 
 To begin testing your NestJS Cognito authentication, you'll need to install the required packages:
 
-```bash
+<CodeGroup>
+```sh {{ title: 'pnpm' }}
+pnpm add --save-dev @nestjs-cognito/testing      # NestJS Cognito testing utilities
+pnpm add --save-dev @nestjs/testing              # NestJS testing utilities
+pnpm add --save-dev jest                         # Test runner
+pnpm add --save-dev @types/jest                  # TypeScript definitions
+```
+```sh {{ title: 'npm' }}
 npm install --save-dev @nestjs-cognito/testing      # NestJS Cognito testing utilities
 npm install --save-dev @nestjs/testing              # NestJS testing utilities
 npm install --save-dev jest                         # Test runner
 npm install --save-dev @types/jest                  # TypeScript definitions
 ```
+```sh {{ title: 'yarn' }}
+yarn add --dev @nestjs-cognito/testing      # NestJS Cognito testing utilities
+yarn add --dev @nestjs/testing              # NestJS testing utilities
+yarn add --dev jest                         # Test runner
+yarn add --dev @types/jest                  # TypeScript definitions
+```
+</CodeGroup>
+
 
 ## HTTP Testing with Pactum
 
 Pactum is a HTTP testing toolkit that makes it easy to test NestJS Cognito authentication endpoints.
 
-```bash
-npm install --save-dev pactum                       # HTTP testing toolkit
+<CodeGroup>
+```sh {{ title: 'pnpm' }}
+pnpm add --save-dev pactum    # HTTP testing toolkit
 ```
+```sh {{ title: 'npm' }}
+npm install --save-dev pactum   # HTTP testing toolkit
+```
+```sh {{ title: 'yarn' }}
+yarn add --dev pactum   # HTTP testing toolkit
+```
+</CodeGroup>
 
 ### Setting Up Pactum
 

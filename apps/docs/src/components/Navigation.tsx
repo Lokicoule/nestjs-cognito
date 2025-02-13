@@ -232,7 +232,6 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quick Start', href: '/quickstart' },
-      { title: 'Integration Guide', href: '/api/integration' },
     ],
   },
   {
@@ -249,6 +248,7 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Advanced',
     links: [
+      { title: 'Integration Guide', href: '/api/integration' },
       { title: 'Core Package', href: '/api/core-package' },
       { title: 'JWT Verification', href: '/api/jwt-verification' },
       { title: 'Module Configuration', href: '/api/module-configuration' },

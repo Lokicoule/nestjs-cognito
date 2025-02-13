@@ -9,8 +9,8 @@ import { type Section } from '@/components/SectionProvider'
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - Kumiko',
-    default: 'Kumiko',
+    template: '%s - NestJS-Cognito',
+    default: 'NestJS-Cognito',
   },
 }
 
