@@ -52,7 +52,7 @@ jobs:
       - name: Build documentation
         working-directory: apps/docs
         run: |
-          pnpm build
+          pnpm next build
           touch out/.nojekyll
 
       - name: Upload artifact
