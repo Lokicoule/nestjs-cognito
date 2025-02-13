@@ -1,0 +1,96 @@
+# Authentication
+
+Authentication is a crucial aspect of securing your NestJS application with AWS Cognito. This guide will walk you through implementing authentication using @nestjs-cognito/auth.
+
+## Overview
+
+The authentication process in @nestjs-cognito involves verifying JWT tokens issued by AWS Cognito. When a user successfully logs in through Cognito, they receive JWT tokens that can be used to authenticate subsequent requests to your NestJS application.
+
+## Basic Setup
+
+First, ensure you have the auth package properly configured:
+
+```ts
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
+
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      region: 'us-east-1',
+      userPoolId: 'us-east-1_xxxxxx',
+      clientId: 'your-client-id'
+    })
+  ]
+})
+export class AppModule {}
+```
+
+## Using @Authentication Decorator
+
+The `@Authentication()` decorator is the primary way to protect your routes. You can apply it at both the controller and route levels:
+
+### Controller-level Authentication
+
+```ts
+import { Authentication } from '@nestjs-cognito/auth';
+import { Controller, Get } from '@nestjs/common';
+
+@Controller('users')
+@Authentication() // Protect all routes in this controller
+export class UsersController {
+  @Get()
+  findAll() {
+    return 'This route is protected';
+  }
+}
+```
+
+### Route-level Authentication
+
+```ts
+import { Authentication } from '@nestjs-cognito/auth';
+import { Controller, Get } from '@nestjs/common';
+
+@Controller('users')
+export class UsersController {
+  @Get('public')
+  public() {
+    return 'This route is public';
+  }
+
+  @Get('protected')
+  @Authentication() // Protect only this route
+  protected() {
+    return 'This route is protected';
+  }
+}
+```
+
+## Public Routes
+
+Sometimes you need to make certain routes public while keeping the controller-level authentication. Use the `@PublicRoute()` decorator for this:
+
+```ts
+import { Authentication, Public } from '@nestjs-cognito/auth';
+import { Controller, Get } from '@nestjs/common';
+
+@Controller('users')
+@Authentication()
+export class UsersController {
+  @PublicRoute()
+  @Get('public')
+  public() {
+    return 'This route is public despite controller-level authentication';
+  }
+}
+```
+
+## Token Verification
+
+By default, @nestjs-cognito/auth verifies the following aspects of the JWT token:
+
+- Token signature using JWKS from Cognito
+- Token expiration
+- Token issuer (matches your Cognito User Pool)
+- Token audience (matches your Client ID)
+- Token use (access or id token)

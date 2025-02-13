@@ -1,0 +1,153 @@
+export const metadata = {
+  title: 'Core Package - NestJS Cognito',
+  description: 'Comprehensive guide to the core package of NestJS-Cognito, including configuration, JWT verification, and identity provider setup.'
+}
+
+# Core Package
+
+The core package provides the fundamental building blocks for AWS Cognito integration in NestJS applications. It handles JWT verification and Cognito Identity Provider configuration.
+
+## Key Features
+
+- AWS Cognito Identity Provider integration
+- JWT verification with support for both Cognito JWT and RSA JWT
+- Flexible module configuration (sync and async)
+- Global module availability
+- Dependency injection decorators
+
+## Installation
+
+```bash
+npm install @nestjs-cognito/core
+```
+
+## Configuration Options
+
+### Identity Provider Configuration
+
+Configure the AWS Cognito Identity Provider client:
+
+```typescript
+import { CognitoModule } from '@nestjs-cognito/core';
+
+@Module({
+  imports: [
+    CognitoModule.register({
+      identityProvider: {
+        region: 'us-east-1',
+        credentials: {
+          accessKeyId: 'YOUR_ACCESS_KEY_ID',
+          secretAccessKey: 'YOUR_SECRET_ACCESS_KEY'
+        }
+      }
+    })
+  ]
+})
+export class AppModule {}
+```
+
+### JWT Verifier Configuration
+
+Configure JWT verification for Cognito tokens:
+
+```typescript
+CognitoModule.register({
+  jwtVerifier: {
+    userPoolId: 'your-user-pool-id',
+    clientId: 'your-client-id',
+    tokenUse: 'id', // or 'access'
+    additionalProperties: {
+      jwksCache: // optional JWK cache configuration
+    }
+  }
+})
+```
+
+### RSA JWT Verifier Configuration
+
+Configure JWT verification for RSA-signed tokens:
+
+```typescript
+CognitoModule.register({
+  jwtRsaVerifier: {
+    issuer: 'https://your-issuer.com',
+    audience: 'your-audience',
+    additionalProperties: {
+      jwksCache: // optional JWK cache configuration
+    }
+  }
+})
+```
+
+## Async Configuration
+
+For dynamic configuration using environment variables or other async providers:
+
+```typescript
+import { CognitoModule } from '@nestjs-cognito/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+@Module({
+  imports: [
+    CognitoModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        identityProvider: {
+          region: configService.get('AWS_REGION'),
+        },
+        jwtVerifier: {
+          userPoolId: configService.get('COGNITO_USER_POOL_ID'),
+          clientId: configService.get('COGNITO_CLIENT_ID'),
+          tokenUse: 'id',
+        },
+      }),
+      inject: [ConfigService],
+    })
+  ]
+})
+export class AppModule {}
+```
+
+## Dependency Injection
+
+Inject Cognito services using decorators:
+
+```typescript
+import { InjectCognitoIdentityProvider, InjectCognitoJwtVerifier } from '@nestjs-cognito/core';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    @InjectCognitoIdentityProvider()
+    private readonly cognitoIdentityProvider: CognitoIdentityProviderClient,
+    @InjectCognitoJwtVerifier()
+    private readonly jwtVerifier: CognitoJwtVerifier
+  ) {}
+}
+```
+
+## Module Options
+
+### CognitoModuleOptions
+
+Core configuration interface:
+
+```typescript
+interface CognitoModuleOptions {
+  identityProvider?: CognitoIdentityProviderClientConfig;
+  jwtVerifier?: CognitoJwtVerifierProperties | CognitoJwtVerifierMultiProperties[];
+  jwtRsaVerifier?: JwtRsaVerifierProperties | JwtRsaVerifierMultiProperties[];
+}
+```
+
+### Async Configuration Options
+
+```typescript
+interface CognitoModuleAsyncOptions {
+  imports?: Array<Type<any>>;
+  useFactory?: (...args: any[]) => Promise<CognitoModuleOptions> | CognitoModuleOptions;
+  inject?: any[];
+  useClass?: Type<CognitoModuleOptionsFactory>;
+  useExisting?: Type<CognitoModuleOptionsFactory>;
+  extraProviders?: Provider[];
+}```

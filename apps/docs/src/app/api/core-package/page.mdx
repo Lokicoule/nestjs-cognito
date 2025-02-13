@@ -1,0 +1,48 @@
+export const metadata = {
+  title: 'Core Package - NestJS Cognito',
+  description: 'Core functionality and adapters for AWS Cognito integration in NestJS applications'
+}
+
+# Core Package
+
+The Core package provides essential adapters and interfaces that serve as the foundation for AWS Cognito integration in NestJS applications. It includes key components for JWT verification, Cognito Identity Provider integration, and dependency injection.
+
+## Installation
+
+```bash
+npm install @nestjs-cognito/core
+```
+
+## Package Architecture
+
+The Core package provides essential adapters and interfaces that are used by other packages in the @nestjs-cognito ecosystem:
+
+- **CognitoJwtVerifier**: An adapter for verifying JWT tokens issued by AWS Cognito
+- **CognitoIdentityProvider**: Integration with AWS Cognito Identity Provider service
+- **Dependency Injection Tokens**: Tokens for proper dependency injection in NestJS applications
+
+## Basic Usage
+
+### Cognito Identity Provider
+
+The package provides direct access to AWS Cognito Identity Provider through dependency injection:
+
+```ts
+import { CognitoIdentityProvider } from "@aws-sdk/client-cognito-identity-provider";
+import { InjectCognitoIdentityProvider } from "@nestjs-cognito/core";
+
+export class MyService {
+  constructor(
+    @InjectCognitoIdentityProvider()
+    private readonly client: CognitoIdentityProvider
+  ) {}
+}
+```
+
+## Integration with Other Packages
+
+The Core package serves as the foundation for other @nestjs-cognito packages:
+
+- Provides essential adapters and interfaces used by the Auth package
+- Enables JWT verification capabilities across the ecosystem
+- Facilitates proper dependency injection in NestJS applications

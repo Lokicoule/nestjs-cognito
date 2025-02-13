@@ -1,0 +1,83 @@
+# GraphQL Integration
+
+The `@nestjs-cognito/graphql` package provides GraphQL-specific decorators and guards for authentication and authorization.
+
+## Installation
+
+```bash
+npm install @nestjs-cognito/graphql
+```
+
+## Basic Setup
+
+Configure the core authentication module:
+
+```typescript
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
+
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      region: 'us-east-1',
+      userPoolId: 'us-east-1_xxxxxx',
+      clientId: 'your-client-id'
+    })
+  ]
+})
+export class AppModule {}
+```
+
+## Authentication
+
+Protect your GraphQL operations using the `@GqlAuthentication()` decorator:
+
+```typescript
+import { GqlAuthentication } from '@nestjs-cognito/graphql';
+
+@Resolver()
+export class SecureResolver {
+  @Query()
+  @GqlAuthentication()
+  async secureData() {
+    return { message: 'This is secure data' };
+  }
+}
+```
+
+## Authorization
+
+Implement role-based access control with the `@GqlAuthorization()` decorator:
+
+```typescript
+import { GqlAuthorization } from '@nestjs-cognito/graphql';
+
+@Resolver()
+export class AdminResolver {
+  @Mutation()
+  @GqlAuthorization(['admin'])
+  async adminOperation() {
+    return { success: true };
+  }
+}
+```
+
+## User Information
+
+Access the authenticated user's information using the `@GqlCognitoUser()` decorator:
+
+```typescript
+import { GqlCognitoUser } from '@nestjs-cognito/graphql';
+import type { CognitoJwtPayload } from '@nestjs-cognito/core';
+
+@Resolver()
+export class UserResolver {
+  @Query()
+  async me(@GqlCognitoUser() user: CognitoJwtPayload) {
+    return {
+      id: user.sub,
+      username: user.username,
+      email: user['email']
+    };
+  }
+}
+```

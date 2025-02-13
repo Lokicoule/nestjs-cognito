@@ -1,0 +1,317 @@
+export const metadata = {
+  title: 'Testing - NestJS Cognito',
+  description: 'Learn how to implement E2E testing with NestJS-Cognito using real and mocked scenarios.'
+}
+
+# Testing
+
+The testing package provides comprehensive utilities and helpers for testing NestJS applications that use AWS Cognito authentication. It supports both real E2E testing with actual AWS services and mocked testing for faster development cycles.
+
+## Getting Started with Testing
+
+To begin testing your NestJS Cognito authentication, you'll need to install the required packages:
+
+```bash
+npm install --save-dev @nestjs-cognito/testing      # NestJS Cognito testing utilities
+npm install --save-dev @nestjs/testing              # NestJS testing utilities
+npm install --save-dev jest                         # Test runner
+npm install --save-dev @types/jest                  # TypeScript definitions
+```
+
+## HTTP Testing with Pactum
+
+Pactum is a HTTP testing toolkit that makes it easy to test NestJS Cognito authentication endpoints.
+
+```bash
+npm install --save-dev pactum                       # HTTP testing toolkit
+```
+
+### Setting Up Pactum
+
+```typescript
+import { handler, request, spec } from "pactum";
+import { Test } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+
+describe('Auth Tests', () => {
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleRef.createNestApplication();
+    await app.init();
+
+    // Configure Pactum to use the NestJS application
+    request.setBaseUrl(`http://localhost:${process.env.PORT || 3000}`);
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+});
+```
+
+## Real E2E Testing
+
+Real E2E testing allows you to validate your application against actual AWS Cognito services, ensuring production-ready authentication flows.
+
+```typescript
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CognitoTestingModule } from '@nestjs-cognito/testing';
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
+
+@Module({
+  imports: [
+    // Configure auth module with environment variables
+    CognitoAuthModule.registerAsync({
+      imports: [ConfigModule.forRoot()],
+      useFactory: (config: ConfigService) => ({
+        jwtVerifier: {
+          userPoolId: config.get('COGNITO_USER_POOL_ID'),
+          clientId: config.get('COGNITO_CLIENT_ID'),
+          tokenUse: 'id',
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    // Configure testing module with AWS credentials
+    CognitoTestingModule.registerAsync({
+      imports: [ConfigModule.forRoot()],
+      useFactory: (config: ConfigService) => ({
+        identityProvider: {
+          region: config.get('COGNITO_REGION'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
+})
+export class TestModule {}
+```
+
+## Mock Testing
+
+Mock testing is useful during development and CI/CD pipelines where real AWS Cognito services are not available or desired. Note that you must provide the mock configuration as the second argument to `CognitoTestingModule.register()` and explicitly enable mock mode.
+
+```typescript
+import { COGNITO_JWT_VERIFIER_INSTANCE_TOKEN } from '@nestjs-cognito/core';
+import { CognitoTestingModule } from '@nestjs-cognito/testing';
+import { Test } from "@nestjs/testing";
+import { handler, request, spec } from "pactum";
+
+describe('Auth Tests', () => {
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    const moduleFixture = await Test.createTestingModule({
+      imports: [
+        CognitoTestingModule.register({}, {
+          enabled: true, // Enable mock mode
+          user: {
+            username: 'test-user',
+            email: 'test@example.com',
+            groups: ['users'],
+          },
+        }),
+        AppModule,
+      ],
+    })
+      .overrideProvider(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+      .useFactory({
+        factory: CognitoTestingModule.createJwtVerifierFactory
+      })
+      .compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+});
+```
+
+## Testing Scenarios
+
+### Authentication Testing
+
+```typescript
+// Test authentication using mock service
+const response = await request(app.getHttpServer())
+  .post('/cognito-testing-login')
+  .send({
+    username: 'test-user',
+    password: 'any-password', // Password is not validated in mock mode
+    clientId: 'mock-client-id'
+  })
+  .expect(200);
+
+// Test protected routes
+await request(app.getHttpServer())
+  .get('/protected')
+  .set('Authorization', `Bearer ${response.body.AccessToken}`)
+  .expect(200)
+  .expect({
+    username: 'test-user',
+    email: 'test@example.com',
+    groups: ['users'],
+  });
+```
+
+### Authorization Testing
+
+```typescript
+// Test group-based authorization
+describe('Authorization Tests', () => {
+  it('should allow access to authorized group members', async () => {
+    // Configure mock user with specific group
+    await request(app.getHttpServer())
+      .post('/config')
+      .send({
+        enabled: true,
+        user: {
+          username: 'admin-user',
+          email: 'admin@example.com',
+          groups: ['admin'],
+        },
+      })
+      .expect(200);
+
+    // Login and get token
+    const loginResponse = await request(app.getHttpServer())
+      .post('/cognito-testing-login')
+      .send({
+        username: 'admin@example.com',
+        password: 'password',
+        clientId: 'test-client',
+      })
+      .expect(200);
+
+    // Test protected route access
+    await request(app.getHttpServer())
+      .get('/admin/dashboard')
+      .set('Authorization', `Bearer ${loginResponse.body.AccessToken}`)
+      .expect(200);
+  });
+});
+```
+
+### Authentication Testing
+
+```typescript
+// Test authentication using mock service
+const response = await request(app.getHttpServer())
+  .post('/cognito-testing-login')
+  .send({
+    username: 'test-user',
+    password: 'any-password', // Password is not validated in mock mode
+    clientId: 'mock-client-id'
+  })
+  .expect(200);
+
+// Test protected routes
+await request(app.getHttpServer())
+  .get('/protected')
+  .set('Authorization', `Bearer ${response.body.AccessToken}`)
+  .expect(200)
+  .expect({
+    username: 'test-user',
+    email: 'test@example.com',
+    groups: ['users'],
+  });
+```
+
+### Authorization Testing
+
+```typescript
+// Test group-based authorization
+describe('Authorization Tests', () => {
+  it('should allow access to authorized group members', async () => {
+    // Configure mock user with specific group
+    await request(app.getHttpServer())
+      .post('/config')
+      .send({
+        enabled: true,
+        user: {
+          username: 'admin-user',
+          email: 'admin@example.com',
+          groups: ['admin'],
+        },
+      })
+      .expect(200);
+
+    // Login and get token
+    const loginResponse = await request(app.getHttpServer())
+      .post('/cognito-testing-login')
+      .send({
+        username: 'admin@example.com',
+        password: 'password',
+        clientId: 'test-client',
+      })
+      .expect(200);
+
+    // Test protected route access
+    await request(app.getHttpServer())
+      .get('/admin/dashboard')
+      .set('Authorization', `Bearer ${loginResponse.body.AccessToken}`)
+      .expect(200);
+  });
+});
+```
+
+## Advanced Testing
+
+### Dynamic User Configuration
+
+Update mock settings during test execution:
+
+```typescript
+await request(app.getHttpServer())
+  .post('/config')
+  .send({
+    user: {
+      username: 'new-user',
+      email: 'new@example.com',
+      groups: ['admin'],
+    },
+  })
+  .expect(200);
+```
+
+### Testing Different Token Types
+
+```typescript
+describe('Token Type Tests', () => {
+  it('should validate ID tokens', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/cognito-testing-login')
+      .send({
+        username: 'test@example.com',
+        password: 'password',
+        clientId: 'test-client',
+      })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .get('/protected')
+      .set('Authorization', `Bearer ${response.body.IdToken}`)
+      .expect(200);
+  });
+
+  it('should validate access tokens', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/cognito-testing-login')
+      .send({
+        username: 'test@example.com',
+        password: 'password',
+        clientId: 'test-client',
+      })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .get('/protected')
+      .set('Authorization', `Bearer ${response.body.AccessToken}`)
+      .expect(200);
+  });
+});

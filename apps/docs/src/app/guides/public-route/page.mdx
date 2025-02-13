@@ -1,0 +1,132 @@
+# Public Route
+
+The `@PublicRoute` decorator allows you to create endpoints that are accessible to both authenticated and unauthenticated users while maintaining security when credentials are provided.
+
+## Overview
+
+Sometimes you need routes that can serve different content based on the user's authentication status. For example, you might want to show a personalized message for logged-in users while still allowing access to anonymous users.
+
+## Basic Usage
+
+```ts
+import { Authentication, PublicRoute, CognitoUser } from '@nestjs-cognito/auth';
+import { Controller, Get } from '@nestjs/common';
+
+@Controller('api')
+@Authentication()
+export class AppController {
+  @PublicRoute()
+  @Get('welcome')
+  welcomeUser(@CognitoUser() user?: User) {
+    return user 
+      ? `Welcome back, ${user.username}!` 
+      : 'Welcome, guest!';
+  }
+}
+```
+
+## How It Works
+
+When using `@PublicRoute` with `@Authentication`, the behavior is as follows:
+
+1. **No JWT Token Present**:
+   - The route is accessible
+   - The `user` parameter will be `undefined`
+   - No authentication checks are performed
+
+2. **Valid JWT Token Present**:
+   - The route is accessible
+   - The token is validated
+   - User information is available via `@CognitoUser()`
+
+3. **Invalid JWT Token Present**:
+   - Returns 401 Unauthorized
+   - The route is not accessible
+
+
+## Token Validation Priority
+
+When both `@Authentication` and `@PublicRoute` decorators are present:
+
+- If a JWT token is provided, `@Authentication` takes precedence
+- The token must pass all validation checks (signature, expiration, issuer, etc.)
+- Invalid tokens will result in a 401 Unauthorized response
+
+## Use Cases
+
+### Welcome Message
+
+```ts
+@Controller('api')
+@Authentication()
+export class AppController {
+  @PublicRoute()
+  @Get('welcome')
+  getMessage(@CognitoUser('username') username?: string) {
+    return `Hello ${username ?? 'stranger'}`;
+  }
+}
+```
+
+### Content Preview
+
+```ts
+@Controller('content')
+@Authentication()
+export class ContentController {
+  @PublicRoute()
+  @Get('article/:id')
+  async getArticle(
+    @Param('id') id: string,
+    @CognitoUser() user?: User
+  ) {
+    const article = await this.articleService.findById(id);
+    
+    return user
+      ? article // Full article for authenticated users
+      : article.preview; // Preview for guests
+  }
+}
+```
+
+## Common Patterns
+
+### Conditional Response
+
+```ts
+@PublicRoute()
+@Get('profile')
+async getProfile(@CognitoUser() user?: User) {
+  if (!user) {
+    return {
+      message: 'Log in to view your full profile',
+      preview: true
+    };
+  }
+
+  return {
+    message: 'Your profile details',
+    data: await this.userService.getFullProfile(user.sub),
+    preview: false
+  };
+}
+```
+
+### Mixed Access Levels
+
+```ts
+@Controller('api')
+@Authentication()
+export class ApiController {
+  @PublicRoute()
+  @Get('basic-info')
+  getBasicInfo() {
+    return { version: '1.0.0' };
+  }
+
+  @Get('sensitive-info')
+  getSensitiveInfo(@CognitoUser() user: User) {
+    return { secretData: 'only for authenticated users' };
+  }
+}
+```

@@ -1,0 +1,51 @@
+export const metadata = {
+  title: 'NestJS Cognito - Simple AWS Authentication for NestJS',
+  description: 'The easiest way to add AWS Cognito authentication to your NestJS applications.'
+}
+
+# Get Started with NestJS-Cognito
+
+Add AWS Cognito to your NestJS app in minutes. Simple, secure, and ready for production.
+
+## Features
+
+- **Quick Setup**: Connect to AWS Cognito in under 5 minutes
+- **Simple Guards**: One line of code to protect your routes
+- **GraphQL Support**: Works seamlessly with your GraphQL apps
+- **Testing Made Easy**: Write tests with confidence
+- **Zero Config**: Works right out of the box
+
+## Why NestJS-Cognito?
+
+We make AWS Cognito authentication dead simple:
+
+### Built-in Security
+
+Powered by [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify), security comes standard:
+
+- **Auto Key Management**: JWKS keys handled automatically
+- **Complete Protection**: All essential checks included:
+  - Token signatures
+  - Expiration times
+  - Issuer validation
+  - Audience checks
+  - Token use verification
+
+### Role-Based Access Control (RBAC)
+
+NestJS-Cognito makes implementing RBAC with AWS Cognito groups seamless:
+
+- **Cognito Groups Integration**: Automatically maps AWS Cognito groups to roles
+- **Custom Attribute Support**: Leverage custom attributes for fine-grained permissions
+- **Guard-Level Authorization**: Protect routes based on roles or custom claims
+- **Flexible Role Checking**: Use decorators or guards for role verification
+
+### Comparison with Passport.js
+
+While Passport.js is a popular authentication middleware for Node.js, NestJS-Cognito offers several advantages when working specifically with AWS Cognito:
+
+- **Specialized Integration**: Unlike Passport.js which requires manual setup and configuration for AWS Cognito, NestJS-Cognito provides out-of-the-box integration with AWS Cognito services.
+
+- **Built-in Token Verification**: NestJS-Cognito handles all aspects of token verification internally, while with Passport.js, you would need to manually implement token verification logic or rely on additional packages.
+
+- **AWS Best Practices**: By using aws-jwt-verify under the hood, NestJS-Cognito ensures compliance with AWS security best practices, which would require additional effort to implement correctly with Passport.js.

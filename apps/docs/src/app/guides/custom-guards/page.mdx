@@ -1,0 +1,96 @@
+# Custom Guards
+
+The `@nestjs-cognito/auth` package provides an abstract guard class that you can extend to create custom guards with specific validation logic. This guide will show you how to create custom guards by extending the `AbstractGuard` class.
+
+## Understanding AbstractGuard
+
+The `AbstractGuard` class provides the core authentication functionality, including JWT verification and request handling. When you extend this class, you only need to implement two abstract methods:
+
+```typescript
+protected abstract onValidate(user: User): boolean;
+protected abstract getRequest(context: ExecutionContext): any;
+```
+
+## Creating a Custom Guard
+
+Here's an example of creating a custom guard that validates if a user has a specific email domain:
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { AbstractGuard } from '@nestjs-cognito/auth';
+import { ExecutionContext } from '@nestjs/common';
+import { User } from '@nestjs-cognito/auth';
+
+@Injectable()
+export class CompanyEmailGuard extends AbstractGuard {
+  /**
+   * Validate if the user's email belongs to the company domain
+   */
+  protected onValidate(user: User): boolean {
+    return user.email.endsWith('@company.com');
+  }
+
+  /**
+   * Get the request object from the execution context
+   */
+  protected getRequest(context: ExecutionContext) {
+    return context.switchToHttp().getRequest();
+  }
+}
+```
+
+## Using the Custom Guard
+
+You can use your custom guard like any other NestJS guard:
+
+```typescript
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { CompanyEmailGuard } from './company-email.guard';
+
+@Controller('protected')
+@UseGuards(CompanyEmailGuard)
+export class ProtectedController {
+  @Get()
+  getProtectedResource() {
+    return 'This is only accessible to users with company email';
+  }
+}
+```
+
+## Guard Inheritance Flow
+
+When a request comes in, the following flow occurs:
+
+1. The `AbstractGuard.canActivate()` method is called first
+2. It verifies the JWT token and extracts the user information
+3. If the route is not public, it calls your custom guard's `onValidate()` method
+4. Your validation logic determines if the request is allowed
+
+## Best Practices
+
+### Implementing getRequest
+
+The `getRequest` method should handle the appropriate request type. For HTTP requests:
+
+```typescript
+protected getRequest(context: ExecutionContext) {
+  return context.switchToHttp().getRequest();
+}
+```
+
+For WebSocket requests:
+
+```typescript
+protected getRequest(context: ExecutionContext) {
+  return context.switchToWs().getClient();
+}
+```
+
+### Validation Logic
+
+Your `onValidate` method should:
+
+- Be focused and handle one specific validation concern
+- Return a boolean indicating if the validation passed
+- Not throw exceptions (the abstract guard handles that)
+- Be efficient as it runs on every request
