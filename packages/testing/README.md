@@ -1,7 +1,14 @@
+<div align="center">
+ <img src="https://github.com/lokicoule/nestjs-cognito/blob/main/media/repo-header-testing.svg?raw=true" alt="NestJS-Cognito Testing" />
+</div>
+
+<div align="center">
+
 [![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
 ![npm](https://img.shields.io/npm/dt/%40nestjs-cognito%2Ftesting)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# @nestjs-cognito/testing
+</div>
 
 Comprehensive testing utilities for NestJS applications using AWS Cognito authentication.
 

@@ -1,7 +1,16 @@
-# @nestjs-cognito/core
+<div align="center">
+ <img src="https://github.com/lokicoule/nestjs-cognito/blob/main/media/repo-header-core.svg?raw=true" alt="NestJS-Cognito Core" />
+</div>
+
+<div align="center">
 
 [![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
 ![npm](https://img.shields.io/npm/dt/%40nestjs-cognito%2Fcore)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+</div>
+
+
 
 This package provides the core functionality and adapters for AWS Cognito integration in NestJS applications. It serves as the foundation for other @nestjs-cognito packages.
 
