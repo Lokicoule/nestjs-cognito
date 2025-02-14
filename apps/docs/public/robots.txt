@@ -4,8 +4,3 @@ Allow: /
 
 # Sitemap location
 Sitemap: https://lokicoule.github.io/nestjs-cognito/sitemap.xml
-
-# Disallow specific paths
-Disallow: /api/
-Disallow: /_next/
-Disallow: /*.json$

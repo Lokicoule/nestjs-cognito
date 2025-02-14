@@ -232,10 +232,11 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quick Start', href: '/quickstart' },
+      { title: 'Integration', href: '/integration' },
     ],
   },
   {
-    title: 'Features',
+    title: 'Guides',
     links: [
       { title: 'Authentication', href: '/guides/authentication' },
       { title: 'Authorization', href: '/guides/authorization' },
@@ -248,23 +249,26 @@ export const navigation: Array<NavGroup> = [
   {
     title: 'Advanced',
     links: [
-      { title: 'Integration Guide', href: '/api/integration' },
-      { title: 'Core Package', href: '/api/core-package' },
-      { title: 'JWT Verification', href: '/api/jwt-verification' },
-      { title: 'Module Configuration', href: '/api/module-configuration' },
-      { title: 'Custom Guards', href: '/guides/custom-guards' },
-      { title: 'WebSocket Support', href: '/guides/websocket' },
+      { title: 'Core Package', href: '/advanced/core-package' },
+      { title: 'JWT Verification', href: '/advanced/jwt-verification' },
+      { title: 'Module Configuration', href: '/advanced/module-configuration' },
+      { title: 'Custom Guards', href: '/advanced/custom-guards' },
+      { title: 'WebSocket Support', href: '/advanced/websocket' },
     ],
   },
+  {
+    title: 'Community',
+    links: [
+      { title: 'Contributing', href: '/contribution' },
+      { title: 'Credits', href: '/credits' }
+    ]
+  }
 ]
 
 export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props}>
       <ul role="list">
-        <TopLevelNavItem href="/">API</TopLevelNavItem>
-        <TopLevelNavItem href="#">Documentation</TopLevelNavItem>
-        <TopLevelNavItem href="#">Support</TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
             key={group.title}
@@ -272,11 +276,6 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
             className={groupIndex === 0 ? 'md:mt-0' : ''}
           />
         ))}
-        <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <Button href="#" variant="filled" className="w-full">
-            Sign in
-          </Button>
-        </li>
       </ul>
     </nav>
   )

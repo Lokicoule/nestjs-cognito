@@ -21,9 +21,11 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
 @Module({
   imports: [
     CognitoAuthModule.register({
-      region: 'us-east-1',
-      userPoolId: 'us-east-1_xxxxxx',
-      clientId: 'your-client-id'
+      jwtVerifier: {
+        userPoolId: 'us-east-1_xxxxxx',
+        clientId: 'your-client-id'
+        tokenUse: 'access',
+      },
     })
   ]
 })
@@ -89,13 +91,3 @@ export class UsersController {
   }
 }
 ```
-
-## Token Verification
-
-By default, @nestjs-cognito/auth verifies the following aspects of the JWT token:
-
-- Token signature using JWKS from Cognito
-- Token expiration
-- Token issuer (matches your Cognito User Pool)
-- Token audience (matches your Client ID)
-- Token use (access or id token)

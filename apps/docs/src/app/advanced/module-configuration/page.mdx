@@ -89,7 +89,7 @@ export class AppModule {}
 
 ## Identity Provider Configuration
 
-The `identityProvider` configuration is required and sets up the AWS Cognito Identity Provider client:
+The `identityProvider` configuration sets up the AWS Cognito Identity Provider client:
 
 ```ts
 identityProvider: {
@@ -196,7 +196,6 @@ This helps optimize performance by reducing the number of JWKS endpoint calls.
 
 ## Important Notes
 
-- The `identityProvider` configuration is mandatory
 - Choose either `jwtVerifier` or `jwtRsaVerifier` based on your needs
 - JWK cache configuration is optional but recommended for production
 - When using multiple pools/issuers, each can have its own cache configuration

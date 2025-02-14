@@ -9,9 +9,17 @@ The `@nestjs-cognito/graphql` package provides GraphQL-specific decorators and g
 
 ## Installation
 
-```bash
-npm install @nestjs-cognito/graphql
+<CodeGroup>
+```sh {{ title: 'pnpm' }}
+pnpm add @nestjs-cognito/graphql
 ```
+```sh {{ title: 'npm' }}
+npm i @nestjs-cognito/graphql
+```
+```sh {{ title: 'yarn' }}
+yarn add @nestjs-cognito/graphql
+```
+</CodeGroup>
 
 ## Basic Setup
 
@@ -23,9 +31,11 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
 @Module({
   imports: [
     CognitoAuthModule.register({
-      region: 'us-east-1',
-      userPoolId: 'us-east-1_xxxxxx',
-      clientId: 'your-client-id'
+      jwtVerifier: {
+        userPoolId: 'us-east-1_xxxxxx',
+        clientId: 'your-client-id'
+        tokenUse: 'access',
+      },
     })
   ]
 })

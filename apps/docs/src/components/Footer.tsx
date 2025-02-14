@@ -41,7 +41,13 @@ function PageNavigation() {
   const pathname = usePathname()
 
   let allPages = navigation.flatMap((group) => group.links)
-  let currentPageIndex = allPages.findIndex((page) => page.href === pathname)
+  // Ensure we're looking at the correct path format
+  let normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`
+  let currentPageIndex = allPages.findIndex((page) => {
+    let normalizedHref = page.href.endsWith('/') ? page.href : `${page.href}/`
+    return normalizedHref === normalizedPathname
+  })
+
 
   if (currentPageIndex === -1) {
     return null
@@ -75,9 +81,6 @@ function SmallPrint() {
     <div className="flex flex-col items-center justify-center gap-3 border-t border-zinc-900/5 pt-8 dark:border-white/5">
       <p className="text-xs text-zinc-600 dark:text-zinc-400">
         &copy; {new Date().getFullYear()} NestJS-Cognito. All rights reserved.
-      </p>
-      <p className="text-xs text-zinc-600 dark:text-zinc-400">
-        <Link href="/credits" className="hover:text-zinc-900 dark:hover:text-zinc-300 transition">Credits</Link>
       </p>
     </div>
   )
