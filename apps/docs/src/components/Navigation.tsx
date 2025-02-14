@@ -232,7 +232,6 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quick Start', href: '/quickstart' },
-      { title: 'Integration', href: '/integration' },
     ],
   },
   {
@@ -244,6 +243,7 @@ export const navigation: Array<NavGroup> = [
       { title: 'Cognito User', href: '/guides/cognito-user' },
       { title: 'GraphQL Support', href: '/guides/graphql' },
       { title: 'Testing', href: '/guides/testing' },
+      { title: 'Integration', href: '/integration' },
     ],
   },
   {
