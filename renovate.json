@@ -6,6 +6,10 @@
     {
       "matchDepTypes": ["devDependencies"],
       "automerge": true
+    },
+    {
+      "matchPaths": ["apps/docs/**"],
+      "enabled": false
     }
   ]
 }
