@@ -48,6 +48,21 @@ When using `@PublicRoute` with `@Authentication`, the behavior is as follows:
    - Returns 401 Unauthorized
    - The route is not accessible
 
+<Mermaid>
+
+```mermaid
+flowchart LR
+    A[Request] --> B{Has Token?}
+    B -->|Yes| C{Token Valid?}
+    C -->|Yes| D[Return with User]
+    C -->|No| E[401 Unauthorized]
+    B -->|No| F{Is Public?}
+    F -->|Yes| G[Return without User]
+    F -->|No| H[401 Unauthorized]
+```
+
+</Mermaid>
+
 
 ## Token Validation Priority
 
