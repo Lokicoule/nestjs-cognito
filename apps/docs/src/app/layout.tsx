@@ -30,6 +30,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
+      <head>
+        <meta name="google-site-verification" content="xIXXddSPWmFiIXfKZVUpGhQsQspmkO7qkdMpNmJWaK4" />
+      </head>
       <body className="flex min-h-full bg-white antialiased dark:bg-zinc-900">
         <Providers>
           <div className="w-full">
