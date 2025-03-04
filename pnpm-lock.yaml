@@ -281,8 +281,8 @@ importers:
         version: 4.0.1
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.758.0
-        version: 3.758.0
+        specifier: 3.760.0
+        version: 3.760.0
       '@nestjs-cognito/testing':
         specifier: workspace:*
         version: link:../testing
@@ -299,8 +299,8 @@ importers:
   packages/core:
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.758.0
-        version: 3.758.0
+        specifier: 3.760.0
+        version: 3.760.0
       '@nestjs/common':
         specifier: 11.0.9
         version: 11.0.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -349,8 +349,8 @@ importers:
         version: 9.0.2
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.758.0
-        version: 3.758.0
+        specifier: 3.760.0
+        version: 3.760.0
       '@nestjs-cognito/core':
         specifier: workspace:*
         version: link:../core
@@ -547,8 +547,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-cognito-identity-provider@3.758.0':
-    resolution: {integrity: sha512-GDX21MB8wkmUZ4A4gbuTcFXnGqlHs4/sO0F+LC/cstijgZheFQ3zrcC+CQNONE+IAj75kK1/84ESr71E6gKP5Q==}
+  '@aws-sdk/client-cognito-identity-provider@3.760.0':
+    resolution: {integrity: sha512-nDhdT5N2l+kpq4Y1P7UEP/FB6XP5TnwTLYNNlAocKHmFyryI8YqGpCgUE/01z+/wcebQgveuP80NoidV8th2IA==}
     engines: {node: '>=18.0.0'}
 
   '@aws-sdk/client-sso@3.758.0':
@@ -8295,7 +8295,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-cognito-identity-provider@3.758.0':
+  '@aws-sdk/client-cognito-identity-provider@3.760.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
