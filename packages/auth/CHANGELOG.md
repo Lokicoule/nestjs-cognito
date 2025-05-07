@@ -1,5 +1,37 @@
 # Changelog:
 
+## 2.1.0
+
+### Minor Changes
+
+- 8fa8c19: Core package:
+
+  - Added new type definition `CognitoJwtPayload` for improved type safety
+  - Update README.md
+
+  Auth package:
+
+  - Enhanced error handling by replacing `UnauthorizedException` with `BadRequestException` for invalid credentials
+  - Added detailed error messages for better debugging and user feedback
+  - Update README.md
+
+  Graphql package:
+
+  - Update README.md
+
+  Testing package:
+
+  - Improved HTTP status code in authentication responses from 201 to 200 to align with RESTful API best practices (login endpoint returns a token rather than creating a resource)
+  - Enhanced error simulation capabilities for testing scenarios
+  - Update README.md
+
+### Patch Changes
+
+- 04157cc: Auth package:
+  - Changed HTTP status code from 400 (BadRequestException) to 401 (UnauthorizedException) for missing/invalid tokens in AbstractGuard (#1276, 1aeaf36)
+- Updated dependencies [8fa8c19]
+  - @nestjs-cognito/core@2.1.0
+
 ## 2.0.1
 
 ### Patch Changes
