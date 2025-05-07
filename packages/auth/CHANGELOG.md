@@ -1,5 +1,12 @@
 # Changelog:
 
+## 2.0.2
+
+### Patch Changes
+
+- e155ee7: Auth package:
+  - Changed HTTP status code from 400 (BadRequestException) to 401 (UnauthorizedException) for missing/invalid tokens in AbstractGuard (#1276, 1aeaf36)
+
 ## 2.0.1
 
 ### Patch Changes
