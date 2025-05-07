@@ -55,7 +55,7 @@ export abstract class AbstractGuard implements CanActivate {
       if (isPublic) {
         return true;
       }
-      throw new BadRequestException("Invalid request");
+      throw new UnauthorizedException("No authentication credentials provided");
     }
 
     try {
