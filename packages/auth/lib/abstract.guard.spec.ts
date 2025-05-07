@@ -86,7 +86,7 @@ describe("AbstractGuard", () => {
         context.switchToHttp().getRequest.mockReturnValue({});
 
         await expect(guard.canActivate(context)).rejects.toMatchObject({
-          message: "Invalid request",
+          message: "No authentication credentials provided",
         });
       });
 
