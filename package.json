@@ -30,7 +30,7 @@
     "@changesets/cli": "^2.27.12",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-angular": "19.8.1",
-    "@golevelup/ts-jest": "0.6.2",
+    "@golevelup/ts-jest": "0.7.0",
     "@nestjs/config": "4.0.0",
     "@nestjs/core": "11.0.9",
     "@nestjs/platform-express": "11.0.9",
