@@ -277,8 +277,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       aws-jwt-verify:
-        specifier: ^4.0.0
-        version: 4.0.1
+        specifier: ^5.0.0
+        version: 5.1.0
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
         specifier: 3.806.0
@@ -311,8 +311,8 @@ importers:
         specifier: 29.5.14
         version: 29.5.14
       aws-jwt-verify:
-        specifier: ^4.0.0
-        version: 4.0.1
+        specifier: ^5.0.0
+        version: 5.1.0
 
   packages/graphql:
     dependencies:
@@ -2669,9 +2669,9 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  aws-jwt-verify@4.0.1:
-    resolution: {integrity: sha512-kzvi71eD3w/mCpYRUY7cz6DX4bfYihGdI2yV3FYQ2JuZZenqAqDPz0gWj0ew6vlAtdEVBNb7p+Dm2TAIxpVYMA==}
-    engines: {node: '>=14.0.0'}
+  aws-jwt-verify@5.1.0:
+    resolution: {integrity: sha512-98ioOBMyrLU5jW5rPvkJo20XlNB2rAX3tZR3BM6AamfBkOoSRLV1EyGkbgHQzgFOWyQ7yV8+tce6M24rOpMkgw==}
+    engines: {node: '>=18.0.0'}
 
   aws-sign2@0.7.0:
     resolution: {integrity: sha512-08kcGqnYf/YmjoRhfxyu+CLxBjUtHLXLXX/vUfx9l2LYzG3c1m61nrpyFUZI6zeS+Li/wWMMidD9KgrqtGq3mA==}
@@ -11309,7 +11309,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  aws-jwt-verify@4.0.1: {}
+  aws-jwt-verify@5.1.0: {}
 
   aws-sign2@0.7.0: {}
 
