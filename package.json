@@ -52,7 +52,7 @@
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-prettier": "5.4.1",
-    "graphql": "16.10.0",
+    "graphql": "16.11.0",
     "jest": "30.0.0",
     "lerna": "8.2.2",
     "lerna-changelog": "2.2.0",
