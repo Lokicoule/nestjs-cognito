@@ -6,12 +6,12 @@ import type {
 } from "aws-jwt-verify/cognito-verifier";
 import type { JwksCache } from "aws-jwt-verify/jwk";
 import type {
-  JwtRsaVerifierMultiIssuer,
-  JwtRsaVerifierMultiProperties,
-  JwtRsaVerifierProperties,
-  JwtRsaVerifierSingleIssuer,
+  JwtVerifierMultiIssuer as JwtRsaVerifierMultiIssuer,
+  JwtVerifierMultiProperties as JwtRsaVerifierMultiProperties,
+  JwtVerifierProperties as JwtRsaVerifierProperties,
+  JwtVerifierSingleIssuer as JwtRsaVerifierSingleIssuer,
   VerifyProperties,
-} from "aws-jwt-verify/jwt-rsa";
+} from "aws-jwt-verify/jwt-verifier";
 import type { CognitoJwtPayload as AwsCognitoJwtPayload } from 'aws-jwt-verify/jwt-model';
 
 export type CognitoJwtPayload = Prettify<AwsCognitoJwtPayload>;
