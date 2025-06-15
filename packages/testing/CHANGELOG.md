@@ -51,6 +51,8 @@
   - Improved error handling in JWT verification
   - Enhanced type safety across all packages
 
+## 2.1.0
+
 ## 2.0.0
 
 ### Major Changes
