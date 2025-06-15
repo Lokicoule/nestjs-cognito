@@ -6,21 +6,21 @@ import type {
 } from "aws-jwt-verify/cognito-verifier";
 import type { CognitoJwtPayload, JwtPayload } from "aws-jwt-verify/jwt-model";
 import type {
-  JwtRsaVerifierMultiIssuer,
-  JwtRsaVerifierMultiProperties,
-  JwtRsaVerifierProperties,
-  JwtRsaVerifierSingleIssuer,
+  JwtVerifierMultiIssuer,
+  JwtVerifierMultiProperties,
+  JwtVerifierProperties,
+  JwtVerifierSingleIssuer,
   VerifyProperties,
-} from "aws-jwt-verify/jwt-rsa";
+} from "aws-jwt-verify/jwt-verifier";
 
 interface CognitoJwtVerifierProps {
   jwtVerifier?:
     | CognitoJwtVerifierSingleUserPool<CognitoJwtVerifierProperties>
     | CognitoJwtVerifierMultiUserPool<CognitoJwtVerifierMultiProperties>
     | undefined;
-  JwtRsaVerifier?:
-    | JwtRsaVerifierSingleIssuer<JwtRsaVerifierProperties<VerifyProperties>>
-    | JwtRsaVerifierMultiIssuer<JwtRsaVerifierMultiProperties<VerifyProperties>>
+  jwtRsaVerifier?:
+    | JwtVerifierSingleIssuer<JwtVerifierProperties<VerifyProperties>>
+    | JwtVerifierMultiIssuer<JwtVerifierMultiProperties<VerifyProperties>>
     | undefined;
 }
 
@@ -60,7 +60,7 @@ export class CognitoJwtVerifier {
    * @returns The JWT RSA verifier.
    */
   get jwtRsaVerifier() {
-    return this.#props.JwtRsaVerifier;
+    return this.#props.jwtRsaVerifier;
   }
 
   /**
@@ -73,8 +73,8 @@ export class CognitoJwtVerifier {
     if (this.#props.jwtVerifier) {
       return this.#props.jwtVerifier.verify(token);
     }
-    if (this.#props.JwtRsaVerifier) {
-      return this.#props.JwtRsaVerifier.verify(token);
+    if (this.#props.jwtRsaVerifier) {
+      return this.#props.jwtRsaVerifier.verify(token);
     }
 
     throw new Error("No verifier found.");

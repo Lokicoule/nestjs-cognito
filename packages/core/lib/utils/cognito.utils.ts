@@ -1,7 +1,7 @@
 import { CognitoIdentityProvider } from "@aws-sdk/client-cognito-identity-provider";
 import { Logger } from "@nestjs/common";
 import {
-  JwtRsaVerifier,
+  JwtVerifier as JwtRsaVerifier,
   CognitoJwtVerifier as JwtVerifier,
 } from "aws-jwt-verify";
 import { CognitoJwtVerifier } from "../adapters/cognito-jwt-verifier.adapter";
@@ -32,12 +32,12 @@ export const createCognitoJwtVerifierInstance = (
   } else if (jwtRsaVerifier) {
     if (Array.isArray(jwtRsaVerifier)) {
       return CognitoJwtVerifier.create({
-        JwtRsaVerifier: JwtRsaVerifier.create(jwtRsaVerifier),
+        jwtRsaVerifier: JwtRsaVerifier.create(jwtRsaVerifier),
       });
     }
 
     return CognitoJwtVerifier.create({
-      JwtRsaVerifier: JwtRsaVerifier.create(jwtRsaVerifier),
+      jwtRsaVerifier: JwtRsaVerifier.create(jwtRsaVerifier),
     });
   }
 
