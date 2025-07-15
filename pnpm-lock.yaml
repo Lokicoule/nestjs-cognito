@@ -99,8 +99,8 @@ importers:
         specifier: 16.1.2
         version: 16.1.2
       pactum:
-        specifier: 3.7.6
-        version: 3.7.6
+        specifier: 3.8.0
+        version: 3.8.0
       prettier:
         specifier: 3.5.0
         version: 3.5.0
@@ -3220,6 +3220,10 @@ packages:
   component-emitter@1.3.1:
     resolution: {integrity: sha512-T0+barUSQRTUQASh8bx02dl+DhF54GtIDY13Y3m9oWTklKbb3Wv974meRpeZ3lp1JpLVECWWNHC4vaG2XHXouQ==}
 
+  component-type@2.0.0:
+    resolution: {integrity: sha512-/1+d/k0Al0uzg4rFAz9fbYOTnT20JYgN7SoaRr5x2cz7kH4Mtj+GQPh7W9UocpzFtxSL8flv6qAOOfJvQGqUjg==}
+    engines: {node: '>=18'}
+
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
@@ -3284,6 +3288,10 @@ packages:
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
+
+  cookie-lite@0.0.1:
+    resolution: {integrity: sha512-jczNOBIPFsep1+HVBh/RDVU/sdIyTOfpP90jy+D8SwQ4jh8GOJJzXOY0Rs9mogg+gIWeKyREOGt/4xLHdIqtHA==}
+    engines: {node: '>=18'}
 
   cookie-signature@1.0.6:
     resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
@@ -5450,10 +5458,6 @@ packages:
   libphonenumber-js@1.11.19:
     resolution: {integrity: sha512-bW/Yp/9dod6fmyR+XqSUL1N5JE7QRxQ3KrBIbYS1FTv32e5i3SEtQVX+71CYNv8maWNSOgnlCoNp9X78f/cKiA==}
 
-  lightcookie@1.0.25:
-    resolution: {integrity: sha512-SrY/+eBPaKAMnsn7mCsoOMZzoQyCyHHHZlFCu2fjo28XxSyCLjlooKiTxyrXTg8NPaHp1YzWi0lcGG1gDi6KHw==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-
   lilconfig@3.1.3:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
@@ -6517,8 +6521,8 @@ packages:
   pactum-matchers@1.1.7:
     resolution: {integrity: sha512-RqwewcUje6vhcYQGbPfdSXkcp/Vtwn4WmmTWLSmqp0CGxBroCEqRg3JMIjkjQTZCd2VmG+tTcQw+n4P/iuqv3Q==}
 
-  pactum@3.7.6:
-    resolution: {integrity: sha512-LopFf+CwhdoHhBGK8VYWuyfSn6ICCOEWoPzBlMkou9iFWsZN47lZyFXJEfK8UOtdI1fZaFx2JxZcls+RfYAgAA==}
+  pactum@3.8.0:
+    resolution: {integrity: sha512-zMVXkhdNf0RYaTPkH8GWJTtf10MzDoA/+8wtdJBFu+lg4CbB+Zk6WxQw3isowTstKM+MNmKgWcdUnFYNW6B5Mw==}
     engines: {node: '>=10'}
 
   parent-module@1.0.1:
@@ -12141,6 +12145,8 @@ snapshots:
 
   component-emitter@1.3.1: {}
 
+  component-type@2.0.0: {}
+
   concat-map@0.0.1: {}
 
   concat-stream@2.0.0:
@@ -12224,6 +12230,8 @@ snapshots:
       meow: 8.1.2
 
   convert-source-map@2.0.0: {}
+
+  cookie-lite@0.0.1: {}
 
   cookie-signature@1.0.6: {}
 
@@ -15175,8 +15183,6 @@ snapshots:
 
   libphonenumber-js@1.11.19: {}
 
-  lightcookie@1.0.25: {}
-
   lilconfig@3.1.3: {}
 
   lines-and-columns@1.2.4: {}
@@ -16833,14 +16839,15 @@ snapshots:
 
   pactum-matchers@1.1.7: {}
 
-  pactum@3.7.6:
+  pactum@3.8.0:
     dependencies:
       '@exodus/schemasafe': 1.3.0
+      component-type: 2.0.0
+      cookie-lite: 0.0.1
       deep-override: 1.0.2
       form-data-lite: 1.0.3
       json-query: 2.2.2
       klona: 2.0.6
-      lightcookie: 1.0.25
       openapi-fuzzer-core: 1.0.6
       pactum-matchers: 1.1.7
       parse-graphql: 1.0.0
