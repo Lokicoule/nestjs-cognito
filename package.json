@@ -51,7 +51,7 @@
     "eslint": "9.32.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
-    "eslint-plugin-prettier": "5.5.3",
+    "eslint-plugin-prettier": "5.5.4",
     "graphql": "16.11.0",
     "jest": "30.0.5",
     "lerna": "8.2.3",
