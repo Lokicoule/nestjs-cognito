@@ -73,7 +73,7 @@ describe("UserMapper", () => {
       expect(user).toBeDefined();
       expect(user.username).toBeUndefined();
       expect(user.clientId).toEqual("client123");
-      expect(user.email).toBeNull();
+      expect(user.email).toBeUndefined();
       expect(user.groups).toEqual(["admin"]);
     });
   });
