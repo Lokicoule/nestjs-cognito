@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/auth",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Auth Module for NestJS and Cognito",
   "author": "Loik Fekkai",
   "license": "MIT",
