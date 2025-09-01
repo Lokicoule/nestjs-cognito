@@ -1,13 +1,14 @@
 import { User } from "./user.model";
 
 export class UserBuilder {
-  private _username: string;
+  private _username?: string;
+  private _clientId?: string;
   private _email: string | null;
   private _groups: string[];
 
   /**
    * Get the username of the user
-   * @returns {string} - The username
+   * @returns {string | undefined} - The username
    */
   public get username() {
     return this._username;
@@ -19,6 +20,23 @@ export class UserBuilder {
    */
   public setUsername(username: string) {
     this._username = username.toLowerCase();
+    return this;
+  }
+
+  /**
+   * Get the client ID
+   * @returns {string | undefined} - The client ID
+   */
+  public get clientId() {
+    return this._clientId;
+  }
+
+  /**
+   * Set the client ID for machine-to-machine authentication
+   * @param {string} clientId - The client ID
+   */
+  public setClientId(clientId: string) {
+    this._clientId = clientId;
     return this;
   }
 

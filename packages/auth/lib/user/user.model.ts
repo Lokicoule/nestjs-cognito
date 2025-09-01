@@ -1,22 +1,32 @@
 import { UserBuilder } from "./user.builder";
 
 export class User {
-  private _username: string;
+  private _username?: string;
+  private _clientId?: string;
   private _email: string;
   private _groups: string[];
 
   constructor(builder: UserBuilder) {
     this._username = builder.username;
+    this._clientId = builder.clientId;
     this._email = builder.email;
     this._groups = builder.groups ?? [];
   }
 
   /**
    * Get the username of the user
-   * @returns {string} - The username
+   * @returns {string | undefined} - The username
    */
-  public get username(): string {
+  public get username(): string | undefined {
     return this._username;
+  }
+
+  /**
+   * Get the client ID (for machine-to-machine authentication)
+   * @returns {string | undefined} - The client ID
+   */
+  public get clientId(): string | undefined {
+    return this._clientId;
   }
 
   /**

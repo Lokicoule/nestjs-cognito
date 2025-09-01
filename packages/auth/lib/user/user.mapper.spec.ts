@@ -1,10 +1,10 @@
 import { UnauthorizedException } from "@nestjs/common";
+import type { CognitoJwtPayload } from "aws-jwt-verify/jwt-model";
 import { UserMapper } from "./user.mapper";
-import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
 describe("UserMapper", () => {
   describe("fromCognitoJwtPayload", () => {
-    it("should throw an error if the username is not present", () => {
+    it("should throw an error if neither username nor client ID is present", () => {
       expect(() => {
         UserMapper.fromCognitoJwtPayload({} as CognitoJwtPayload);
       }).toThrow(UnauthorizedException);
@@ -61,6 +61,20 @@ describe("UserMapper", () => {
       expect(user.username).toEqual("username");
       expect(user.email).toEqual("email");
       expect(user.groups).toEqual(["group1"]);
+    });
+
+    it("should handle client credentials flow access tokens without username", () => {
+      const user = UserMapper.fromCognitoJwtPayload({
+        client_id: "client123",
+        token_use: "access",
+        scope: "api/read api/write",
+        "cognito:groups": ["admin"],
+      } as unknown as CognitoJwtPayload);
+      expect(user).toBeDefined();
+      expect(user.username).toBeUndefined();
+      expect(user.clientId).toEqual("client123");
+      expect(user.email).toBeNull();
+      expect(user.groups).toEqual(["admin"]);
     });
   });
 });

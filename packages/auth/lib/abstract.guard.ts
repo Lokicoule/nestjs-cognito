@@ -1,4 +1,5 @@
 import {
+  type CognitoJwtPayload,
   CognitoJwtVerifier,
   InjectCognitoJwtVerifier,
 } from "@nestjs-cognito/core";
@@ -64,7 +65,7 @@ export abstract class AbstractGuard implements CanActivate {
         throw new BadRequestException("Missing token in Authorization header");
       }
 
-      const payload = await this.#jwtVerifier.verify(authorization);
+      const payload = await this.#jwtVerifier.verify(authorization) as CognitoJwtPayload;
 
       if (!payload || !payload["sub"]) {
         throw new BadRequestException("Invalid token payload");
