@@ -7,7 +7,16 @@ import {
 import { CognitoJwtVerifier } from "../adapters/cognito-jwt-verifier.adapter";
 
 import type { CognitoIdentityProviderClientConfig } from "@aws-sdk/client-cognito-identity-provider";
+import { BearerJwtExtractor } from "../extractors/bearer-jwt.extractor";
+import type { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.interface";
 import type { CognitoModuleOptions } from "../interfaces/cognito-module.options";
+
+
+export const createCognitoJwtExtractorInstance = (
+  options: CognitoModuleOptions,
+): CognitoJwtExtractor => {
+  return options.jwtExtractor || new BearerJwtExtractor();
+}
 
 /**
  * Creates an instance of CognitoJwtVerifier based on the provided Cognito module options.

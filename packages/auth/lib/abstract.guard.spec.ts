@@ -1,8 +1,8 @@
 import { createMock } from "@golevelup/ts-jest";
-import { CognitoJwtVerifier } from "@nestjs-cognito/core";
+import { type CognitoJwtExtractor, CognitoJwtVerifier } from "@nestjs-cognito/core";
 import { ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { AbstractGuard, CognitoJwtExtractor } from "./abstract.guard";
+import { AbstractGuard } from "./abstract.guard";
 import { User } from "./user/user.model";
 
 class TestGuard extends AbstractGuard {
@@ -28,6 +28,7 @@ class BadTestGuard extends AbstractGuard {
 describe("AbstractGuard", () => {
   let guard: TestGuard;
   let jwtVerifier: jest.Mocked<CognitoJwtVerifier>;
+  let jwtExtractor: jest.Mocked<CognitoJwtExtractor>;
   let reflector: jest.Mocked<Reflector>;
 
   beforeEach(() => {
@@ -40,11 +41,16 @@ describe("AbstractGuard", () => {
       }),
     });
 
+    jwtExtractor = createMock<CognitoJwtExtractor>({
+      hasAuthenticationInfo: jest.fn().mockReturnValue(true),
+      getAuthorizationToken: jest.fn().mockReturnValue("valid-token"),
+    });
+
     reflector = createMock<Reflector>({
       get: jest.fn().mockReturnValue(false),
     });
 
-    guard = new TestGuard(jwtVerifier, reflector);
+    guard = new TestGuard(jwtVerifier, reflector, jwtExtractor);
   });
 
   it("should be defined", () => {
@@ -57,7 +63,7 @@ describe("AbstractGuard", () => {
     });
 
     it("should be undefined", () => {
-      const badGuard = new BadTestGuard(jwtVerifier, reflector);
+      const badGuard = new BadTestGuard(jwtVerifier, reflector, jwtExtractor);
       expect(
         badGuard.getRequest(createMock<ExecutionContext>()),
       ).toBeUndefined();
@@ -84,6 +90,9 @@ describe("AbstractGuard", () => {
       it("should throw UnauthorizedException when no headers present", async () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({});
+
+        // Mock extractor to return false for no auth info
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
 
         await expect(guard.canActivate(context)).rejects.toMatchObject({
           message: "No authentication credentials provided",
@@ -137,6 +146,9 @@ describe("AbstractGuard", () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({});
 
+        // Mock extractor to return false for no auth info (public route should allow)
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
+
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
 
@@ -164,6 +176,9 @@ describe("AbstractGuard", () => {
           },
         });
 
+        // Mock extractor to return false for empty auth header
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
+
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
 
@@ -172,6 +187,9 @@ describe("AbstractGuard", () => {
         context.switchToHttp().getRequest.mockReturnValue({
           headers: {},
         });
+
+        // Mock extractor to return false for no auth header
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
 
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
@@ -184,6 +202,9 @@ describe("AbstractGuard", () => {
           },
         });
 
+        // Mock extractor to return false for spaces-only auth header
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
+
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
 
@@ -194,6 +215,10 @@ describe("AbstractGuard", () => {
             authorization: "Bearer ",
           },
         });
+
+        // Mock extractor to detect auth info but return null token
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(true);
+        jwtExtractor.getAuthorizationToken.mockReturnValue(null);
 
         await expect(guard.canActivate(context)).rejects.toMatchObject({
           message: "Missing token in Authorization header",
@@ -207,6 +232,10 @@ describe("AbstractGuard", () => {
             authorization: "Bearer valid-token",
           },
         });
+
+        // Mock extractor to detect valid token
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(true);
+        jwtExtractor.getAuthorizationToken.mockReturnValue("valid-token");
 
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });

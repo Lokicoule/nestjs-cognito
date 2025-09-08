@@ -1,6 +1,7 @@
 import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import {
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+  COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
   COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
   COGNITO_MODULE_OPTIONS,
 } from "./cognito.constants";
@@ -12,6 +13,7 @@ import {
 } from "./interfaces/cognito-module.options";
 import {
   createCognitoIdentityProviderInstance,
+  createCognitoJwtExtractorInstance,
   createCognitoJwtVerifierInstance,
 } from "./utils/cognito.utils";
 
@@ -35,15 +37,19 @@ export class CognitoModule {
           provide: COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
           useValue: createCognitoIdentityProviderInstance(options),
         },
-
         {
           provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
           useValue: createCognitoJwtVerifierInstance(options),
+        },
+        {
+          provide: COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
+          useValue: createCognitoJwtExtractorInstance(options),
         },
       ],
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+        COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
       ],
     };
   }
@@ -65,6 +71,7 @@ export class CognitoModule {
       exports: [
         COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+        COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
       ],
     };
   }
