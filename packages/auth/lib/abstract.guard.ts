@@ -1,6 +1,8 @@
 import {
   type CognitoJwtPayload,
+  type CognitoJwtExtractor,
   CognitoJwtVerifier,
+  BearerJwtExtractor,
   InjectCognitoJwtExtractor,
   InjectCognitoJwtVerifier,
 } from "@nestjs-cognito/core";
@@ -21,34 +23,6 @@ import { UserMapper } from "./user/user.mapper";
 import { User } from "./user/user.model";
 import { IS_PUBLIC_KEY } from "./whitelist";
 
-export interface CognitoJwtExtractor {
-  hasAuthenticationInfo(request): boolean;
-  getAuthorizationToken(request): string | null;
-}
-
-/**
- * Extracts the JWT token from the "Bearer" authorization request header.
- */
-class BearerTokenCognitoJwtExtractor implements CognitoJwtExtractor {
-  hasAuthenticationInfo(request: any): boolean {
-    const headers = request.headers || request?.handshake?.headers;
-    const authorization = headers?.authorization;
-
-    return Boolean(authorization && authorization.trim());
-  }
-
-  getAuthorizationToken(request: any): string | null {
-    const authorization =
-      request?.headers?.authorization ||
-      request?.handshake?.headers?.authorization;
-
-    if (!authorization) {
-      return null;
-    }
-
-    return authorization.replace("Bearer ", "");
-  }
-}
 
 /**
  * Abstract guard class that implements authentication logic for routes.
@@ -73,7 +47,7 @@ export abstract class AbstractGuard implements CanActivate {
     jwtExtractor?: CognitoJwtExtractor | null,
   ) {
     this.#jwtVerifier = jwtVerifier;
-    this.#jwtExtractor = jwtExtractor || new BearerTokenCognitoJwtExtractor();
+    this.#jwtExtractor = jwtExtractor || new BearerJwtExtractor();
     this.#reflector = reflector;
   }
 

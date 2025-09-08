@@ -13,6 +13,7 @@ import type {
   VerifyProperties,
 } from "aws-jwt-verify/jwt-verifier";
 import type { CognitoJwtPayload as AwsCognitoJwtPayload } from 'aws-jwt-verify/jwt-model';
+import type { CognitoJwtExtractor } from './cognito-jwt-extractor.interface';
 
 export type CognitoJwtPayload = Prettify<AwsCognitoJwtPayload>;
 
@@ -51,6 +52,7 @@ export type JwtRsaVerifierOptions = {
 
 export type CognitoModuleOptions = Prettify<{
   identityProvider?: CognitoIdentityProviderClientConfig;
+  jwtExtractor?: CognitoJwtExtractor;
 } & Partial<JwtVerifierOptions | JwtRsaVerifierOptions>>;
 
 /**
