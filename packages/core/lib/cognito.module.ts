@@ -6,6 +6,7 @@ import {
   COGNITO_MODULE_OPTIONS,
 } from "./cognito.constants";
 import { cognitoProviders } from "./cognito.providers";
+import { BearerJwtExtractor } from "./extractors/bearer-jwt.extractor";
 import {
   CognitoModuleAsyncOptions,
   CognitoModuleOptions,
@@ -15,7 +16,6 @@ import {
   createCognitoIdentityProviderInstance,
   createCognitoJwtVerifierInstance,
 } from "./utils/cognito.utils";
-import { BearerJwtExtractor } from "./extractors/bearer-jwt.extractor";
 
 /**
  * The Cognito module
@@ -37,12 +37,10 @@ export class CognitoModule {
           provide: COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
           useValue: createCognitoIdentityProviderInstance(options),
         },
-
         {
           provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
           useValue: createCognitoJwtVerifierInstance(options),
         },
-        
         {
           provide: COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
           useValue: options.jwtExtractor || new BearerJwtExtractor(),

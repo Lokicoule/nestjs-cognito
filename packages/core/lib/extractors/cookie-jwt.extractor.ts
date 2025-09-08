@@ -1,4 +1,4 @@
-import { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.interface";
+import type { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.interface";
 
 /**
  * JWT extractor implementation that extracts tokens from HTTP-only cookies.

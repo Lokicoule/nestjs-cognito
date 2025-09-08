@@ -1,4 +1,4 @@
-import { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.interface";
+import type { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.interface";
 
 /**
  * Default implementation that extracts JWT tokens from the "Bearer" authorization request header.

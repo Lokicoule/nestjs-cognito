@@ -1,8 +1,7 @@
 import {
-  type CognitoJwtPayload,
   type CognitoJwtExtractor,
+  type CognitoJwtPayload,
   CognitoJwtVerifier,
-  BearerJwtExtractor,
   InjectCognitoJwtExtractor,
   InjectCognitoJwtVerifier,
 } from "@nestjs-cognito/core";
@@ -11,7 +10,6 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  Optional,
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
@@ -42,12 +40,11 @@ export abstract class AbstractGuard implements CanActivate {
     @InjectCognitoJwtVerifier()
     jwtVerifier: CognitoJwtVerifier,
     reflector: Reflector,
-    @Optional()
     @InjectCognitoJwtExtractor()
-    jwtExtractor?: CognitoJwtExtractor | null,
+    jwtExtractor: CognitoJwtExtractor,
   ) {
     this.#jwtVerifier = jwtVerifier;
-    this.#jwtExtractor = jwtExtractor || new BearerJwtExtractor();
+    this.#jwtExtractor = jwtExtractor;
     this.#reflector = reflector;
   }
 
