@@ -10,7 +10,6 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  Optional,
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
