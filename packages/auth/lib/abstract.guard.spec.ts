@@ -109,9 +109,7 @@ describe("AbstractGuard", () => {
       it("should support custom token extractor", async () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({
-          headers: {
-            cookie: "access_token=valid-token;",
-          },
+          cookies: "access_token=valid-token;",
         });
 
         const tokenExtractor = createMock<CognitoJwtExtractor>({
@@ -120,8 +118,8 @@ describe("AbstractGuard", () => {
           },
 
           getAuthorizationToken: jest.fn().mockImplementation((request) => {
-            // Quick extract from cookie
-            return request?.headers?.cookie.split(";")[0].split("=")[1];
+            // Quick extract from cookies
+            return request?.cookies.split(";")[0].split("=")[1];
           }),
         });
 
