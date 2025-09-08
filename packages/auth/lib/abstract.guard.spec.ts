@@ -2,7 +2,7 @@ import { createMock } from "@golevelup/ts-jest";
 import { CognitoJwtVerifier } from "@nestjs-cognito/core";
 import { ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { AbstractGuard } from "./abstract.guard";
+import { AbstractGuard, CognitoJwtExtractor } from "./abstract.guard";
 import { User } from "./user/user.model";
 
 class TestGuard extends AbstractGuard {
@@ -104,6 +104,29 @@ describe("AbstractGuard", () => {
           message: "Authentication failed",
           cause: new Error("Token invalid"),
         });
+      });
+
+      it.only("should support custom token extractor", async () => {
+        const context = createMock<ExecutionContext>();
+        context.switchToHttp().getRequest.mockReturnValue({
+          headers: {
+            cookie: "access_token=valid-token;",
+          },
+        });
+
+        const tokenExtractor = createMock<CognitoJwtExtractor>({
+          hasAuthenticationInfo(): boolean {
+            return true;
+          },
+
+          getAuthorizationToken: jest.fn().mockImplementation((request) => {
+            // Quick extract from cookie
+            return request?.headers?.cookie.split(";")[0].split("=")[1];
+          }),
+        });
+
+        const g = new TestGuard(jwtVerifier, reflector, tokenExtractor);
+        expect(await g.canActivate(context)).toBeTruthy();
       });
     });
 
