@@ -251,6 +251,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Core Package', href: '/advanced/core-package' },
       { title: 'JWT Verification', href: '/advanced/jwt-verification' },
+      { title: 'JWT Token Extraction', href: '/advanced/jwt-token-extraction' },
       { title: 'Module Configuration', href: '/advanced/module-configuration' },
       { title: 'Custom Guards', href: '/advanced/custom-guards' },
       { title: 'WebSocket Support', href: '/advanced/websocket' },

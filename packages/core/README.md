@@ -122,10 +122,101 @@ export class MyService {
 
 > **Note**: Choose either Cognito JWT Verification or RSA JWT Verification based on your authentication requirements. The `InjectCognitoJwtVerifier` decorator works with both verifier types, but you should configure only one type in your module.
 
+### JWT Token Extraction
+
+The package provides flexible JWT token extraction capabilities, allowing you to customize how JWT tokens are retrieved from incoming requests. This is particularly useful for different authentication strategies like cookie-based authentication.
+
+#### Built-in Extractors
+
+##### BearerJwtExtractor (Default)
+
+Extracts JWT tokens from the `Authorization: Bearer <token>` header:
+
+```ts
+import { BearerJwtExtractor } from "@nestjs-cognito/core";
+
+// This is the default extractor, no configuration needed
+// But you can explicitly configure it:
+CognitoModule.register({
+  jwtExtractor: new BearerJwtExtractor(),
+  // ... other configuration
+})
+```
+
+##### CookieJwtExtractor
+
+Extracts JWT tokens from HTTP-only cookies:
+
+```ts
+import { CookieJwtExtractor } from "@nestjs-cognito/core";
+
+CognitoModule.register({
+  jwtExtractor: new CookieJwtExtractor('access_token'), // cookie name
+  // ... other configuration
+})
+
+// With default cookie name 'access_token'
+CognitoModule.register({
+  jwtExtractor: new CookieJwtExtractor(),
+  // ... other configuration
+})
+```
+
+#### Custom JWT Extractors
+
+You can create custom JWT extractors by implementing the `CognitoJwtExtractor` interface:
+
+```ts
+import { CognitoJwtExtractor } from "@nestjs-cognito/core";
+
+class CustomJwtExtractor implements CognitoJwtExtractor {
+  hasAuthenticationInfo(request: any): boolean {
+    // Check if request has authentication information
+    return Boolean(request.headers['x-custom-token']);
+  }
+
+  getAuthorizationToken(request: any): string | null {
+    // Extract and return the JWT token
+    return request.headers['x-custom-token'] || null;
+  }
+}
+
+// Use your custom extractor
+CognitoModule.register({
+  jwtExtractor: new CustomJwtExtractor(),
+  // ... other configuration
+})
+```
+
+#### Injection in Services
+
+You can also inject the JWT extractor in your services:
+
+```ts
+import {
+  CognitoJwtExtractor,
+  InjectCognitoJwtExtractor
+} from "@nestjs-cognito/core";
+
+export class MyService {
+  constructor(
+    @InjectCognitoJwtExtractor()
+    private readonly jwtExtractor: CognitoJwtExtractor
+  ) {}
+
+  extractTokenFromRequest(request: any): string | null {
+    if (this.jwtExtractor.hasAuthenticationInfo(request)) {
+      return this.jwtExtractor.getAuthorizationToken(request);
+    }
+    return null;
+  }
+}
+```
+
 ### Module Configuration
 
 ```ts
-import { CognitoModule } from '@nestjs-cognito/core';
+import { CognitoModule, CookieJwtExtractor } from '@nestjs-cognito/core';
 
 @Module({
   imports: [
@@ -138,6 +229,9 @@ import { CognitoModule } from '@nestjs-cognito/core';
           secretAccessKey: 'xxxxx',
         },
       },
+
+      // Optional: Configure JWT token extraction (defaults to BearerJwtExtractor)
+      jwtExtractor: new CookieJwtExtractor('jwt_token'), // or any custom extractor
 
       // Choose ONE of the following JWT verification methods:
       
