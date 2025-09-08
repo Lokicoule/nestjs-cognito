@@ -91,6 +91,9 @@ describe("AbstractGuard", () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({});
 
+        // Mock extractor to return false for no auth info
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
+
         await expect(guard.canActivate(context)).rejects.toMatchObject({
           message: "No authentication credentials provided",
         });
@@ -143,6 +146,9 @@ describe("AbstractGuard", () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({});
 
+        // Mock extractor to return false for no auth info (public route should allow)
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
+
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
 
@@ -170,6 +176,9 @@ describe("AbstractGuard", () => {
           },
         });
 
+        // Mock extractor to return false for empty auth header
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
+
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
 
@@ -178,6 +187,9 @@ describe("AbstractGuard", () => {
         context.switchToHttp().getRequest.mockReturnValue({
           headers: {},
         });
+
+        // Mock extractor to return false for no auth header
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
 
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
@@ -190,6 +202,9 @@ describe("AbstractGuard", () => {
           },
         });
 
+        // Mock extractor to return false for spaces-only auth header
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(false);
+
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
 
@@ -200,6 +215,10 @@ describe("AbstractGuard", () => {
             authorization: "Bearer ",
           },
         });
+
+        // Mock extractor to detect auth info but return null token
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(true);
+        jwtExtractor.getAuthorizationToken.mockReturnValue(null);
 
         await expect(guard.canActivate(context)).rejects.toMatchObject({
           message: "Missing token in Authorization header",
@@ -213,6 +232,10 @@ describe("AbstractGuard", () => {
             authorization: "Bearer valid-token",
           },
         });
+
+        // Mock extractor to detect valid token
+        jwtExtractor.hasAuthenticationInfo.mockReturnValue(true);
+        jwtExtractor.getAuthorizationToken.mockReturnValue("valid-token");
 
         await expect(guard.canActivate(context)).resolves.toBe(true);
       });
