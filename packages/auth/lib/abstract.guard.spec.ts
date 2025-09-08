@@ -2,7 +2,7 @@ import { createMock } from "@golevelup/ts-jest";
 import { CognitoJwtExtractor, CognitoJwtVerifier } from "@nestjs-cognito/core";
 import { ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { AbstractGuard } from "./abstract.guard";
+import { AbstractGuard, CognitoJwtExtractor } from "./abstract.guard";
 import { User } from "./user/user.model";
 
 class TestGuard extends AbstractGuard {
