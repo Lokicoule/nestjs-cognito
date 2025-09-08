@@ -11,7 +11,7 @@ export class BearerJwtExtractor implements CognitoJwtExtractor {
    * @returns True if Authorization header is present and not empty
    */
   hasAuthenticationInfo(request: any): boolean {
-    const headers = request.headers || request?.handshake?.headers;
+    const headers = request?.headers || request?.handshake?.headers;
     const authorization = headers?.authorization;
 
     return Boolean(authorization && authorization.trim());

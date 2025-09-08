@@ -30,8 +30,8 @@ export class CookieJwtExtractor implements CognitoJwtExtractor {
    * @returns True if the cookie is present and not empty
    */
   hasAuthenticationInfo(request: any): boolean {
-    const cookies = request.cookies || {};
-    const token = cookies[this.cookieName];
+    const cookies = request?.cookies || {};
+    const token = cookies?.[this.cookieName];
 
     return Boolean(token && token.trim());
   }
@@ -42,8 +42,8 @@ export class CookieJwtExtractor implements CognitoJwtExtractor {
    * @returns The JWT token string or null if not found
    */
   getAuthorizationToken(request: any): string | null {
-    const cookies = request.cookies || {};
-    const token = cookies[this.cookieName];
+    const cookies = request?.cookies || {};
+    const token = cookies?.[this.cookieName];
 
     if (!token || !token.trim()) {
       return null;
