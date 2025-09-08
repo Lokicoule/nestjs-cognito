@@ -1,10 +1,10 @@
 import { createMock } from "@golevelup/ts-jest";
-import { CognitoJwtVerifier } from "@nestjs-cognito/core";
-import { BadRequestException, ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { CognitoJwtExtractor, CognitoJwtVerifier } from "@nestjs-cognito/core";
+import { BadRequestException, ExecutionContext } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 import { Test, TestingModule } from "@nestjs/testing";
 import { CognitoAuthModule } from "../cognito-auth.module";
 import { AuthenticationGuard } from "./authentication.guard";
-import { Reflector } from "@nestjs/core";
 
 describe("AuthenticationGuard", () => {
   let authenticationGuard: AuthenticationGuard;
@@ -43,6 +43,10 @@ describe("AuthenticationGuard", () => {
           getAllAndMerge: jest.fn().mockReturnValue(false),
           getAllAndOverride: jest.fn().mockReturnValue(false),
         }),
+        createMock<CognitoJwtExtractor>({
+          hasAuthenticationInfo: jest.fn().mockReturnValue(true),
+          getAuthorizationToken: jest.fn().mockReturnValue("valid-token"),
+        }),
       );
 
       mockContext.switchToHttp().getRequest.mockReturnValue({
@@ -68,6 +72,10 @@ describe("AuthenticationGuard", () => {
           getAll: jest.fn().mockReturnValue(false),
           getAllAndMerge: jest.fn().mockReturnValue(false),
           getAllAndOverride: jest.fn().mockReturnValue(false),
+        }),
+        createMock<CognitoJwtExtractor>({
+          hasAuthenticationInfo: jest.fn().mockReturnValue(true),
+          getAuthorizationToken: jest.fn().mockReturnValue("valid-token"),
         }),
       );
       mockContext.switchToHttp().getRequest.mockReturnValue({
