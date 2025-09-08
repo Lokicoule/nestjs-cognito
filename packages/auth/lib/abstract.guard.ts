@@ -1,6 +1,7 @@
 import {
   type CognitoJwtPayload,
   CognitoJwtVerifier,
+  InjectCognitoJwtExtractor,
   InjectCognitoJwtVerifier,
 } from "@nestjs-cognito/core";
 import {
@@ -8,6 +9,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Optional,
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
@@ -18,6 +20,35 @@ import {
 import { UserMapper } from "./user/user.mapper";
 import { User } from "./user/user.model";
 import { IS_PUBLIC_KEY } from "./whitelist";
+
+export interface CognitoJwtExtractor {
+  hasAuthenticationInfo(request): boolean;
+  getAuthorizationToken(request): string | null;
+}
+
+/**
+ * Extracts the JWT token from the "Bearer" authorization request header.
+ */
+class BearerTokenCognitoJwtExtractor implements CognitoJwtExtractor {
+  hasAuthenticationInfo(request: any): boolean {
+    const headers = request.headers || request?.handshake?.headers;
+    const authorization = headers?.authorization;
+
+    return Boolean(authorization && authorization.trim());
+  }
+
+  getAuthorizationToken(request: any): string | null {
+    const authorization =
+      request?.headers?.authorization ||
+      request?.handshake?.headers?.authorization;
+
+    if (!authorization) {
+      return null;
+    }
+
+    return authorization.replace("Bearer ", "");
+  }
+}
 
 /**
  * Abstract guard class that implements authentication logic for routes.
@@ -30,14 +61,19 @@ import { IS_PUBLIC_KEY } from "./whitelist";
 @Injectable()
 export abstract class AbstractGuard implements CanActivate {
   #jwtVerifier: CognitoJwtVerifier;
+  #jwtExtractor: CognitoJwtExtractor;
   #reflector: Reflector;
 
   constructor(
     @InjectCognitoJwtVerifier()
     jwtVerifier: CognitoJwtVerifier,
-    reflector: Reflector
+    reflector: Reflector,
+    @Optional()
+    @InjectCognitoJwtExtractor()
+    jwtExtractor?: CognitoJwtExtractor | null,
   ) {
     this.#jwtVerifier = jwtVerifier;
+    this.#jwtExtractor = jwtExtractor || new BearerTokenCognitoJwtExtractor();
     this.#reflector = reflector;
   }
 
@@ -52,7 +88,7 @@ export abstract class AbstractGuard implements CanActivate {
     const isPublic = this.#isWhitelisted(context);
     const request = this.getRequest(context);
 
-    if (!this.#hasAuthHeaders(request)) {
+    if (!this.#jwtExtractor.hasAuthenticationInfo(request)) {
       if (isPublic) {
         return true;
       }
@@ -60,12 +96,14 @@ export abstract class AbstractGuard implements CanActivate {
     }
 
     try {
-      const authorization = this.#getAuthorizationToken(request);
+      const authorization = this.#jwtExtractor.getAuthorizationToken(request);
       if (!authorization) {
         throw new BadRequestException("Missing token in Authorization header");
       }
 
-      const payload = await this.#jwtVerifier.verify(authorization) as CognitoJwtPayload;
+      const payload = (await this.#jwtVerifier.verify(
+        authorization,
+      )) as CognitoJwtPayload;
 
       if (!payload || !payload["sub"]) {
         throw new BadRequestException("Invalid token payload");
@@ -121,37 +159,14 @@ export abstract class AbstractGuard implements CanActivate {
     return request[COGNITO_USER_CONTEXT_PROPERTY];
   }
 
-  #hasAuthHeaders(request): boolean {
-    if (!request) {
-      return false;
-    }
-
-    const headers = request.headers || request?.handshake?.headers;
-    const authorization = headers?.authorization;
-
-    return Boolean(authorization && authorization.trim());
-  }
-
-  #getAuthorizationToken(request): string | null {
-    const authorization =
-      request?.headers?.authorization ||
-      request?.handshake?.headers?.authorization;
-
-    if (!authorization) {
-      return null;
-    }
-
-    return authorization.replace("Bearer ", "");
-  }
-
   #isWhitelisted(context: ExecutionContext): boolean {
     const isHandlerPublic = this.#reflector.get<boolean>(
       IS_PUBLIC_KEY,
-      context.getHandler()
+      context.getHandler(),
     );
     const isClassPublic = this.#reflector.get<boolean>(
       IS_PUBLIC_KEY,
-      context.getClass()
+      context.getClass(),
     );
 
     return isHandlerPublic || isClassPublic;
