@@ -106,7 +106,7 @@ describe("AbstractGuard", () => {
         });
       });
 
-      it.only("should support custom token extractor", async () => {
+      it("should support custom token extractor", async () => {
         const context = createMock<ExecutionContext>();
         context.switchToHttp().getRequest.mockReturnValue({
           headers: {
