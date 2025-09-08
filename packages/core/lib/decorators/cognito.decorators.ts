@@ -1,6 +1,7 @@
 import { Inject } from "@nestjs/common";
 import {
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+  COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
   COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
 } from "../cognito.constants";
 
@@ -18,4 +19,13 @@ export function InjectCognitoIdentityProvider() {
  */
 export function InjectCognitoJwtVerifier() {
   return Inject(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN);
+}
+
+/**
+ * Inject the CognitoJwtExtractor instance
+ * @returns {ParameterDecorator} - The injected CognitoJwtExtractor instance
+ * @constructor
+ */
+export function InjectCognitoJwtExtractor() {
+  return Inject(COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN);
 }
