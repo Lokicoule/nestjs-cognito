@@ -1,5 +1,33 @@
 # Changelog:
 
+## 2.4.0
+
+### Minor Changes
+
+- 80cec2f: ## Features
+  - Add configurable JWT token extraction with `CognitoJwtExtractor` interface
+  - Add `BearerJwtExtractor` and `CookieJwtExtractor` implementations
+  - Add `jwtExtractor` option to `CognitoModuleOptions`
+  - Add `@InjectCognitoJwtExtractor()` decorator
+
+  ## Fixes
+  - Update @apollo/server to v5
+  - Fix GitHub Actions workflow pnpm configuration
+
+  ## Chores
+  - Update TypeScript ESLint to v8.43.0
+  - Update Node.js setup action to v5
+  - Update upload-pages-artifact action to v4
+  - Update checkout action to v5
+  - Update Node.js to v22
+  - Update pnpm to v9.15.9
+  - Update various dependencies
+
+### Patch Changes
+
+- Updated dependencies [80cec2f]
+  - @nestjs-cognito/core@2.3.0
+
 ## 2.3.0
 
 ### Minor Changes

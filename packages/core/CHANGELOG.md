@@ -1,5 +1,28 @@
 # Changelog:
 
+## 2.3.0
+
+### Minor Changes
+
+- 80cec2f: ## Features
+  - Add configurable JWT token extraction with `CognitoJwtExtractor` interface
+  - Add `BearerJwtExtractor` and `CookieJwtExtractor` implementations
+  - Add `jwtExtractor` option to `CognitoModuleOptions`
+  - Add `@InjectCognitoJwtExtractor()` decorator
+
+  ## Fixes
+  - Update @apollo/server to v5
+  - Fix GitHub Actions workflow pnpm configuration
+
+  ## Chores
+  - Update TypeScript ESLint to v8.43.0
+  - Update Node.js setup action to v5
+  - Update upload-pages-artifact action to v4
+  - Update checkout action to v5
+  - Update Node.js to v22
+  - Update pnpm to v9.15.9
+  - Update various dependencies
+
 ## 2.2.0
 
 ### Minor Changes
@@ -7,14 +30,12 @@
 - 0d1e2f3: ## Features
 
   ### JWT Verification Improvements
-
   - Added support for ECDSA and EdDSA signing algorithms
   - Enhanced JWT verification through aws-jwt-verify v5
   - Maintained full backward compatibility with existing APIs
   - Improved token validation security
 
   ### Package Updates
-
   - Updated NestJS core dependencies to latest stable versions
   - Improved TypeScript type definitions and compatibility
   - Enhanced GraphQL integration and features
@@ -23,20 +44,17 @@
   ## Dependencies
 
   ### Major Updates
-
   - aws-jwt-verify: v4 → v5
   - Jest: Updated to v30
   - GraphQL: Updated to v16.11.0
   - TypeScript ESLint: Updated to v8.34.0
 
   ### AWS SDK Updates
-
   - Updated AWS SDK core packages
   - Improved Cognito Identity Provider client
   - Enhanced AWS JWT verification utilities
 
   ### Development Dependencies
-
   - ESLint configuration improvements
   - Prettier formatting updates
   - Updated Node.js type definitions
@@ -45,7 +63,6 @@
   ## Bug Fixes
 
   ### Core Functionality
-
   - Fixed NestJS monorepo integration issues
   - Resolved GraphQL compatibility concerns
   - Improved error handling in JWT verification
@@ -58,11 +75,9 @@
 - eb798d2: ## Package Updates
 
   ### @nestjs-cognito/auth
-
   - Updated `@nestjs/common` peer dependency to support multiple versions: `^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0`
 
   ### @nestjs-cognito/core
-
   - Updated `@aws-sdk/client-cognito-identity-provider` peer dependency from `3.744.0` to `^3.744.0`
   - Updated `@nestjs/common` peer dependency to support multiple versions: `^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0`
 
@@ -71,33 +86,27 @@
 ### Major Changes
 
 - 93ae5bb: ## Major Infrastructure Changes
-
   - Upgraded to NestJS v11.0.0
   - Migrated from Lerna to PNPM workspace for improved monorepo management
   - Updated CI/CD workflows with PNPM-based configuration
 
   ## Breaking Changes
-
   - Updated peer dependencies to support NestJS v11
   - Updated all package dependencies to their latest compatible versions
 
   ## Package-specific Updates
 
   ### @nestjs-cognito/core
-
   - Updated dependencies to support NestJS v11
 
   ### @nestjs-cognito/auth
-
   - Updated dependencies to support NestJS v11
 
   ### @nestjs-cognito/graphql
-
   - Updated dependencies to support NestJS v11
   - Adapted GraphQL tests for compatibility with updated dependencies
 
   ### @nestjs-cognito/testing
-
   - Updated dependencies to support NestJS v11
 
 ## @nestjs-cognito/core:
