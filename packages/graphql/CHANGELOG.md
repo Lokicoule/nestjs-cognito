@@ -1,5 +1,12 @@
 # Changelog:
 
+## 3.1.2
+
+### Patch Changes
+
+- Updated dependencies [80cec2f]
+  - @nestjs-cognito/auth@2.4.0
+
 ## 3.1.1
 
 ### Patch Changes
