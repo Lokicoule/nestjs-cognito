@@ -90,8 +90,8 @@ importers:
         specifier: 30.1.3
         version: 30.1.3(@types/node@22.18.4)(ts-node@10.9.2(@types/node@22.18.4)(typescript@5.9.2))
       lerna:
-        specifier: 8.2.3
-        version: 8.2.3(encoding@0.1.13)
+        specifier: 8.2.4
+        version: 8.2.4(encoding@0.1.13)
       lerna-changelog:
         specifier: 2.2.0
         version: 2.2.0
@@ -1406,8 +1406,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@lerna/create@8.2.3':
-    resolution: {integrity: sha512-f+68+iojcQ0tZRMfCgQyJdsdz+YPu3/d+0Zo1RJz92bgBxTCiEU+dHACVq1n3sEjm/YWPnFGdag8U5EYYmP3WA==}
+  '@lerna/create@8.2.4':
+    resolution: {integrity: sha512-A8AlzetnS2WIuhijdAzKUyFpR5YbLLfV3luQ4lzBgIBgRfuoBDZeF+RSZPhra+7A6/zTUlrbhKZIOi/MNhqgvQ==}
     engines: {node: '>=18.0.0'}
 
   '@lukeed/csprng@1.1.0':
@@ -5471,8 +5471,8 @@ packages:
     engines: {node: 12.* || 14.* || >= 16}
     hasBin: true
 
-  lerna@8.2.3:
-    resolution: {integrity: sha512-rmuDU+92eWUnnyaPg3Ise339pTxF+r2hu8ky/soCfbGpUoW4kCwsDza3P/LtQJWrKwZWHcosEitfYvxGUWZ16A==}
+  lerna@8.2.4:
+    resolution: {integrity: sha512-0gaVWDIVT7fLfprfwpYcQajb7dBJv3EGavjG7zvJ+TmGx3/wovl5GklnSwM2/WeE0Z2wrIz7ndWhBcDUHVjOcQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -9882,7 +9882,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lerna/create@8.2.3(encoding@0.1.13)(typescript@5.9.2)':
+  '@lerna/create@8.2.4(encoding@0.1.13)(typescript@5.9.2)':
     dependencies:
       '@npmcli/arborist': 7.5.4
       '@npmcli/package-json': 5.2.0
@@ -9917,7 +9917,6 @@ snapshots:
       js-yaml: 4.1.0
       libnpmpublish: 9.0.9
       load-json-file: 6.2.0
-      lodash: 4.17.21
       make-dir: 4.0.0
       minimatch: 3.0.5
       multimatch: 5.0.0
@@ -11724,7 +11723,7 @@ snapshots:
   axios@1.7.9:
     dependencies:
       follow-redirects: 1.15.9
-      form-data: 4.0.1
+      form-data: 4.0.4
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
@@ -15134,9 +15133,9 @@ snapshots:
       - bluebird
       - supports-color
 
-  lerna@8.2.3(encoding@0.1.13):
+  lerna@8.2.4(encoding@0.1.13):
     dependencies:
-      '@lerna/create': 8.2.3(encoding@0.1.13)(typescript@5.9.2)
+      '@lerna/create': 8.2.4(encoding@0.1.13)(typescript@5.9.2)
       '@npmcli/arborist': 7.5.4
       '@npmcli/package-json': 5.2.0
       '@npmcli/run-script': 8.1.0
@@ -15176,7 +15175,6 @@ snapshots:
       libnpmaccess: 8.0.6
       libnpmpublish: 9.0.9
       load-json-file: 6.2.0
-      lodash: 4.17.21
       make-dir: 4.0.0
       minimatch: 3.0.5
       multimatch: 5.0.0
