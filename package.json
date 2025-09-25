@@ -28,8 +28,8 @@
   "devDependencies": {
     "@apollo/server": "4.12.2",
     "@changesets/cli": "^2.27.12",
-    "@commitlint/cli": "19.8.1",
-    "@commitlint/config-angular": "19.8.1",
+    "@commitlint/cli": "20.0.0",
+    "@commitlint/config-angular": "20.0.0",
     "@golevelup/ts-jest": "0.7.0",
     "@nestjs/config": "4.0.2",
     "@nestjs/core": "11.1.6",
