@@ -1,4 +1,4 @@
-import { parseCookies } from "./parse-cookies.util";
+import { parseCookies } from "./cookies.utils";
 
 describe("parseCookies", () => {
   it("should parse simple cookies", () => {
