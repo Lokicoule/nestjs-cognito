@@ -1,25 +1,31 @@
 export const metadata = {
-  title: 'CognitoUser Decorator - NestJS Cognito',
-  description: 'Learn how to access authenticated user information using the CognitoUser decorator in NestJS-Cognito.',
+  title: 'CognitoUser Decorators - NestJS Cognito',
+  description: 'Learn how to access authenticated user information using CognitoUser decorators with type safety in NestJS-Cognito.',
 }
 
-# CognitoUser Decorator
+# CognitoUser Decorators
 
-Learn how to access authenticated user information in your NestJS application using the `@CognitoUser` decorator.
+Learn how to access authenticated user information in your NestJS application using the Cognito user decorators with built-in type safety.
 
 ## Overview
 
-The `@CognitoUser` decorator provides convenient access to the authenticated user's information from AWS Cognito. It can be used in three different ways to retrieve user data:
+NestJS-Cognito provides three decorators for accessing authenticated user information from AWS Cognito:
 
-1. Full user object
+- `@CognitoUser` - Generic decorator for both access and ID tokens
+- `@CognitoAccessUser` - Specialized decorator for access tokens with type safety
+- `@CognitoIdUser` - Specialized decorator for ID tokens with type safety
+
+Each decorator supports three retrieval patterns:
+
+1. Full token payload
 2. Single property access
 3. Multiple properties selection
 
-## Usage Patterns
+## Generic Decorator
 
-### 1. Full User Object
+### @CognitoUser
 
-Retrieve the complete user object containing all available Cognito user information:
+The generic decorator works with both access and ID tokens:
 
 ```typescript
 import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
@@ -37,74 +43,166 @@ export class UserController {
 
 This approach gives you access to all user attributes available in the JWT token.
 
-### 2. Single Property Access
+## Specialized Decorators
 
-Extract a specific property from the user object:
+### @CognitoAccessUser
+
+For access tokens, use `@CognitoAccessUser` for better type safety:
 
 ```typescript
-@Authentication()
-@Controller('user')
-export class UserController {
-  @Get('email')
-  getEmail(@CognitoUser('email') email: string) {
-    return email;
-  }
+import { Authentication, CognitoAccessUser } from '@nestjs-cognito/auth';
+import type { CognitoAccessTokenPayload } from "@nestjs-cognito/core";
 
-  @Get('username')
-  getUsername(@CognitoUser('username') username: string) {
-    return username;
+@Controller('api')
+export class ApiController {
+  @Get('scope')
+  @Authentication()
+  getScope(@CognitoAccessUser() user: CognitoAccessTokenPayload) {
+    return { scope: user.scope, username: user.username };
   }
 }
 ```
 
-This method is useful when you only need one specific attribute, making your code more concise and explicit.
+The decorator validates at runtime that the token is an access token and throws `CognitoTokenTypeMismatchError` if not.
+
+### @CognitoIdUser
+
+For ID tokens, use `@CognitoIdUser` for better type safety:
+
+```typescript
+import { Authentication, CognitoIdUser } from '@nestjs-cognito/auth';
+import type { CognitoIdTokenPayload } from "@nestjs-cognito/core";
+
+@Controller('user')
+export class UserController {
+  @Get('profile')
+  @Authentication()
+  getProfile(@CognitoIdUser() user: CognitoIdTokenPayload) {
+    return {
+      username: user['cognito:username'],
+      email: user.email,
+      groups: user['cognito:groups']
+    };
+  }
+}
+```
+
+The decorator validates at runtime that the token is an ID token and throws `CognitoTokenTypeMismatchError` if not.
+
+## Usage Patterns
+
+### 1. Full Token Payload
+
+Retrieve the complete token payload:
+
+### 2. Single Property Access
+
+Extract a specific property from the token:
+
+```typescript
+@Controller('user')
+export class UserController {
+  @Get('email')
+  @Authentication()
+  getEmail(@CognitoIdUser('email') email: string) {
+    return { email };
+  }
+
+  @Get('scope')
+  @Authentication()
+  getScope(@CognitoAccessUser('scope') scope: string) {
+    return { scope };
+  }
+}
+```
+
+The decorator automatically checks for both `cognito:` prefixed and non-prefixed properties.
 
 ### 3. Multiple Properties Selection
 
-Select multiple specific properties from the user object:
+Select multiple specific properties:
 
 ```typescript
-@Authentication()
 @Controller('user')
 export class UserController {
   @Get('details')
-  getDetails(@CognitoUser(['username', 'email', 'groups']) user) {
+  @Authentication()
+  getDetails(@CognitoIdUser(['username', 'email', 'groups']) user) {
     return user; // Returns object with only selected properties
   }
 
-  @Get('preferences')
-  getPreferences(@CognitoUser(['locale', 'timezone']) preferences) {
-    return preferences;
+  @Get('token-info')
+  @Authentication()
+  getTokenInfo(@CognitoAccessUser(['username', 'scope', 'client_id']) info) {
+    return info;
   }
 }
 ```
 
 This approach allows you to select multiple specific attributes while excluding unnecessary data.
 
-## Available Properties
+## Token Types & Properties
 
-Common properties available through the `@CognitoUser` decorator:
+### Access Token Properties (`CognitoAccessTokenPayload`)
 
 - `sub` - The unique identifier for the user
+- `username` - Cognito username
+- `client_id` - The client ID that requested the token
+- `scope` - OAuth scopes granted to the token
+- `token_use` - Always `"access"`
+- `auth_time` - Authentication timestamp
+- `iat` / `exp` - Issued at / Expiration timestamps
+
+### ID Token Properties (`CognitoIdTokenPayload`)
+
+- `sub` - The unique identifier for the user
+- `cognito:username` - Cognito username (with prefix)
 - `email` - User's email address
 - `email_verified` - Email verification status
-- `username` - Cognito username
-- `groups` - User's group memberships
+- `cognito:groups` - User's group memberships
+- `phone_number` - User's phone number
+- `phone_number_verified` - Phone verification status
 - `custom:*` - Any custom attributes defined in your user pool
+- `token_use` - Always `"id"`
 
-<Note>
- **Authentication/Authorization**: Use either the `@Authentication()` decorator or `@Authorization()` decorator when using `@CognitoUser`. 
-</Note>
+## Type Guards
 
-4. **Error Handling**: Handle cases where requested properties might not exist in the token payload:
+Use type guards to check token types at runtime:
 
 ```typescript
-@Get('preferences')
+import { isAccessTokenPayload, isIdTokenPayload } from '@nestjs-cognito/core';
+import type { CognitoJwtPayload } from '@nestjs-cognito/core';
+
+@Get('token-type')
 @Authentication()
-async getPreferences(@CognitoUser(['locale']) preferences) {
-  if (!preferences.locale) {
-    return { locale: 'default' };
+checkTokenType(@CognitoUser() payload: CognitoJwtPayload) {
+  if (isAccessTokenPayload(payload)) {
+    return { type: 'access', scope: payload.scope };
   }
-  return preferences;
+
+  if (isIdTokenPayload(payload)) {
+    return { type: 'id', email: payload.email };
+  }
 }
 ```
+
+## Error Handling
+
+The specialized decorators throw `CognitoTokenTypeMismatchError` when token type doesn't match:
+
+```typescript
+import { CognitoTokenTypeMismatchError } from '@nestjs-cognito/auth';
+
+@Get('protected')
+@Authentication()
+async getProtected(@CognitoIdUser() user: CognitoIdTokenPayload) {
+  // If an access token is provided, CognitoTokenTypeMismatchError is thrown
+  return user;
+}
+```
+
+You can catch this error in your exception filters for custom handling.
+
+<Note>
+ **Authentication Required**: Always use `@Authentication()` or `@Authorization()` decorators before using any `@Cognito*User` decorator.
+</Note>

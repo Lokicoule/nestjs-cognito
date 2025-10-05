@@ -8,8 +8,6 @@ export class UserMapper {
     USERNAME: "User must have a username or client ID",
   };
 
-
-
   public static fromCognitoJwtPayload(
     payload: CognitoJwtPayload,
   ): User {
