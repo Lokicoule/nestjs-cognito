@@ -3,6 +3,7 @@ import { CognitoModuleOptions } from "../interfaces/cognito-module.options";
 import {
   createCognitoIdentityProviderInstance,
   createCognitoJwtVerifierInstance,
+  parseCookies,
 } from "./cognito.utils";
 
 describe("CognitoUtils", () => {
@@ -103,4 +104,19 @@ it("should return null when neither jwtVerifier nor jwtRsaVerifier is provided",
   const cognitoJwtVerifier = createCognitoJwtVerifierInstance(options);
 
   expect(cognitoJwtVerifier).toBeNull();
+});
+
+describe("parseCookies", () => {
+  it("should parse cookies", () => {
+    const cookies = "foo=bar; baz=qux";
+
+    const parsedCookies = parseCookies(cookies);
+
+    expect(parsedCookies).toEqual({ foo: "bar", baz: "qux" });
+  });
+
+  it("should return an empty object when no cookies are provided", () => {
+    const parsedCookies = parseCookies();
+    expect(parsedCookies).toEqual({});
+  });
 });

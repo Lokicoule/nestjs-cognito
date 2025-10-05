@@ -328,11 +328,21 @@ export class CatsController {
 
 </details>
 
-### `@CognitoUser`
+### `@CognitoUser` Decorators
 
-To retrieve the cognito user from an incoming request, you'll need to use the `@CognitoUser` decorator. You can use the decorator to inject the entire `CognitoJwtPayload` object or specific properties from the payload, such as the `username` or `email`. Note that the `cognito:` namespace is automatically managed, so you don't need to include it when accessing properties such as `cognito:username` or `cognito:groups`.
+NestJS-Cognito provides three decorators for accessing authenticated user information:
 
-It's important to note that this decorator must be used in conjunction with an authentication guard, such as `Authentication` or `Authorization`.
+- **`@CognitoUser`** - Generic decorator for both access and ID tokens
+- **`@CognitoAccessUser`** - Specialized decorator for access tokens with runtime validation
+- **`@CognitoIdUser`** - Specialized decorator for ID tokens with runtime validation
+
+All decorators support injecting the full payload or specific properties. The `cognito:` namespace is automatically managed.
+
+**Important:** These decorators must be used with an authentication guard (`@Authentication()` or `@Authorization()`).
+
+#### Generic Decorator
+
+The `@CognitoUser` decorator works with any token type:
 
 For example:
 
@@ -364,9 +374,54 @@ export class YourController {
 }
 ```
 
+#### Specialized Decorators
+
+For better type safety, use specialized decorators that validate token types at runtime.
+
+**When to use which decorator:**
+- **`@CognitoAccessUser`** - Use when you need access token specific properties (`scope`, `client_id`) or want to enforce that only access tokens are accepted
+- **`@CognitoIdUser`** - Use when you need ID token specific properties (`email`, `cognito:groups`, custom attributes) or want to enforce that only ID tokens are accepted
+- **`@CognitoUser`** - Use when you don't care about token type or need to support both
+
+**Access Token Example:**
+```ts
+import { Authentication, CognitoAccessUser } from "@nestjs-cognito/auth";
+import type { CognitoAccessTokenPayload } from "@nestjs-cognito/core";
+
+@Controller()
+@Authentication()
+export class YourController {
+  @Get()
+  getData(@CognitoAccessUser() token: CognitoAccessTokenPayload): any {
+    return { scope: token.scope, clientId: token.client_id };
+  }
+}
+```
+
+**ID Token Example:**
+```ts
+import { Authentication, CognitoIdUser } from "@nestjs-cognito/auth";
+import type { CognitoIdTokenPayload } from "@nestjs-cognito/core";
+
+@Controller()
+@Authentication()
+export class YourController {
+  @Get()
+  getData(@CognitoIdUser() user: CognitoIdTokenPayload): any {
+    return {
+      username: user['cognito:username'],
+      email: user.email,
+      groups: user['cognito:groups']
+    };
+  }
+}
+```
+
+> **Note:** If the token type doesn't match the expected type, `CognitoTokenTypeMismatchError` is thrown.
+
 #### <b>Multiple properties</b>
 
-You can extract multiple properties from the cognito user by passing an array of strings.
+You can extract multiple properties from the token by passing an array of strings.
 
 ```ts
 import { Authentication, CognitoUser } from "@nestjs-cognito/auth";

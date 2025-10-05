@@ -6,16 +6,36 @@ import type {
 } from "aws-jwt-verify/cognito-verifier";
 import type { JwksCache } from "aws-jwt-verify/jwk";
 import type {
+  CognitoAccessTokenPayload as AwsCognitoAccessTokenPayload,
+  CognitoIdTokenPayload as AwsCognitoIdTokenPayload,
+  CognitoJwtPayload as AwsCognitoJwtPayload
+} from 'aws-jwt-verify/jwt-model';
+import type {
   JwtVerifierMultiIssuer as JwtRsaVerifierMultiIssuer,
   JwtVerifierMultiProperties as JwtRsaVerifierMultiProperties,
   JwtVerifierProperties as JwtRsaVerifierProperties,
   JwtVerifierSingleIssuer as JwtRsaVerifierSingleIssuer,
   VerifyProperties,
 } from "aws-jwt-verify/jwt-verifier";
-import type { CognitoJwtPayload as AwsCognitoJwtPayload } from 'aws-jwt-verify/jwt-model';
 import type { CognitoJwtExtractor } from './cognito-jwt-extractor.interface';
 
 export type CognitoJwtPayload = Prettify<AwsCognitoJwtPayload>;
+export type CognitoAccessTokenPayload = Prettify<AwsCognitoAccessTokenPayload>;
+export type CognitoIdTokenPayload = Prettify<AwsCognitoIdTokenPayload>;
+
+/**
+ * Type guard to check if a payload is an access token
+ */
+export function isAccessTokenPayload(payload: CognitoJwtPayload): payload is CognitoAccessTokenPayload {
+  return payload.token_use === 'access';
+}
+
+/**
+ * Type guard to check if a payload is an ID token
+ */
+export function isIdTokenPayload(payload: CognitoJwtPayload): payload is CognitoIdTokenPayload {
+  return payload.token_use === 'id';
+}
 
 /**
  * Represents a type that can be used as a Cognito JWT RSA verifier.
