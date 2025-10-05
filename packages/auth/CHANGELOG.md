@@ -1,4 +1,18 @@
-# Changelog:
+## 2.5.0
+
+### Minor Changes
+
+- **Specialized Decorators**: Add `@CognitoAccessUser` and `@CognitoIdUser` decorators for better type safety
+- **New Types**: Export `CognitoAccessTokenPayload` and `CognitoIdTokenPayload` from `@nestjs-cognito/core`
+- **Type Guards**: Add `isAccessTokenPayload` and `isIdTokenPayload` type guards for runtime type checking
+- **GraphQL Support**: Add `@GqlCognitoAccessUser` and `@GqlCognitoIdUser` decorators for GraphQL resolvers
+- **Runtime Validation**: Specialized decorators include runtime validation to ensure correct token types
+- **Code Reuse**: Refactored decorators to share core logic and avoid duplication
+- **Shared Factory**: Export `createCognitoUserDecorator` function for reuse across packages
+
+### Breaking Changes
+
+- None (additive changes only)
 
 ## 2.4.0
 

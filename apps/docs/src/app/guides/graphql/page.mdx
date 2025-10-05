@@ -78,7 +78,9 @@ export class AdminResolver {
 
 ## User Information
 
-Access the authenticated user's information using the `@GqlCognitoUser()` decorator:
+Access the authenticated user's information using the GraphQL Cognito decorators:
+
+### Generic Decorator
 
 ```typescript
 import { GqlCognitoUser } from '@nestjs-cognito/graphql';
@@ -87,12 +89,48 @@ import type { CognitoJwtPayload } from '@nestjs-cognito/core';
 @Resolver()
 export class UserResolver {
   @Query()
+  @GqlAuthentication()
   async me(@GqlCognitoUser() user: CognitoJwtPayload) {
     return {
       id: user.sub,
       username: user.username,
-      email: user['email']
+      email: user.email
     };
   }
 }
 ```
+
+### Specialized Decorators
+
+For better type safety, use `@GqlCognitoAccessUser` or `@GqlCognitoIdUser`:
+
+```typescript
+import { GqlCognitoIdUser, GqlCognitoAccessUser } from '@nestjs-cognito/graphql';
+import type { CognitoIdTokenPayload, CognitoAccessTokenPayload } from '@nestjs-cognito/core';
+
+@Resolver()
+export class UserResolver {
+  // For ID tokens
+  @Query()
+  @GqlAuthentication()
+  async profile(@GqlCognitoIdUser() user: CognitoIdTokenPayload) {
+    return {
+      username: user['cognito:username'],
+      email: user.email,
+      groups: user['cognito:groups']
+    };
+  }
+
+  // For access tokens
+  @Query()
+  @GqlAuthentication()
+  async tokenInfo(@GqlCognitoAccessUser() token: CognitoAccessTokenPayload) {
+    return {
+      scope: token.scope,
+      clientId: token.client_id
+    };
+  }
+}
+```
+
+The specialized decorators validate token types at runtime and throw `CognitoTokenTypeMismatchError` if the token type doesn't match.
