@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@apollo/server": "4.12.2",
+    "@as-integrations/express5": "^1.1.2",
     "@nestjs-cognito/testing": "workspace:*",
     "@nestjs/apollo": "13.2.1",
     "@nestjs/common": "11.1.6",
@@ -40,6 +41,7 @@
     "@nestjs/testing": "11.1.6"
   },
   "dependencies": {
-    "@nestjs-cognito/auth": "workspace:*"
+    "@nestjs-cognito/auth": "workspace:*",
+    "@nestjs-cognito/core": "workspace:*"
   }
 }
