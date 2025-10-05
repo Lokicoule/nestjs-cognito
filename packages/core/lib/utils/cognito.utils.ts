@@ -94,13 +94,3 @@ function buildConfigurationFromOptions(
     ...options,
   };
 }
-
-export const parseCookies = (cookies?: string) => {
-  if (!cookies) return {};
-
-  return cookies.split(";").reduce((acc, cookie) => {
-    const [key, value] = cookie.split("=");
-    acc[key.trim()] = value;
-    return acc;
-  }, {});
-}
