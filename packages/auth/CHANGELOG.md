@@ -1,7 +1,5 @@
 ## 2.5.0
 
-## 2.5.0
-
 ### Minor Changes
 
 - b067256: # Specialized Cognito User Decorators with Type Safety
