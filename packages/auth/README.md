@@ -376,7 +376,7 @@ export class YourController {
 
 #### Specialized Decorators
 
-For better type safety, use specialized decorators that validate token types at runtime.
+Use specialized decorators that validate token types at runtime.
 
 **When to use which decorator:**
 - **`@CognitoAccessUser`** - Use when you need access token specific properties (`scope`, `client_id`) or want to enforce that only access tokens are accepted

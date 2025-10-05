@@ -1,19 +1,19 @@
 export const metadata = {
   title: 'CognitoUser Decorators - NestJS Cognito',
-  description: 'Learn how to access authenticated user information using CognitoUser decorators with type safety in NestJS-Cognito.',
+  description: 'Learn how to access authenticated user information using CognitoUser decorators with runtime validation in NestJS-Cognito.',
 }
 
 # CognitoUser Decorators
 
-Learn how to access authenticated user information in your NestJS application using the Cognito user decorators with built-in type safety.
+Learn how to access authenticated user information in your NestJS application using the Cognito user decorators with built-in runtime validation.
 
 ## Overview
 
 NestJS-Cognito provides three decorators for accessing authenticated user information from AWS Cognito:
 
 - `@CognitoUser` - Generic decorator for both access and ID tokens
-- `@CognitoAccessUser` - Specialized decorator for access tokens with type safety
-- `@CognitoIdUser` - Specialized decorator for ID tokens with type safety
+- `@CognitoAccessUser` - Specialized decorator for access tokens with runtime validation
+- `@CognitoIdUser` - Specialized decorator for ID tokens with runtime validation
 
 Each decorator supports three retrieval patterns:
 
@@ -47,7 +47,7 @@ This approach gives you access to all user attributes available in the JWT token
 
 ### @CognitoAccessUser
 
-For access tokens, use `@CognitoAccessUser` for better type safety:
+For access tokens, use `@CognitoAccessUser` for runtime validation:
 
 ```typescript
 import { Authentication, CognitoAccessUser } from '@nestjs-cognito/auth';
@@ -67,7 +67,7 @@ The decorator validates at runtime that the token is an access token and throws 
 
 ### @CognitoIdUser
 
-For ID tokens, use `@CognitoIdUser` for better type safety:
+For ID tokens, use `@CognitoIdUser` for runtime validation:
 
 ```typescript
 import { Authentication, CognitoIdUser } from '@nestjs-cognito/auth';
