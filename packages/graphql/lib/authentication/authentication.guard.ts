@@ -1,7 +1,7 @@
+import { AuthenticationGuard as CoreAuthenticationGuard } from "@nestjs-cognito/auth";
+import { parseCookies } from "@nestjs-cognito/core";
 import { ExecutionContext, Injectable } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
-import { AuthenticationGuard as CoreAuthenticationGuard } from "@nestjs-cognito/auth";
-import { parseCookies } from "../utils/parse-cookies.util";
 
 @Injectable()
 export class AuthenticationGuard extends CoreAuthenticationGuard {
