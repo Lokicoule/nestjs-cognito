@@ -57,9 +57,9 @@ export class ProfileController {
 - **Flexible** - Works with REST, GraphQL, cookies, multiple user pools, custom extractors
 - **Testable** - Built-in testing utilities for both mocked and real authentication flows
 
-## Star This Project ⭐
+## Like It? Star It!
 
-If @nestjs-cognito saves you hours of authentication headaches, **give it a star**. It helps other developers discover this solution and motivates us to keep improving it.
+No more authentication boilerplate nightmares? Stars are appreciated and help other developers discover this project. Plus, it makes our day better.
 
 <div align="center">
   <a href="https://github.com/Lokicoule/nestjs-cognito/stargazers">
@@ -308,16 +308,7 @@ Check our [Contributing Guidelines](https://github.com/Lokicoule/nestjs-cognito/
 
 ## Support This Project
 
-If @nestjs-cognito is helpful to you, consider:
-
-- **Starring the repository** - Helps others discover the project
-- **Contributing** - Code, documentation, bug reports, or feature ideas
-
-<div align="center">
-  <a href="https://github.com/Lokicoule/nestjs-cognito/stargazers">
-    <img src="https://img.shields.io/github/stars/Lokicoule/nestjs-cognito?style=for-the-badge&logo=github" alt="Star on GitHub" />
-  </a>
-</div>
+If @nestjs-cognito is helpful to you, consider contributing with code, documentation, bug reports, or feature ideas.
 
 ## Documentation
 
