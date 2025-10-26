@@ -306,10 +306,6 @@ Every contributor is recognized in our [Contributors](https://github.com/Lokicou
 
 Check our [Contributing Guidelines](https://github.com/Lokicoule/nestjs-cognito/blob/main/CONTRIBUTING.md) for more details.
 
-## Support This Project
-
-If @nestjs-cognito is helpful to you, consider contributing with code, documentation, bug reports, or feature ideas.
-
 ## Documentation
 
 - [Official Documentation](https://lokicoule.github.io/nestjs-cognito/) - Complete guides and API reference
