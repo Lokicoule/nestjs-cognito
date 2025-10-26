@@ -10,32 +10,32 @@
 
 </div>
 
+## Overview
 
-## Description
+`@nestjs-cognito/auth` is a powerful authentication and authorization library for NestJS applications using AWS Cognito. Built on top of [@nestjs-cognito/core](https://www.npmjs.com/package/@nestjs-cognito/core) and [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify), it provides type-safe decorators and guards to secure your REST APIs with minimal configuration.
 
-`@nestjs-cognito/auth` is a library for [NestJS](https://github.com/nestjs/nest) that provides authentication and authorization decorators and guards for applications using [AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html). This library is built on top of `@nestjs-cognito/core` and `aws-jwt-verify`.
+## Features
+
+- **JWT Token Verification** - Automatic verification of AWS Cognito access and ID tokens
+- **Authentication Guards** - Simple `@Authentication()` decorator for protecting routes
+- **Role-Based Authorization** - Fine-grained access control with `@Authorization()` decorator supporting allowed, required, and prohibited groups
+- **User Decorators** - Extract user information from tokens with `@CognitoUser()`, `@CognitoAccessUser()`, and `@CognitoIdUser()` decorators
+- **Public Routes** - `@PublicRoute()` decorator for optional authentication with security enforcement
+- **Type Safety** - Full TypeScript support with typed payloads
+- **Flexible Configuration** - Both synchronous and asynchronous module configuration
+- **Zero Boilerplate** - Minimal setup required to secure your application
 
 ## Installation
-
-To install the library, use npm:
 
 ```bash
 npm install @nestjs-cognito/auth
 ```
 
-## Configuration
+## Quick Start
 
-The `@nestjs-cognito/auth` library offers both _synchronous_ and _asynchronous_ configuration options. To use the library, a few configuration parameters are required, including the AWS Cognito user pool ID and client ID. Detailed information about the available options can be found in the [@nestjs-cognito/core](https://www.npmjs.com/package/@nestjs-cognito/core) documentation.
+### 1. Configure the Module
 
-### Synchronous Configuration
-
-The `@nestjs-cognito/auth` library can be easily integrated into your NestJS application by importing the `CognitoAuthModule` from the `@nestjs-cognito/auth` package.
-
-Use the `CognitoAuthModule.register` method with options from the [CognitoModuleOptions interface](https://www.npmjs.com/package/@nestjs-cognito/core)
-
-Here's an example of how you can import the `CognitoAuthModule` into your NestJS application:
-
-```ts
+```typescript
 import { CognitoAuthModule } from "@nestjs-cognito/auth";
 import { Module } from "@nestjs/common";
 
@@ -43,9 +43,9 @@ import { Module } from "@nestjs/common";
   imports: [
     CognitoAuthModule.register({
       jwtVerifier: {
-        userPoolId: "user_pool_id",
-        clientId: "client_id",
-        tokenUse: "id",
+        userPoolId: "us-east-1_xxxxxx",
+        clientId: "your-client-id",
+        tokenUse: "access", // or "id"
       },
     }),
   ],
@@ -53,22 +53,97 @@ import { Module } from "@nestjs/common";
 export class AppModule {}
 ```
 
-In this example, the CognitoAuthModule is imported and registered with the following configuration options:
+### 2. Protect Your Routes
 
-- `jwtVerifier`:
-  - `userPoolId`: The ID of your AWS Cognito user pool.
-  - `clientId`: The client ID of your AWS Cognito user pool.
-  - `tokenUse`: The type of token to be used. Since December 2023, AWS Cognito supports access token customization, making it the recommended choice for RBAC implementation over ID tokens.
+```typescript
+import { Authentication, CognitoUser } from "@nestjs-cognito/auth";
+import { Controller, Get } from "@nestjs/common";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
-Note: You can also define an identity provider without importing the [CognitoModule](https://www.npmjs.com/package/@nestjs-cognito/core) module by using the CognitoAuthModule.
+@Controller("profile")
+@Authentication()
+export class ProfileController {
+  @Get()
+  getProfile(@CognitoUser() user: CognitoJwtPayload) {
+    return { username: user.username, email: user.email };
+  }
+}
+```
+
+### 3. Add Role-Based Authorization
+
+```typescript
+import { Authorization, CognitoUser } from "@nestjs-cognito/auth";
+import { Controller, Delete } from "@nestjs/common";
+
+@Controller("admin")
+@Authorization(["admin", "superadmin"])
+export class AdminController {
+  @Delete("users/:id")
+  deleteUser(@CognitoUser("username") username: string) {
+    return `Action performed by ${username}`;
+  }
+}
+```
+
+## Table of Contents
+
+- [Configuration](#configuration)
+  - [Synchronous Configuration](#synchronous-configuration)
+  - [Asynchronous Configuration](#asynchronous-configuration)
+- [Authentication](#authentication)
+  - [@Authentication Decorator](#authentication-decorator)
+  - [AuthenticationGuard](#authenticationguard)
+- [Authorization](#authorization)
+  - [@Authorization Decorator](#authorization-decorator)
+  - [AuthorizationGuard](#authorizationguard)
+- [User Decorators](#user-decorators)
+  - [@CognitoUser - Generic Decorator](#cognitouser---generic-decorator)
+  - [@CognitoAccessUser - Access Token Decorator](#cognitoaccessuser---access-token-decorator)
+  - [@CognitoIdUser - ID Token Decorator](#cognitoiduser---id-token-decorator)
+- [Public Routes](#public-routes)
+- [Related Packages](#related-packages)
+- [License](#license)
+
+## Configuration
+
+The `@nestjs-cognito/auth` library offers both synchronous and asynchronous configuration options. You need to provide your AWS Cognito user pool ID and client ID. For detailed information about available options, see the [@nestjs-cognito/core documentation](https://www.npmjs.com/package/@nestjs-cognito/core).
+
+### Synchronous Configuration
+
+Use the `CognitoAuthModule.register()` method to configure the module with static options:
+
+```typescript
+import { CognitoAuthModule } from "@nestjs-cognito/auth";
+import { Module } from "@nestjs/common";
+
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      jwtVerifier: {
+        userPoolId: "us-east-1_xxxxxx",
+        clientId: "your-client-id",
+        tokenUse: "access",
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+**Configuration Options:**
+
+- `jwtVerifier.userPoolId` - Your AWS Cognito user pool ID
+- `jwtVerifier.clientId` - Your AWS Cognito app client ID
+- `jwtVerifier.tokenUse` - Token type: `"access"` or `"id"` (AWS Cognito supports access token customization since December 2023, making it the recommended choice for RBAC)
+
+> **Note:** You can define an identity provider without importing the separate [CognitoModule](https://www.npmjs.com/package/@nestjs-cognito/core) by using `CognitoAuthModule`.
 
 ### Asynchronous Configuration
 
-With `CognitoModule.registerAsync` you can import a ConfigModule and inject ConfigService to use it in `useFactory` method.
-Alternatively, you can use `useExisting` or `useClass`.
-You can find more information about asynchronous configuration in the [NestJS documentation](https://docs.nestjs.com/techniques/configuration).
+Use `CognitoAuthModule.registerAsync()` to configure the module with dynamic options from ConfigService or other providers:
 
-```ts
+```typescript
 import { CognitoAuthModule } from "@nestjs-cognito/auth";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -80,8 +155,8 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       useFactory: async (configService: ConfigService) => ({
         jwtVerifier: {
           userPoolId: configService.get("COGNITO_USER_POOL_ID") as string,
-          clientId: configService.get("COGNITO_CLIENT_ID"),
-          tokenUse: "id",
+          clientId: configService.get("COGNITO_CLIENT_ID") as string,
+          tokenUse: "access",
         },
       }),
       inject: [ConfigService],
@@ -91,66 +166,21 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 export class AppModule {}
 ```
 
-## Usage
+You can also use `useExisting` or `useClass` for configuration. See the [NestJS documentation](https://docs.nestjs.com/techniques/configuration) for more information about asynchronous configuration patterns.
 
-Once the `@nestjs-cognito/auth` module is installed and configured, you can use the following decorators and guards to protect your controllers and routes.
+## Authentication
 
-### Built-in Decorators and Guards
+Protect your routes by requiring valid AWS Cognito authentication tokens. You can use either the `@Authentication()` decorator or the `AuthenticationGuard` with `@UseGuards()`.
 
-- Use the `@Authentication` decorator or the `@UseGuards(AuthenticationGuard)` syntax to apply the `AuthenticationGuard` to a controller and ensure that the user is authenticated.
-- Use the `@Authorization` decorator or the `@UseGuards(AuthorizationGuard)` syntax to apply the `AuthorizationGuard` to a controller and ensure that the user is authorized.
-- Decorate method arguments with the `@CognitoUser` decorator to retrieve the payload information extracted from the JWT.
+> **Note:** When using authorization, authentication is already checked, so there's no need to use both guards together.
 
-<b>Note: During the authorization process, the authentication of the user is already checked, so there's no need to use the `authentication` guard or decorator.</b>
+### @Authentication Decorator
 
-In addition, you can find more details about `@UseGuards` decorator from the official [NestJS](https://docs.nestjs.com/guards) documentation.
+The `@Authentication()` decorator is the recommended approach for securing controllers or individual routes:
 
-### `Authentication`
-
-#### `@Authentication` Decorator
-
-To configure the authentication, you'll need to use the `@Authentication` decorator. You can add the `@Authentication` decorator to controllers or routes:
-
-```ts
-import { Authentication } from "@nestjs-cognito/auth";
-import { Controller } from "@nestjs/common";
-
-@Controller("dogs")
-@Authentication()
-export class DogsController {
-  // Your routes here
-}
-```
-
-#### `AuthenticationGuard`
-
-You can also use the `AuthenticationGuard` to secure individual routes or endpoint.
-
-To use the `AuthenticationGuard`, you'll need to use the `@UseGuards` decorator:
-
-```ts
-import { AuthenticationGuard } from "@nestjs-cognito/auth";
-import { UseGuards } from "@nestjs/common";
-
-@Controller("dogs")
-@UseGuards(AuthenticationGuard)
-export class DogsController {
-  // Your routes here
-}
-```
-
-<details>
-<summary>
-Examples of using authentication:
-</summary>
-
-```ts
-import {
-  Authentication,
-  AuthenticationGuard,
-  CognitoUser,
-} from "@nestjs-cognito/auth";
-import { Controller, Get, UseGuards } from "@nestjs/common";
+```typescript
+import { Authentication, CognitoUser } from "@nestjs-cognito/auth";
+import { Controller, Get } from "@nestjs/common";
 import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
 @Controller("dogs")
@@ -158,378 +188,343 @@ import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 export class DogsController {
   @Get()
   findAll(@CognitoUser("email") email: string): string {
-    return "This action returns all my dogs";
+    return `This action returns all dogs for ${email}`;
   }
 }
+```
 
-@Controller("cats")
-@UseGuards(AuthenticationGuard)
-export class CatsController {
-  @Get()
-  findAll(@CognitoUser(["groups", "email", "username"]) me): string {
-    return "This action returns all my cats";
-  }
-}
+You can also apply the decorator to individual routes:
 
+```typescript
 @Controller("dogs")
 export class DogsController {
   @Get()
   @Authentication()
-  findAll(@CognitoUser() CognitoJwtPayload): string {
-    return "This action returns all my dogs";
-  }
-}
-
-@Controller("cats")
-export class CatsController {
-  @Get()
-  @UseGuards(AuthenticationGuard)
-  findAll(@CognitoUser(["groups", "email", "username"]) me): string {
-    return "This action returns all my cats";
-  }
-}
-```
-
-</details>
-
-### `Authorization`
-
-#### `@Authorization` Decorator
-
-The `@Authorization` decorator can be used to secure an entire controller. You can specify the `allowedGroups`, `requiredGroups`, and/or `prohibitedGroups` for a given controller.
-
-For example:
-
-```ts
-@Controller("dogs")
-@Authorization({
-  allowedGroups: ["user", "admin"],
-  requiredGroups: ["moderator"],
-  prohibitedGroups: ["visitor"],
-})
-export class DogsController {
-  @Get()
-  findAll(@CognitoUser() CognitoJwtPayload): string {
+  findAll(@CognitoUser() user: CognitoJwtPayload): string {
     return "This action returns all my dogs";
   }
 }
 ```
 
-You can also specify the `allowedGroups` as an array of strings:
+### AuthenticationGuard
 
-```ts
-@Controller("cats")
-@Authorization(["user"]) // allowedGroups by default
-export class CatsController {
-  @Get()
-  findAll(@CognitoUser("username") username: string): string {
-    return "This action returns all my cats";
-  }
-}
-```
+Alternatively, use the `AuthenticationGuard` directly with the `@UseGuards()` decorator:
 
-#### `AuthorizationGuard`
-
-The `AuthorizationGuard` can be used to secure a single route, allowing you to specify the `allowedGroups`, `requiredGroups`, and/or `prohibitedGroups` for a given endpoint.
-
-For example:
-
-```ts
-@Controller("cats")
-@UseGuards(
-  AuthorizationGuard({
-    allowedGroups: ["user", "admin"],
-    requiredGroups: ["moderator"],
-    prohibitedGroups: ["visitor"],
-  })
-)
-export class CatsController {
-  @Get()
-  findAll(@CognitoUser("email") email: string): string {
-    return "This action returns all my cats";
-  }
-}
-```
-
-You can also use the `AuthorizationGuard` directly on a route:
-
-```ts
-@Controller("cats")
-export class CatsController {
-  @Get()
-  @UseGuards(AuthorizationGuard(["user", "admin"]))
-  findAll(@CognitoUser() me: CognitoJwtPayload): string {
-    return "This action returns all my cats";
-  }
-}
-```
-
-<details>
-
-<summary>
-Examples of using authorization:
-</summary>
-
-```ts
-import {
-  Authorization,
-  AuthorizationGuard,
-  CognitoUser,
-} from "@nestjs-cognito/auth";
+```typescript
+import { AuthenticationGuard, CognitoUser } from "@nestjs-cognito/auth";
 import { Controller, Get, UseGuards } from "@nestjs/common";
 import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
-@Controller("dogs")
-@Authorization({
-  allowedGroups: ["user", "admin"],
-  requiredGroups: ["moderator"],
-  prohibitedGroups: ["visitor"],
-})
-export class DogsController {
+@Controller("cats")
+@UseGuards(AuthenticationGuard)
+export class CatsController {
   @Get()
-  findAll(@CognitoUser() CognitoJwtPayload): string {
-    return "This action returns all my dogs";
+  findAll(@CognitoUser(["email", "username"]) user): string {
+    return "This action returns all my cats";
   }
 }
+```
 
-@Controller("cats")
-@Authorization(["user"]) // allowedGroups by default
-export class CatsController {
+## Authorization
+
+Implement role-based access control (RBAC) using Cognito user groups. Authorization automatically includes authentication, so you don't need both guards.
+
+### @Authorization Decorator
+
+The `@Authorization()` decorator enforces group-based access control with three types of rules:
+
+- **`allowedGroups`** - User must belong to at least one of these groups
+- **`requiredGroups`** - User must belong to all of these groups
+- **`prohibitedGroups`** - User must not belong to any of these groups
+
+**Controller-level authorization:**
+
+```typescript
+import { Authorization, CognitoUser } from "@nestjs-cognito/auth";
+import { Controller, Get } from "@nestjs/common";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
+
+@Controller("admin")
+@Authorization({
+  allowedGroups: ["admin", "superadmin"],
+  requiredGroups: ["verified"],
+  prohibitedGroups: ["suspended"],
+})
+export class AdminController {
+  @Get()
+  getDashboard(@CognitoUser() user: CognitoJwtPayload): string {
+    return "Admin dashboard";
+  }
+}
+```
+
+**Simplified syntax for allowed groups:**
+
+```typescript
+@Controller("users")
+@Authorization(["user", "admin"]) // shorthand for allowedGroups
+export class UsersController {
   @Get()
   findAll(@CognitoUser("username") username: string): string {
-    return "This action returns all my cats";
+    return "This action returns all users";
   }
 }
+```
 
-@Controller("cats")
+**Route-level authorization:**
+
+```typescript
+@Controller("posts")
+export class PostsController {
+  @Delete(":id")
+  @Authorization(["moderator", "admin"])
+  deletePost(@CognitoUser() user: CognitoJwtPayload): string {
+    return "Post deleted";
+  }
+}
+```
+
+### AuthorizationGuard
+
+You can also use the `AuthorizationGuard` directly with `@UseGuards()`:
+
+```typescript
+import { AuthorizationGuard, CognitoUser } from "@nestjs-cognito/auth";
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
+
+@Controller("reports")
 @UseGuards(
   AuthorizationGuard({
-    allowedGroups: ["user", "admin"],
-    requiredGroups: ["moderator"],
-    prohibitedGroups: ["visitor"],
+    allowedGroups: ["analyst", "manager"],
+    prohibitedGroups: ["guest"],
   })
 )
-export class CatsController {
+export class ReportsController {
   @Get()
-  findAll(@CognitoUser("email") email: string): string {
-    return "This action returns all my cats";
-  }
-}
-
-@Controller("cats")
-export class CatsController {
-  @Get()
-  @UseGuards(AuthorizationGuard(["user", "admin"]))
-  findAll(@CognitoUser() me: CognitoJwtPayload): string {
-    return "This action returns all my cats";
+  getReports(@CognitoUser("email") email: string): string {
+    return "Financial reports";
   }
 }
 ```
 
-</details>
+**Route-level with guard:**
 
-### `@CognitoUser` Decorators
-
-NestJS-Cognito provides three decorators for accessing authenticated user information:
-
-- **`@CognitoUser`** - Generic decorator for both access and ID tokens
-- **`@CognitoAccessUser`** - Specialized decorator for access tokens with runtime validation
-- **`@CognitoIdUser`** - Specialized decorator for ID tokens with runtime validation
-
-All decorators support injecting the full payload or specific properties. The `cognito:` namespace is automatically managed.
-
-**Important:** These decorators must be used with an authentication guard (`@Authentication()` or `@Authorization()`).
-
-#### Generic Decorator
-
-The `@CognitoUser` decorator works with any token type:
-
-For example:
-
-```ts
-@Controller()
-@Authentication()
-export class YourController {
+```typescript
+@Controller("settings")
+export class SettingsController {
   @Get()
-  findAll(@CognitoUser() cognitoJwtPayload: CognitoJwtPayload): string {
-    return "This action returns all the data";
+  @UseGuards(AuthorizationGuard(["admin", "superadmin"]))
+  getSettings(@CognitoUser() user: CognitoJwtPayload): string {
+    return "System settings";
   }
 }
 ```
 
-#### <b>Optional property name</b>
+## User Decorators
 
-You can specify the name of the property to inject the user into by passing a string as an argument.
+Extract authenticated user information from JWT tokens using specialized decorators. All decorators must be used within routes protected by authentication or authorization guards.
 
-```ts
+### @CognitoUser - Generic Decorator
+
+The `@CognitoUser()` decorator works with both access and ID tokens, providing flexible access to user information.
+
+**Inject the complete payload:**
+
+```typescript
 import { Authentication, CognitoUser } from "@nestjs-cognito/auth";
+import { Controller, Get } from "@nestjs/common";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 
-@Controller()
+@Controller("profile")
 @Authentication()
-export class YourController {
+export class ProfileController {
   @Get()
-  getData(@CognitoUser("email") email: string): any {
-    // Use the `email` string
-  }
-}
-```
-
-#### Specialized Decorators
-
-Use specialized decorators that validate token types at runtime.
-
-**When to use which decorator:**
-- **`@CognitoAccessUser`** - Use when you need access token specific properties (`scope`, `client_id`) or want to enforce that only access tokens are accepted
-- **`@CognitoIdUser`** - Use when you need ID token specific properties (`email`, `cognito:groups`, custom attributes) or want to enforce that only ID tokens are accepted
-- **`@CognitoUser`** - Use when you don't care about token type or need to support both
-
-**Access Token Example:**
-```ts
-import { Authentication, CognitoAccessUser } from "@nestjs-cognito/auth";
-import type { CognitoAccessTokenPayload } from "@nestjs-cognito/core";
-
-@Controller()
-@Authentication()
-export class YourController {
-  @Get()
-  getData(@CognitoAccessUser() token: CognitoAccessTokenPayload): any {
-    return { scope: token.scope, clientId: token.client_id };
-  }
-}
-```
-
-**ID Token Example:**
-```ts
-import { Authentication, CognitoIdUser } from "@nestjs-cognito/auth";
-import type { CognitoIdTokenPayload } from "@nestjs-cognito/core";
-
-@Controller()
-@Authentication()
-export class YourController {
-  @Get()
-  getData(@CognitoIdUser() user: CognitoIdTokenPayload): any {
+  getProfile(@CognitoUser() user: CognitoJwtPayload) {
     return {
-      username: user['cognito:username'],
+      username: user.username,
       email: user.email,
-      groups: user['cognito:groups']
+      sub: user.sub,
     };
   }
 }
 ```
 
-> **Note:** If the token type doesn't match the expected type, `CognitoTokenTypeMismatchError` is thrown.
+**Extract a single property:**
 
-#### <b>Multiple properties</b>
-
-You can extract multiple properties from the token by passing an array of strings.
-
-```ts
-import { Authentication, CognitoUser } from "@nestjs-cognito/auth";
-
-@Controller()
+```typescript
+@Controller("profile")
 @Authentication()
-export class YourController {
-  @Get()
-  getData(
-    @CognitoUser(["groups", "email", "username"])
-    {
-      groups,
-      email,
-      username,
-    }: {
-      groups: string[];
-      email: string;
-      username: string;
-    }
-  ): any {
-    // Use the `groups` and/or `username` and `email` strings
+export class ProfileController {
+  @Get("email")
+  getEmail(@CognitoUser("email") email: string): string {
+    return email;
   }
 }
 ```
 
-### `@PublicRoute`
-
-Makes routes public while still enforcing valid authentication when credentials are provided. This decorator is perfect for implementing "login to see more" features while maintaining security.
-
-#### How it works
-
-- Without authentication token: Route is accessible
-- With valid token: Route is accessible and user information is available
-- With invalid token: Returns 401 Unauthorized (security is never compromised)
-
-#### Example
+**Extract multiple properties:**
 
 ```typescript
+@Controller("profile")
+@Authentication()
+export class ProfileController {
+  @Get("info")
+  getInfo(
+    @CognitoUser(["email", "username", "groups"])
+    user: {
+      email: string;
+      username: string;
+      groups: string[];
+    }
+  ) {
+    return user;
+  }
+}
+```
+
+> **Note:** The `cognito:` namespace is automatically managed for properties like `cognito:groups` and `cognito:username`. You can reference them without the prefix.
+
+### @CognitoAccessUser - Access Token Decorator
+
+The `@CognitoAccessUser()` decorator validates that the token is an access token and provides access to access token-specific properties like `scope` and `client_id`. It throws `CognitoTokenTypeMismatchError` if an ID token is provided.
+
+**When to use:** When you need access token properties or want to enforce that only access tokens are accepted.
+
+```typescript
+import { Authentication, CognitoAccessUser } from "@nestjs-cognito/auth";
+import { Controller, Get } from "@nestjs/common";
+import type { CognitoAccessTokenPayload } from "@nestjs-cognito/core";
+
+@Controller("api")
+@Authentication()
+export class ApiController {
+  @Get("scope")
+  getScope(@CognitoAccessUser() token: CognitoAccessTokenPayload) {
+    return {
+      scope: token.scope,
+      clientId: token.client_id,
+      username: token.username,
+    };
+  }
+}
+```
+
+### @CognitoIdUser - ID Token Decorator
+
+The `@CognitoIdUser()` decorator validates that the token is an ID token and provides access to ID token-specific properties like `email`, `cognito:groups`, and custom attributes. It throws `CognitoTokenTypeMismatchError` if an access token is provided.
+
+**When to use:** When you need ID token properties like email, groups, or custom attributes, or want to enforce that only ID tokens are accepted.
+
+```typescript
+import { Authentication, CognitoIdUser } from "@nestjs-cognito/auth";
+import { Controller, Get } from "@nestjs/common";
+import type { CognitoIdTokenPayload } from "@nestjs-cognito/core";
+
+@Controller("user")
+@Authentication()
+export class UserController {
+  @Get("details")
+  getUserDetails(@CognitoIdUser() user: CognitoIdTokenPayload) {
+    return {
+      username: user["cognito:username"],
+      email: user.email,
+      groups: user["cognito:groups"],
+      emailVerified: user.email_verified,
+    };
+  }
+}
+```
+
+**Choosing the right decorator:**
+
+- **`@CognitoAccessUser`** - Use when you need `scope`, `client_id`, or want to enforce access tokens
+- **`@CognitoIdUser`** - Use when you need `email`, `cognito:groups`, custom attributes, or want to enforce ID tokens
+- **`@CognitoUser`** - Use when you don't care about token type or need to support both
+
+## Public Routes
+
+The `@PublicRoute()` decorator makes routes accessible without authentication while still enforcing validation when credentials are provided. This is perfect for implementing "login to see more" features.
+
+### How It Works
+
+- **Without authentication token:** Route is accessible, user parameter will be `undefined`
+- **With valid token:** Route is accessible and user information is available
+- **With invalid token:** Returns 401 Unauthorized (security is never compromised)
+
+### Basic Example
+
+```typescript
+import { Authentication, PublicRoute, CognitoUser } from "@nestjs-cognito/auth";
+import { Controller, Get } from "@nestjs/common";
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
+
 @Controller("api")
 @Authentication() // All routes require auth by default
-export class AppController {
-  // Basic usage - public route with optional auth
+export class ApiController {
   @Get("welcome")
   @PublicRoute()
-  welcomeUser(@CognitoUser() user?: User) {
+  welcomeUser(@CognitoUser() user?: CognitoJwtPayload) {
     if (user) {
-      return `Welcome back ${user.username}!`;
+      return `Welcome back, ${user.username}!`;
     }
-    return "Hello! Login to see your dashboard";
+    return "Hello! Login to see your personalized dashboard.";
   }
+}
+```
 
-  // Real-world example - product page with member benefits
-  @Get("products/:id")
+### Real-World Example
+
+```typescript
+@Controller("products")
+export class ProductsController {
+  @Get(":id")
   @PublicRoute()
-  getProduct(@Param("id") id: string, @CognitoUser() user?: User) {
-    const product = this.getProduct(id);
+  getProduct(
+    @Param("id") id: string,
+    @CognitoUser() user?: CognitoJwtPayload
+  ) {
+    const product = this.productsService.findById(id);
 
     return {
       ...product,
-      // Show different prices based on authentication
-      price: user ? this.getMemberPrice(product) : product.normalPrice,
-      // Additional data only for authenticated users
+      // Show member pricing if authenticated
+      price: user
+        ? this.getPricingService.getMemberPrice(product)
+        : product.regularPrice,
+      // Additional data for authenticated users
       memberDetails: user
         ? {
-            inWishlist: this.isInWishlist(user.id, id),
-            stock: this.getStockLevel(id),
-            reviews: this.getMemberReviews(id),
+            inWishlist: this.wishlistService.contains(user.sub, id),
+            availableStock: this.inventoryService.getStock(id),
+            memberReviews: this.reviewsService.getMemberReviews(id),
           }
         : null,
     };
   }
-
-  // Example with both @Authentication and @PublicRoute
-  @Get("dashboard")
-  @Authentication()
-  @PublicRoute()
-  getDashboard(@CognitoUser() user?: User) {
-    // If token is provided, it MUST be valid
-    // Invalid tokens will return 401 even though route is public
-    if (user) {
-      return this.getUserDashboard(user);
-    }
-    return this.getPublicDashboard();
-  }
 }
 ```
 
-#### When to use it
+### When to Use
 
-- Public pages that offer enhanced features for authenticated users
+- Public pages with enhanced features for authenticated users
 - Landing pages with personalization opportunities
-- Preview functionality that expands with authentication
+- Preview content that expands with authentication
 - Hybrid public/private APIs where authentication is optional but must be valid when provided
 
-#### Authentication Flow
+## Related Packages
 
-```mermaid
+- **[@nestjs-cognito/core](https://www.npmjs.com/package/@nestjs-cognito/core)** - Core functionality and AWS Cognito integration
+- **[@nestjs-cognito/graphql](https://www.npmjs.com/package/@nestjs-cognito/graphql)** - GraphQL support for Cognito authentication
+- **[@nestjs-cognito/testing](https://www.npmjs.com/package/@nestjs-cognito/testing)** - Testing utilities for E2E and mock testing
 
-flowchart LR
-    A[Request] --> B{Has Token?}
-    B -->|Yes| C{Token Valid?}
-    C -->|Yes| D[Return with User]
-    C -->|No| E[401 Unauthorized]
-    B -->|No| F{Is Public?}
-    F -->|Yes| G[Return without User]
-    F -->|No| H[401 Unauthorized]
-```
+## Resources
+
+- [Documentation](https://lokicoule.github.io/nestjs-cognito/)
+- [GitHub Repository](https://github.com/Lokicoule/nestjs-cognito)
+- [AWS Cognito Documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html)
+- [NestJS Guards Documentation](https://docs.nestjs.com/guards)
 
 ## License
 
-<b>@nestjs-cognito/auth</b> is [MIT licensed](LICENSE).
+**@nestjs-cognito/auth** is [MIT licensed](LICENSE).
