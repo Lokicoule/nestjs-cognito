@@ -42,7 +42,7 @@
     "tslib": "^2.6.2",
     "@types/normalize-path": "3.0.2",
     "@types/ws": "8.18.1",
-    "@types/express": "5.0.4",
+    "@types/express": "5.0.5",
     "@typescript-eslint/eslint-plugin": "8.46.2",
     "@typescript-eslint/parser": "8.46.2",
     "class-transformer": "0.5.1",
