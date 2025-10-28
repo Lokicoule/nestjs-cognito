@@ -207,38 +207,6 @@ describe('CustomHeaderExtractor', () => {
 });
 ```
 
-## Best Practices
-
-### 1. Security First
-
-- **Bearer tokens** (headers) are most secure for APIs
-- **HttpOnly cookies** are secure for browser apps
-- **Avoid** query parameters except for WebSocket upgrades
-
-### 2. CORS Configuration
-
-When using cookies, configure CORS properly:
-
-```typescript
-app.enableCors({
-  origin: 'https://your-frontend.com',
-  credentials: true, // Allow cookies
-});
-```
-
-### 3. Mobile Apps
-
-For mobile apps, use Bearer tokens in headers:
-
-```typescript
-// React Native, Flutter, etc.
-fetch('/api/protected', {
-  headers: {
-    'Authorization': `Bearer ${token}`
-  }
-});
-```
-
 ## See Also
 
 - [Authentication](/guides/authentication) - Protect routes

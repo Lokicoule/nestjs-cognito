@@ -3,67 +3,58 @@ export const metadata = {
   description: 'The easiest way to add AWS Cognito authentication to your NestJS applications.'
 }
 
-# Get Started with NestJS-Cognito
+# NestJS Cognito
 
-Transform your NestJS authentication with AWS Cognito - where enterprise-grade security meets developer-friendly implementation.
+AWS Cognito authentication for NestJS applications.
 
 <Note>
-**Quick Start Benefits**
-
-- **5-Minute Setup**: Get authentication running in your NestJS app quickly
-- **Production-Ready**: Battle-tested security
-- **Developer-First**: Clean APIs, good DX, and comprehensive docs
+- **5-Minute Setup**: Get authentication running quickly
+- **Production-Ready**: Built on [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify)
+- **Type-Safe**: Full TypeScript support
 </Note>
 
 ## Why NestJS-Cognito?
 
-### Understanding AWS Cognito Integration Challenges
+AWS Cognito integration can be complex: OIDC flows, JWT verification, token handling, AWS SDK configuration. NestJS-Cognito handles this for you.
 
-AWS Cognito presents several integration challenges in NestJS applications:
+### Key Features
 
-- **Complex Documentation Structure**: The AWS Cognito documentation spans multiple services and concepts, requiring developers to piece together information from various sources
-- **Technical Implementation Overhead**: Direct integration demands extensive knowledge of AWS services, token handling, and security protocols
-- **Authentication Flow Complexity**: Managing OIDC flows, JWT token verification, and OAuth2 processes requires significant development effort
-- **Error Resolution Complexity**: AWS Cognito's error messages often require deep AWS knowledge for proper interpretation and resolution
+**Simple Authentication**
+```typescript
+@Controller('profile')
+export class ProfileController {
+  @Get()
+  @Authentication()  // ✅ Protected route
+  getProfile(@CognitoUser() user: CognitoJwtPayload) {
+    return user;
+  }
+}
+```
 
-### Comparison with Passport.js
+**Authorization with Cognito Groups**
+```typescript
+@Get('admin')
+@Authorization({ requiredGroups: ['admin'] })
+getAdminData() {
+  return { sensitive: 'data' };
+}
+```
 
-While Passport.js serves as a popular authentication solution, NestJS-Cognito offers distinct advantages for AWS Cognito authentication:
+**Flexible Token Extraction**
+- Bearer tokens (default)
+- Cookies
+- Custom extractors
+- Multiple sources
 
-- **Specialized Integration**: Unlike Passport.js's generic approach requiring manual AWS Cognito setup, NestJS-Cognito provides dedicated, optimized integration
-- **Built-in Token Verification**: NestJS-Cognito includes comprehensive token verification through aws-jwt-verify, eliminating the need for manual implementation required with Passport.js
-- **AWS Best Practices**: The library ensures compliance with AWS security best practices, which would require additional effort to implement correctly with Passport.js
+**Built-in Security**
+- Automatic JWT verification
+- Token expiration handling
+- Issuer validation
+- JWKS key management
 
-NestJS-Cognito addresses these challenges through:
+## Next Steps
 
-### Developer Experience
-
-- **Clear Documentation**: Practical, focused guides that get straight to the point
-- **Intuitive Design**: Following NestJS patterns you already know
-- **Type Safety**: Catch errors early with full TypeScript support
-- **Smart Defaults**: Best practices built-in, so you can focus on your app
-
-### Enterprise Security
-
-Built on [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify), offering:
-
-- **Automatic Key Management**: JWKS handling behind the scenes
-- **Comprehensive Protection**: Including:
-  - Token verification
-  - Expiration handling
-  - Issuer validation
-  - Audience checks
-  - Token use verification
-
-### Clean Architecture
-
-- **Natural NestJS Fit**: Works harmoniously with your existing code
-- **Modular Design**: Keep your authentication logic organized
-- **Dependency Injection**: Flexible service composition
-- **Declarative Security**: Protect routes with simple decorators
-
-### Role Management
-
-- **Cognito Groups**: Map AWS groups to roles automatically
-- **Custom Claims**: Add fine-grained permissions easily
-- **Flexible Control**: Handle permissions your way
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button href="/quickstart" arrow="right">Quick Start</Button>
+  <Button href="/guides/authentication" variant="outline">Authentication Guide</Button>
+</div>
