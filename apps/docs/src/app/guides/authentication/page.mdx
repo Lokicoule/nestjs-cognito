@@ -23,7 +23,7 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
     CognitoAuthModule.register({
       jwtVerifier: {
         userPoolId: 'us-east-1_xxxxxx',
-        clientId: 'your-client-id'
+        clientId: 'your-client-id',
         tokenUse: 'access',
       },
     })
@@ -78,7 +78,7 @@ export class UsersController {
 Sometimes you need to make certain routes public while keeping the controller-level authentication. Use the `@PublicRoute()` decorator for this:
 
 ```ts
-import { Authentication, Public } from '@nestjs-cognito/auth';
+import { Authentication, PublicRoute } from '@nestjs-cognito/auth';
 import { Controller, Get } from '@nestjs/common';
 
 @Controller('users')

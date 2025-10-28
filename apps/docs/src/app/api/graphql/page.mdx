@@ -1,0 +1,92 @@
+export const metadata = {
+  title: '@nestjs-cognito/graphql API - NestJS Cognito',
+  description: 'Technical reference for @nestjs-cognito/graphql package.'
+}
+
+# @nestjs-cognito/graphql
+
+GraphQL-specific decorators and guards for NestJS applications.
+
+## Installation
+
+```bash
+npm install @nestjs-cognito/graphql @nestjs-cognito/auth @nestjs-cognito/core
+```
+
+## Decorators
+
+### Guards
+
+#### `@GqlAuthentication()`
+Apply JWT authentication to GraphQL resolvers or operations.
+
+```typescript
+@Resolver()
+@GqlAuthentication()
+export class UserResolver {}
+```
+
+#### `@GqlAuthorization(groups: string[])`
+Require specific Cognito groups for GraphQL operations.
+
+```typescript
+@Mutation()
+@GqlAuthorization(['admin'])
+async adminMutation() {}
+```
+
+#### `@GqlPublicRoute()`
+Bypass authentication for specific GraphQL operations.
+
+```typescript
+@Query()
+@GqlPublicRoute()
+async publicQuery() {}
+```
+
+### Parameter Decorators
+
+#### `@GqlCognitoUser(property?: string)`
+Extract authenticated user from GraphQL context.
+
+```typescript
+@Query()
+async me(@GqlCognitoUser() user: CognitoJwtPayload) {}
+```
+
+#### `@GqlCognitoIdUser(property?: string)`
+Extract ID token payload (validates token type).
+
+```typescript
+@Query()
+async profile(@GqlCognitoIdUser() user: CognitoIdTokenPayload) {}
+```
+
+#### `@GqlCognitoAccessUser(property?: string)`
+Extract access token payload (validates token type).
+
+```typescript
+@Query()
+async permissions(@GqlCognitoAccessUser() token: CognitoAccessTokenPayload) {}
+```
+
+## Exports
+
+**Decorators:**
+- `@GqlAuthentication()`
+- `@GqlAuthorization(groups: string[])`
+- `@GqlPublicRoute()`
+- `@GqlCognitoUser(property?: string)`
+- `@GqlCognitoIdUser(property?: string)`
+- `@GqlCognitoAccessUser(property?: string)`
+
+**Guards:**
+- `GqlCognitoAuthGuard`
+- `GqlCognitoGroupGuard`
+
+**Constants:**
+- `GQL_PUBLIC_ROUTE_METADATA`
+
+## Guides
+
+- [GraphQL](/guides/graphql) - Complete GraphQL integration guide

@@ -1,11 +1,11 @@
 export const metadata = {
   title: 'GraphQL Integration - NestJS Cognito',
-  description: 'Learn how to integrate GraphQL with NestJS-Cognito for secure, type-safe API authentication.'
+  description: 'GraphQL authentication and authorization with AWS Cognito.'
 }
 
 # GraphQL Integration
 
-The `@nestjs-cognito/graphql` package provides GraphQL-specific decorators and guards for authentication and authorization.
+GraphQL-specific decorators and guards for Cognito authentication.
 
 ## Installation
 
@@ -21,69 +21,10 @@ yarn add @nestjs-cognito/graphql
 ```
 </CodeGroup>
 
-## Basic Setup
-
-Configure the core authentication module:
-
-```typescript
-import { CognitoAuthModule } from '@nestjs-cognito/auth';
-
-@Module({
-  imports: [
-    CognitoAuthModule.register({
-      jwtVerifier: {
-        userPoolId: 'us-east-1_xxxxxx',
-        clientId: 'your-client-id'
-        tokenUse: 'access',
-      },
-    })
-  ]
-})
-export class AppModule {}
-```
-
 ## Authentication
 
-Protect your GraphQL operations using the `@GqlAuthentication()` decorator:
-
 ```typescript
-import { GqlAuthentication } from '@nestjs-cognito/graphql';
-
-@Resolver()
-export class SecureResolver {
-  @Query()
-  @GqlAuthentication()
-  async secureData() {
-    return { message: 'This is secure data' };
-  }
-}
-```
-
-## Authorization
-
-Implement role-based access control with the `@GqlAuthorization()` decorator:
-
-```typescript
-import { GqlAuthorization } from '@nestjs-cognito/graphql';
-
-@Resolver()
-export class AdminResolver {
-  @Mutation()
-  @GqlAuthorization(['admin'])
-  async adminOperation() {
-    return { success: true };
-  }
-}
-```
-
-## User Information
-
-Access the authenticated user's information using the GraphQL Cognito decorators:
-
-### Generic Decorator
-
-```typescript
-import { GqlCognitoUser } from '@nestjs-cognito/graphql';
+import { GqlAuthentication, GqlCognitoUser } from '@nestjs-cognito/graphql';
 import type { CognitoJwtPayload } from '@nestjs-cognito/core';
 
 @Resolver()
@@ -100,9 +41,40 @@ export class UserResolver {
 }
 ```
 
-### Specialized Decorators
+## Authorization
 
-For runtime validation, use `@GqlCognitoAccessUser` or `@GqlCognitoIdUser`:
+```typescript
+import { GqlAuthorization } from '@nestjs-cognito/graphql';
+
+@Resolver()
+export class AdminResolver {
+  @Mutation()
+  @GqlAuthorization(['admin'])
+  async adminOperation() {
+    return { success: true };
+  }
+}
+```
+
+## Public Routes
+
+```typescript
+import { GqlPublicRoute } from '@nestjs-cognito/graphql';
+
+@Resolver()
+@GqlAuthentication()
+export class ProductResolver {
+  @Query()
+  @GqlPublicRoute()
+  async products() {
+    return [{ id: 1, name: 'Product 1' }];
+  }
+}
+```
+
+## Token Types
+
+Use specialized decorators for runtime validation:
 
 ```typescript
 import { GqlCognitoIdUser, GqlCognitoAccessUser } from '@nestjs-cognito/graphql';
@@ -110,18 +82,17 @@ import type { CognitoIdTokenPayload, CognitoAccessTokenPayload } from '@nestjs-c
 
 @Resolver()
 export class UserResolver {
-  // For ID tokens
+  // ID token (user profile)
   @Query()
   @GqlAuthentication()
   async profile(@GqlCognitoIdUser() user: CognitoIdTokenPayload) {
     return {
-      username: user['cognito:username'],
       email: user.email,
       groups: user['cognito:groups']
     };
   }
 
-  // For access tokens
+  // Access token (authorization)
   @Query()
   @GqlAuthentication()
   async tokenInfo(@GqlCognitoAccessUser() token: CognitoAccessTokenPayload) {
@@ -133,4 +104,81 @@ export class UserResolver {
 }
 ```
 
-The specialized decorators validate token types at runtime and throw `CognitoTokenTypeMismatchError` if the token type doesn't match.
+## Subscriptions
+
+Secure GraphQL subscriptions with JWT authentication:
+
+<Mermaid>
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant WS as WebSocket
+    participant V as JWT Verifier
+    participant S as Subscription
+
+    C->>WS: Connect + Bearer Token
+    WS->>V: Verify Token
+    V-->>WS: Valid Payload
+    WS->>C: Connection Established
+    C->>S: Subscribe to Events
+    S-->>C: Stream Data
+```
+
+</Mermaid>
+
+```typescript
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
+import { CognitoJwtVerifier } from 'aws-jwt-verify';
+
+@Module({
+  imports: [
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      useFactory: (cognitoVerifier: CognitoJwtVerifier) => ({
+        autoSchemaFile: true,
+        subscriptions: {
+          'graphql-ws': {
+            onConnect: async (context) => {
+              const token = context.connectionParams?.authorization?.replace('Bearer ', '');
+              if (!token) throw new Error('Missing token');
+
+              const payload = await cognitoVerifier.verify(token);
+              return { user: payload };
+            },
+          },
+        },
+      }),
+      inject: [CognitoJwtVerifier],
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+**Protected subscription:**
+
+```typescript
+@Resolver()
+export class NotificationResolver {
+  @Subscription()
+  @GqlAuthentication()
+  notificationAdded(@GqlCognitoUser() user: CognitoJwtPayload) {
+    return pubSub.asyncIterator(`notifications.${user.sub}`);
+  }
+}
+```
+
+**Client:**
+
+```typescript
+import { createClient } from 'graphql-ws';
+
+const wsClient = createClient({
+  url: 'ws://localhost:3000/graphql',
+  connectionParams: {
+    authorization: `Bearer ${accessToken}`,
+  },
+});
+```

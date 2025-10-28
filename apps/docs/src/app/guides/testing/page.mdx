@@ -220,69 +220,6 @@ describe('Authorization Tests', () => {
 });
 ```
 
-### Authentication Testing
-
-```typescript
-// Test authentication using mock service
-const response = await request(app.getHttpServer())
-  .post('/cognito-testing-login')
-  .send({
-    username: 'test-user',
-    password: 'any-password', // Password is not validated in mock mode
-    clientId: 'mock-client-id'
-  })
-  .expect(200);
-
-// Test protected routes
-await request(app.getHttpServer())
-  .get('/protected')
-  .set('Authorization', `Bearer ${response.body.AccessToken}`)
-  .expect(200)
-  .expect({
-    username: 'test-user',
-    email: 'test@example.com',
-    groups: ['users'],
-  });
-```
-
-### Authorization Testing
-
-```typescript
-// Test group-based authorization
-describe('Authorization Tests', () => {
-  it('should allow access to authorized group members', async () => {
-    // Configure mock user with specific group
-    await request(app.getHttpServer())
-      .post('/config')
-      .send({
-        enabled: true,
-        user: {
-          username: 'admin-user',
-          email: 'admin@example.com',
-          groups: ['admin'],
-        },
-      })
-      .expect(200);
-
-    // Login and get token
-    const loginResponse = await request(app.getHttpServer())
-      .post('/cognito-testing-login')
-      .send({
-        username: 'admin@example.com',
-        password: 'password',
-        clientId: 'test-client',
-      })
-      .expect(200);
-
-    // Test protected route access
-    await request(app.getHttpServer())
-      .get('/admin/dashboard')
-      .set('Authorization', `Bearer ${loginResponse.body.AccessToken}`)
-      .expect(200);
-  });
-});
-```
-
 ## Advanced Testing
 
 ### Dynamic User Configuration

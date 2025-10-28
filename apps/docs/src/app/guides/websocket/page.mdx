@@ -1,0 +1,117 @@
+export const metadata = {
+  title: 'WebSocket Support - NestJS Cognito',
+  description: 'Secure WebSocket connections with AWS Cognito JWT authentication.'
+}
+
+# WebSocket Support
+
+Authenticate WebSocket connections using Cognito JWT tokens.
+
+## Basic Setup
+
+```typescript
+import { WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
+import { Socket } from 'socket.io';
+import { CognitoJwtVerifier, InjectCognitoJwtVerifier } from '@nestjs-cognito/core';
+
+@WebSocketGateway()
+export class MessagesGateway implements OnGatewayConnection {
+  constructor(
+    @InjectCognitoJwtVerifier()
+    private readonly jwtVerifier: CognitoJwtVerifier
+  ) {}
+
+  async handleConnection(client: Socket) {
+    try {
+      const token = client.handshake.headers.authorization?.replace('Bearer ', '');
+      if (!token) {
+        client.disconnect();
+        return;
+      }
+
+      const payload = await this.jwtVerifier.verify(token);
+      client.data.user = payload;
+    } catch (error) {
+      client.disconnect();
+    }
+  }
+}
+```
+
+**Client:**
+
+```typescript
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:3000', {
+  extraHeaders: { authorization: `Bearer ${token}` }
+});
+```
+
+## Cookie Authentication
+
+Extract tokens from cookies instead of headers:
+
+```typescript
+import { parse } from 'cookie';
+
+@WebSocketGateway({ cors: { origin: 'http://localhost:3000', credentials: true } })
+export class MessagesGateway implements OnGatewayConnection {
+  constructor(
+    @InjectCognitoJwtVerifier()
+    private readonly jwtVerifier: CognitoJwtVerifier
+  ) {}
+
+  async handleConnection(client: Socket) {
+    try {
+      const cookies = parse(client.handshake.headers.cookie || '');
+      const token = cookies['access_token'];
+
+      if (!token) {
+        client.disconnect();
+        return;
+      }
+
+      const payload = await this.jwtVerifier.verify(token);
+      client.data.user = payload;
+    } catch (error) {
+      client.disconnect();
+    }
+  }
+}
+```
+
+**Client:**
+
+```typescript
+const socket = io('http://localhost:3000', {
+  withCredentials: true
+});
+```
+
+## Authorization
+
+Check user groups in message handlers:
+
+```typescript
+import { SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
+import type { CognitoJwtPayload } from '@nestjs-cognito/core';
+
+@WebSocketGateway()
+export class MessagesGateway {
+  @SubscribeMessage('adminAction')
+  handleAdminAction(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const user: CognitoJwtPayload = client.data.user;
+    const groups = user['cognito:groups'] || [];
+
+    if (!groups.includes('admin')) {
+      throw new UnauthorizedException('Admin access required');
+    }
+
+    return { success: true };
+  }
+}
+```
