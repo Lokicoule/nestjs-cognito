@@ -1,0 +1,131 @@
+export const metadata = {
+  title: '@nestjs-cognito/testing API - NestJS Cognito',
+  description: 'Technical reference for @nestjs-cognito/testing package.'
+}
+
+# @nestjs-cognito/testing
+
+Testing utilities to mock Cognito authentication in NestJS applications.
+
+## Installation
+
+```bash
+npm install -D @nestjs-cognito/testing
+```
+
+## Functions
+
+### `createCognitoTestingModule(options?: TestingModuleOptions)`
+
+Creates a testing module with mocked Cognito authentication.
+
+**Parameters:**
+```typescript
+interface TestingModuleOptions {
+  enabled?: boolean;
+  user?: CognitoTestUser;
+  jwtVerifier?: CognitoJwtVerifierOptions;
+  identityProvider?: CognitoIdentityProviderOptions;
+}
+```
+
+**Returns:** `DynamicModule`
+
+**Usage:**
+```typescript
+Test.createTestingModule({
+  imports: [
+    createCognitoTestingModule({
+      user: {
+        username: 'testuser',
+        email: 'test@example.com',
+        groups: ['users'],
+      },
+    }),
+  ],
+})
+```
+
+## Types
+
+### CognitoTestUser
+
+```typescript
+interface CognitoTestUser {
+  username: string;
+  email?: string;
+  groups?: string[];
+  attributes?: Record<string, string>;
+}
+```
+
+### TestingModuleOptions
+
+```typescript
+interface TestingModuleOptions {
+  enabled?: boolean;
+  user?: CognitoTestUser;
+  jwtVerifier?: CognitoJwtVerifierOptions;
+  identityProvider?: CognitoIdentityProviderOptions;
+}
+```
+
+## Mock Endpoints
+
+The testing module provides these endpoints when enabled:
+
+### `POST /cognito-testing-login`
+Generate mock JWT tokens.
+
+**Request:**
+```typescript
+{
+  username: string;
+  password: string;
+  clientId: string;
+}
+```
+
+**Response:**
+```typescript
+{
+  AccessToken: string;
+  IdToken: string;
+  RefreshToken: string;
+}
+```
+
+### `POST /config`
+Update mock configuration.
+
+**Request:**
+```typescript
+{
+  enabled?: boolean;
+  user?: CognitoTestUser;
+}
+```
+
+### `GET /config`
+Get current mock configuration.
+
+**Response:**
+```typescript
+{
+  enabled: boolean;
+  user: CognitoTestUser;
+}
+```
+
+## Exports
+
+**Functions:**
+- `createCognitoTestingModule(options?: TestingModuleOptions): DynamicModule`
+
+**Types:**
+- `CognitoTestUser`
+- `TestingModuleOptions`
+
+## Guides
+
+- [Testing](/guides/testing) - Complete testing guide with examples

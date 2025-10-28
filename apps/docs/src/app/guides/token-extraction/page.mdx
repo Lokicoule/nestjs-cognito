@@ -1,0 +1,246 @@
+export const metadata = {
+  title: 'Token Extraction - NestJS Cognito',
+  description: 'Extract JWT tokens from different sources: headers, cookies, or custom locations.'
+}
+
+# Token Extraction
+
+Configure how JWT tokens are extracted from HTTP requests.
+
+## Default: Bearer Token
+
+By default, tokens are extracted from the `Authorization` header:
+
+```
+Authorization: Bearer <your-jwt-token>
+```
+
+No configuration needed - this works out of the box.
+
+## Cookie-Based Extraction
+
+Extract tokens from cookies instead of headers:
+
+```typescript
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
+import { CookieJwtExtractor } from '@nestjs-cognito/core';
+
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      jwtExtractor: new CookieJwtExtractor('access_token'), // cookie name
+      jwtVerifier: {
+        userPoolId: 'us-east-1_xxxxx',
+        clientId: 'your-client-id',
+        tokenUse: 'access',
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+**Frontend example:**
+
+```typescript
+// Set cookie (httpOnly recommended for security)
+document.cookie = `access_token=${token}; path=/; secure; samesite=strict`;
+
+// Requests automatically include the cookie
+fetch('/api/protected', {
+  credentials: 'include'
+});
+```
+
+## Custom Extraction
+
+Extract tokens from custom headers or other sources:
+
+```typescript
+import { CognitoJwtExtractor } from '@nestjs-cognito/core';
+
+export class CustomHeaderExtractor implements CognitoJwtExtractor {
+  hasAuthenticationInfo(request: any): boolean {
+    return Boolean(request.headers['x-api-key']);
+  }
+
+  getAuthorizationToken(request: any): string | null {
+    return request.headers['x-api-key'] || null;
+  }
+}
+```
+
+**Register the custom extractor:**
+
+```typescript
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
+
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      jwtExtractor: new CustomHeaderExtractor(),
+      jwtVerifier: {
+        userPoolId: 'us-east-1_xxxxx',
+        clientId: 'your-client-id',
+        tokenUse: 'access',
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+**Client usage:**
+
+```typescript
+fetch('/api/protected', {
+  headers: {
+    'X-API-Key': token
+  }
+});
+```
+
+## Query Parameter Extraction
+
+Extract token from URL query parameters (useful for WebSocket connections):
+
+```typescript
+export class QueryParamExtractor implements CognitoJwtExtractor {
+  hasAuthenticationInfo(request: any): boolean {
+    return Boolean(request.query?.token);
+  }
+
+  getAuthorizationToken(request: any): string | null {
+    return request.query?.token || null;
+  }
+}
+```
+
+**Usage:**
+
+```
+GET /api/stream?token=<your-jwt-token>
+```
+
+<Note>
+**Security Warning:** Tokens in query parameters are visible in browser history and server logs. Use only when necessary (e.g., WebSocket upgrades).
+</Note>
+
+## Multiple Sources (Fallback)
+
+Try multiple extraction methods in order:
+
+```typescript
+export class MultiSourceExtractor implements CognitoJwtExtractor {
+  private extractors = [
+    new BearerJwtExtractor(),
+    new CookieJwtExtractor('access_token'),
+  ];
+
+  hasAuthenticationInfo(request: any): boolean {
+    return this.extractors.some(extractor =>
+      extractor.hasAuthenticationInfo(request)
+    );
+  }
+
+  getAuthorizationToken(request: any): string | null {
+    for (const extractor of this.extractors) {
+      if (extractor.hasAuthenticationInfo(request)) {
+        return extractor.getAuthorizationToken(request);
+      }
+    }
+    return null;
+  }
+}
+```
+
+This tries Bearer token first, then falls back to cookies.
+
+## Custom Token Format
+
+Handle non-standard token formats:
+
+```typescript
+export class CustomFormatExtractor implements CognitoJwtExtractor {
+  hasAuthenticationInfo(request: any): boolean {
+    return Boolean(request.headers.authorization?.startsWith('Token '));
+  }
+
+  getAuthorizationToken(request: any): string | null {
+    const header = request.headers.authorization;
+    if (!header) return null;
+
+    // Extract from "Token <jwt>"
+    const match = header.match(/^Token (.+)$/);
+    return match ? match[1] : null;
+  }
+}
+```
+
+## Testing
+
+Test custom extractors:
+
+```typescript
+describe('CustomHeaderExtractor', () => {
+  let extractor: CustomHeaderExtractor;
+
+  beforeEach(() => {
+    extractor = new CustomHeaderExtractor();
+  });
+
+  it('should detect token in custom header', () => {
+    const request = {
+      headers: { 'x-api-key': 'test-token' }
+    };
+
+    expect(extractor.hasAuthenticationInfo(request)).toBe(true);
+    expect(extractor.getAuthorizationToken(request)).toBe('test-token');
+  });
+
+  it('should return null when header missing', () => {
+    const request = { headers: {} };
+
+    expect(extractor.hasAuthenticationInfo(request)).toBe(false);
+    expect(extractor.getAuthorizationToken(request)).toBeNull();
+  });
+});
+```
+
+## Best Practices
+
+### 1. Security First
+
+- **Bearer tokens** (headers) are most secure for APIs
+- **HttpOnly cookies** are secure for browser apps
+- **Avoid** query parameters except for WebSocket upgrades
+
+### 2. CORS Configuration
+
+When using cookies, configure CORS properly:
+
+```typescript
+app.enableCors({
+  origin: 'https://your-frontend.com',
+  credentials: true, // Allow cookies
+});
+```
+
+### 3. Mobile Apps
+
+For mobile apps, use Bearer tokens in headers:
+
+```typescript
+// React Native, Flutter, etc.
+fetch('/api/protected', {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
+```
+
+## See Also
+
+- [Authentication](/guides/authentication) - Protect routes
+- [WebSocket](/guides/websocket) - WebSocket token extraction
+- [@nestjs-cognito/core API](/api/core) - Technical reference

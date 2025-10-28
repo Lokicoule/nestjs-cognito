@@ -1,0 +1,129 @@
+export const metadata = {
+  title: '@nestjs-cognito/auth API - NestJS Cognito',
+  description: 'Technical reference for @nestjs-cognito/auth package.'
+}
+
+# @nestjs-cognito/auth
+
+HTTP authentication guards and decorators for NestJS applications.
+
+## Installation
+
+```bash
+npm install @nestjs-cognito/auth @nestjs-cognito/core
+```
+
+## Module
+
+### `CognitoAuthModule`
+
+Main module for HTTP authentication.
+
+**Methods:**
+- `register(options: CognitoModuleOptions): DynamicModule`
+- `registerAsync(options: CognitoModuleAsyncOptions): DynamicModule`
+
+## Decorators
+
+### Guards
+
+#### `@Authentication()`
+Apply JWT authentication to controllers or routes.
+
+```typescript
+@Authentication()
+export class UsersController {}
+```
+
+#### `@Authorization(groups: string[])`
+Require specific Cognito groups.
+
+```typescript
+@Authorization(['admin', 'manager'])
+async adminAction() {}
+```
+
+#### `@PublicRoute()`
+Bypass authentication for specific routes.
+
+```typescript
+@PublicRoute()
+@Get('public')
+public() {}
+```
+
+### Parameter Decorators
+
+#### `@CognitoUser(property?: string)`
+Extract authenticated user from request.
+
+```typescript
+getProfile(@CognitoUser() user: CognitoJwtPayload) {}
+getProfile(@CognitoUser('sub') userId: string) {}
+```
+
+#### `@CognitoIdUser(property?: string)`
+Extract ID token payload (validates token type).
+
+```typescript
+getProfile(@CognitoIdUser() user: CognitoIdTokenPayload) {}
+```
+
+#### `@CognitoAccessUser(property?: string)`
+Extract access token payload (validates token type).
+
+```typescript
+getScopes(@CognitoAccessUser('scope') scope: string) {}
+```
+
+## Configuration
+
+### CognitoModuleOptions
+
+```typescript
+interface CognitoModuleOptions {
+  jwtVerifier: CognitoJwtVerifierOptions | CognitoJwtVerifierOptions[];
+  jwtRsaVerifier?: JwtRsaVerifierOptions | JwtRsaVerifierOptions[];
+  jwtExtractor?: CognitoJwtExtractor;
+  identityProvider?: CognitoIdentityProviderOptions;
+}
+```
+
+### CognitoJwtVerifierOptions
+
+```typescript
+interface CognitoJwtVerifierOptions {
+  userPoolId: string;
+  clientId: string | null;
+  tokenUse: 'access' | 'id' | null;
+  groups?: string[];
+}
+```
+
+## Exports
+
+**Classes:**
+- `CognitoAuthModule`
+
+**Decorators:**
+- `@Authentication()`
+- `@Authorization(groups: string[])`
+- `@PublicRoute()`
+- `@CognitoUser(property?: string)`
+- `@CognitoIdUser(property?: string)`
+- `@CognitoAccessUser(property?: string)`
+
+**Guards:**
+- `CognitoAuthGuard`
+- `CognitoGroupGuard`
+
+**Constants:**
+- `PUBLIC_ROUTE_METADATA`
+
+## Guides
+
+- [Authentication](/guides/authentication) - Protect your routes
+- [Authorization](/guides/authorization) - Role-based access control
+- [Public Routes](/guides/public-route) - Configure public endpoints
+- [User Information](/guides/cognito-user) - Access user data
+- [Token Extraction](/guides/token-extraction) - Custom token extraction

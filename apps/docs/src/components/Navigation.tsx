@@ -239,22 +239,28 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Authentication', href: '/guides/authentication' },
       { title: 'Authorization', href: '/guides/authorization' },
-      { title: 'Public Route', href: '/guides/public-route' },
-      { title: 'Cognito User', href: '/guides/cognito-user' },
-      { title: 'GraphQL Support', href: '/guides/graphql' },
+      { title: 'Public Routes', href: '/guides/public-route' },
+      { title: 'Token Extraction', href: '/guides/token-extraction' },
+      { title: 'User Information', href: '/guides/cognito-user' },
+      { title: 'GraphQL', href: '/guides/graphql' },
+      { title: 'WebSocket', href: '/guides/websocket' },
       { title: 'Testing', href: '/guides/testing' },
-      { title: 'Integration', href: '/integration' },
+      { title: 'Integration', href: '/guides/integration' },
+    ],
+  },
+  {
+    title: 'API Reference',
+    links: [
+      { title: '@nestjs-cognito/core', href: '/api/core' },
+      { title: '@nestjs-cognito/auth', href: '/api/auth' },
+      { title: '@nestjs-cognito/graphql', href: '/api/graphql' },
+      { title: '@nestjs-cognito/testing', href: '/api/testing' },
     ],
   },
   {
     title: 'Advanced',
     links: [
-      { title: 'Core Package', href: '/advanced/core-package' },
-      { title: 'JWT Verification', href: '/advanced/jwt-verification' },
-      { title: 'JWT Token Extraction', href: '/advanced/jwt-token-extraction' },
-      { title: 'Module Configuration', href: '/advanced/module-configuration' },
       { title: 'Custom Guards', href: '/advanced/custom-guards' },
-      { title: 'WebSocket Support', href: '/advanced/websocket' },
     ],
   },
   {

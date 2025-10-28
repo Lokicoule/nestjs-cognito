@@ -1,0 +1,194 @@
+export const metadata = {
+  title: '@nestjs-cognito/core API - NestJS Cognito',
+  description: 'Technical reference for @nestjs-cognito/core package.'
+}
+
+# @nestjs-cognito/core
+
+Foundation package providing JWT verification, token extraction interfaces, and AWS Cognito SDK integration.
+
+## Installation
+
+```bash
+npm install @nestjs-cognito/core aws-jwt-verify
+```
+
+## Module
+
+### `CognitoModule`
+
+Core module for JWT verification and Cognito integration.
+
+**Methods:**
+- `register(options: CognitoModuleOptions): DynamicModule`
+- `registerAsync(options: CognitoModuleAsyncOptions): DynamicModule`
+
+## JWT Verifiers
+
+### `CognitoJwtVerifier`
+
+Verifies JWT tokens from AWS Cognito User Pools.
+
+```typescript
+interface CognitoJwtVerifier {
+  verify(token: string): Promise<CognitoJwtPayload>;
+}
+```
+
+**Injection:**
+```typescript
+@InjectCognitoJwtVerifier()
+private readonly jwtVerifier: CognitoJwtVerifier
+```
+
+### `JwtRsaVerifier`
+
+Verifies JWT tokens using RSA public keys from JWKS endpoints.
+
+```typescript
+interface JwtRsaVerifier {
+  verify(token: string): Promise<any>;
+}
+```
+
+## Token Extractors
+
+### `CognitoJwtExtractor`
+
+Interface for extracting JWT tokens from HTTP requests.
+
+```typescript
+interface CognitoJwtExtractor {
+  hasAuthenticationInfo(request: any): boolean;
+  getAuthorizationToken(request: any): string | null;
+}
+```
+
+**Built-in implementations:**
+- `BearerJwtExtractor` - Extracts from `Authorization: Bearer <token>`
+- `CookieJwtExtractor` - Extracts from cookies
+
+**Injection:**
+```typescript
+@InjectCognitoJwtExtractor()
+private readonly jwtExtractor: CognitoJwtExtractor
+```
+
+## Identity Provider
+
+### `CognitoIdentityProvider`
+
+AWS Cognito Identity Provider SDK client.
+
+```typescript
+@InjectCognitoIdentityProvider()
+private readonly cognito: CognitoIdentityProvider
+```
+
+## Configuration
+
+### CognitoModuleOptions
+
+```typescript
+interface CognitoModuleOptions {
+  jwtVerifier?: CognitoJwtVerifierOptions | CognitoJwtVerifierOptions[];
+  jwtRsaVerifier?: JwtRsaVerifierOptions | JwtRsaVerifierOptions[];
+  jwtExtractor?: CognitoJwtExtractor;
+  identityProvider?: CognitoIdentityProviderOptions;
+}
+```
+
+### CognitoJwtVerifierOptions
+
+```typescript
+interface CognitoJwtVerifierOptions {
+  userPoolId: string;
+  clientId: string | null;
+  tokenUse: 'access' | 'id' | null;
+}
+```
+
+### JwtRsaVerifierOptions
+
+```typescript
+interface JwtRsaVerifierOptions {
+  issuer: string;
+  jwksUri: string;
+}
+```
+
+### CognitoIdentityProviderOptions
+
+```typescript
+interface CognitoIdentityProviderOptions {
+  region: string;
+}
+```
+
+## TypeScript Types
+
+### Token Payloads
+
+```typescript
+interface CognitoJwtPayload {
+  sub: string;
+  iss: string;
+  aud?: string;
+  exp: number;
+  iat: number;
+  token_use?: 'access' | 'id';
+  [key: string]: any;
+}
+```
+
+```typescript
+interface CognitoIdTokenPayload extends CognitoJwtPayload {
+  email?: string;
+  email_verified?: boolean;
+  'cognito:username': string;
+  'cognito:groups'?: string[];
+  [key: string]: any;
+}
+```
+
+```typescript
+interface CognitoAccessTokenPayload extends CognitoJwtPayload {
+  scope: string;
+  client_id: string;
+  username?: string;
+  [key: string]: any;
+}
+```
+
+## Exports
+
+**Modules:**
+- `CognitoModule`
+
+**Classes:**
+- `BearerJwtExtractor`
+- `CookieJwtExtractor`
+
+**Interfaces:**
+- `CognitoJwtExtractor`
+- `CognitoJwtVerifier`
+- `JwtRsaVerifier`
+
+**Types:**
+- `CognitoJwtPayload`
+- `CognitoIdTokenPayload`
+- `CognitoAccessTokenPayload`
+- `CognitoModuleOptions`
+- `CognitoModuleAsyncOptions`
+- `CognitoJwtVerifierOptions`
+- `JwtRsaVerifierOptions`
+
+**Decorators:**
+- `@InjectCognitoJwtVerifier()`
+- `@InjectCognitoJwtExtractor()`
+- `@InjectCognitoIdentityProvider()`
+
+## Guides
+
+- [Token Extraction](/guides/token-extraction) - Configure token extraction
+- [Integration](/guides/integration) - Use Identity Provider SDK
