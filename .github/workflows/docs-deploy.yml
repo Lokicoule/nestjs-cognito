@@ -49,7 +49,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Install Puppeteer Chrome
-        run: npx puppeteer browsers install chrome
+        run: pnpm exec puppeteer browsers install chrome
 
       - name: Build documentation
         working-directory: apps/docs
