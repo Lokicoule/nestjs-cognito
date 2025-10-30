@@ -11,29 +11,19 @@
 </div>
 
 <div align="center">
-  <h3>Seamless AWS Cognito Authentication for NestJS</h3>
-  <p>Stop wrestling with authentication. Start building features.</p>
+  <h3>AWS Cognito authentication for NestJS</h3>
+  <p>Stop writing boilerplate. Protect your routes with a decorator.</p>
 </div>
 
 ---
 
-## The Challenge
+## What is this?
 
-You're building a NestJS application. AWS Cognito is your authentication provider. Simple, right?
+You're building a NestJS app. You chose AWS Cognito for authentication. Now you need to verify JWT tokens, handle multiple user pools, extract tokens from headers or cookies, and implement role-based authorization.
 
-**Not quite.**
+You could spend days writing boilerplate. Or you could use this.
 
-You need to verify JWT tokens. Handle multiple user pools. Extract tokens from headers or cookies. Implement role-based authorization. Support GraphQL. Write testable code. Configure everything type-safely.
-
-Suddenly, your authentication layer is hundreds of lines of boilerplate code, repeated security checks, and fragile token validation logic.
-
-**There has to be a better way.**
-
-## The Solution
-
-@nestjs-cognito transforms AWS Cognito integration from a multi-day struggle into a 5-minute setup. Built on top of [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify), it provides production-ready authentication with elegant decorators, automatic token verification, and zero boilerplate.
-
-**One decorator to authenticate. One decorator to authorize. Zero headaches.**
+One decorator protects your routes. Built on [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify).
 
 ```typescript
 @Controller('profile')
@@ -46,36 +36,24 @@ export class ProfileController {
 }
 ```
 
-## Why Developers Choose @nestjs-cognito
+## Why use this?
 
-**"Finally, authentication that doesn't slow us down"**
+- **Fast setup** — 5 minutes from install to protected routes
+- **Type-safe** — Full TypeScript support
+- **Production-ready** — Built on AWS's official JWT verification library
+- **Zero boilerplate** — Decorators replace hundreds of lines
+- **Flexible** — REST, GraphQL, cookies, multiple user pools, custom extractors
+- **Testable** — Mock and E2E test utilities included
 
-- **5-Minute Setup** - From npm install to protected routes in minutes, not days
-- **Type-Safe** - Full TypeScript support catches auth bugs at compile time
-- **Battle-Tested** - Powers production apps processing millions of requests
-- **Zero Boilerplate** - Clean decorators replace hundreds of lines of validation code
-- **Flexible** - Works with REST, GraphQL, cookies, multiple user pools, custom extractors
-- **Testable** - Built-in testing utilities for both mocked and real authentication flows
+## Quick start
 
-## Like It? Star It!
-
-No more authentication boilerplate nightmares? Stars are appreciated and help other developers discover this project. Plus, it makes our day better.
-
-<div align="center">
-  <a href="https://github.com/Lokicoule/nestjs-cognito/stargazers">
-    <img src="https://img.shields.io/github/stars/Lokicoule/nestjs-cognito?style=for-the-badge&logo=github" alt="Star on GitHub" />
-  </a>
-</div>
-
-## Quick Start
-
-### Installation
+Install:
 
 ```bash
 npm install @nestjs-cognito/core @nestjs-cognito/auth
 ```
 
-### Configure Your App
+Configure:
 
 ```typescript
 import { CognitoAuthModule } from '@nestjs-cognito/auth';
@@ -94,13 +72,13 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
 export class AppModule {}
 ```
 
-### Protect Your Routes
+Protect routes:
 
 ```typescript
 import { Authentication, Authorization, CognitoUser } from '@nestjs-cognito/auth';
 
 @Controller('admin')
-@Authorization(['admin'])  // Only admins allowed
+@Authorization(['admin'])
 export class AdminController {
   @Get('dashboard')
   getDashboard(@CognitoUser() user: CognitoJwtPayload) {
@@ -109,22 +87,20 @@ export class AdminController {
 }
 ```
 
-**That's it.** Your routes are now protected with AWS Cognito authentication.
+Done.
 
 ## Packages
 
-Our modular architecture lets you use exactly what you need:
+| Package | What it does | npm |
+|---------|--------------|-----|
+| **[@nestjs-cognito/core](./packages/core)** | JWT verification, token extraction | [![npm](https://badge.fury.io/js/%40nestjs-cognito%2Fcore.svg)](https://www.npmjs.com/package/@nestjs-cognito/core) |
+| **[@nestjs-cognito/auth](./packages/auth)** | Decorators, guards, authorization | [![npm](https://badge.fury.io/js/%40nestjs-cognito%2Fauth.svg)](https://www.npmjs.com/package/@nestjs-cognito/auth) |
+| **[@nestjs-cognito/graphql](./packages/graphql)** | GraphQL authentication | [![npm](https://badge.fury.io/js/%40nestjs-cognito%2Fgraphql.svg)](https://www.npmjs.com/package/@nestjs-cognito/graphql) |
+| **[@nestjs-cognito/testing](./packages/testing)** | Mock and E2E test utilities | [![npm](https://badge.fury.io/js/%40nestjs-cognito%2Ftesting.svg)](https://www.npmjs.com/package/@nestjs-cognito/testing) |
 
-| Package | Purpose | npm |
-|---------|---------|-----|
-| **[@nestjs-cognito/core](./packages/core)** | JWT verification, token extraction, AWS integration | [![npm](https://badge.fury.io/js/%40nestjs-cognito%2Fcore.svg)](https://www.npmjs.com/package/@nestjs-cognito/core) |
-| **[@nestjs-cognito/auth](./packages/auth)** | Authentication decorators, guards, authorization | [![npm](https://badge.fury.io/js/%40nestjs-cognito%2Fauth.svg)](https://www.npmjs.com/package/@nestjs-cognito/auth) |
-| **[@nestjs-cognito/graphql](./packages/graphql)** | GraphQL resolver authentication | [![npm](https://badge.fury.io/js/%40nestjs-cognito%2Fgraphql.svg)](https://www.npmjs.com/package/@nestjs-cognito/graphql) |
-| **[@nestjs-cognito/testing](./packages/testing)** | Testing utilities (mock & E2E) | [![npm](https://badge.fury.io/js/%40nestjs-cognito%2Ftesting.svg)](https://www.npmjs.com/package/@nestjs-cognito/testing) |
+## Examples
 
-## Real-World Examples
-
-### Role-Based Authorization
+### Role-based authorization
 
 ```typescript
 @Controller('content')
@@ -152,33 +128,27 @@ export class ContentController {
 }
 ```
 
-### Public Routes with Optional Auth
-
-Perfect for e-commerce, content platforms, or any "login to see more" scenario:
+### Public routes with optional auth
 
 ```typescript
 @Controller('products')
 @Authentication()
 export class ProductsController {
   @Get(':id')
-  @PublicRoute()  // Public, but auth unlocks premium features
+  @PublicRoute()
   getProduct(@Param('id') id: string, @CognitoUser() user?: CognitoJwtPayload) {
     const product = this.findProduct(id);
 
     return {
       ...product,
-      // Authenticated users get member pricing
       price: user ? this.getMemberPrice(product) : product.regularPrice,
-      // Extra details for logged-in users
       memberBenefits: user ? this.getBenefits(product) : null,
     };
   }
 }
 ```
 
-### GraphQL Support
-
-First-class GraphQL integration with specialized decorators:
+### GraphQL
 
 ```typescript
 import { GqlAuthentication, GqlAuthorization, GqlCognitoUser } from '@nestjs-cognito/graphql';
@@ -203,9 +173,7 @@ export class UserResolver {
 }
 ```
 
-### Multiple User Pools
-
-Enterprise apps often need to support multiple Cognito User Pools:
+### Multiple user pools
 
 ```typescript
 CognitoAuthModule.register({
@@ -224,9 +192,7 @@ CognitoAuthModule.register({
 })
 ```
 
-### Cookie-Based Authentication
-
-Perfect for web applications that prefer cookies over bearer tokens:
+### Cookie authentication
 
 ```typescript
 import { CookieJwtExtractor } from '@nestjs-cognito/core';
@@ -241,9 +207,7 @@ CognitoAuthModule.register({
 })
 ```
 
-### Testing Made Easy
-
-Mock authentication for unit tests, real Cognito for E2E:
+### Testing
 
 ```typescript
 import { CognitoTestingModule } from '@nestjs-cognito/testing';
@@ -266,67 +230,32 @@ const module = await Test.createTestingModule({
   .compile();
 ```
 
-## Architecture
+## Contributing
 
-```
-@nestjs-cognito/
-├── core/           - JWT verification, token extraction, AWS SDK integration
-├── auth/           - Authentication guards, decorators, authorization logic
-├── graphql/        - GraphQL-specific authentication and context handling
-└── testing/        - Testing utilities for mock and real E2E tests
-```
+Found a bug? Have an idea? Pull requests are welcome.
 
-**Package Dependencies:**
-- `@nestjs-cognito/auth` → `@nestjs-cognito/core`
-- `@nestjs-cognito/graphql` → `@nestjs-cognito/auth` + `@nestjs-cognito/core`
-- `@nestjs-cognito/testing` → `@nestjs-cognito/core`
+1. Fork the repo
+2. Create your feature branch
+3. Commit your changes
+4. Push and open a PR
 
-## Join the Community
-
-**@nestjs-cognito is open source and thrives on community contributions.**
-
-### Ways to Contribute
-
-- **Report Bugs** - Found an issue? [Open an issue](https://github.com/Lokicoule/nestjs-cognito/issues/new)
-- **Request Features** - Have an idea? [Start a discussion](https://github.com/Lokicoule/nestjs-cognito/discussions)
-- **Improve Documentation** - Fix typos, add examples, clarify concepts
-- **Submit Pull Requests** - Fix bugs, add features, improve performance
-
-### Recognition
-
-Every contributor is recognized in our [Contributors](https://github.com/Lokicoule/nestjs-cognito/graphs/contributors) section. Your name could be there too.
-
-### Getting Started with Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-Check our [Contributing Guidelines](https://github.com/Lokicoule/nestjs-cognito/blob/main/CONTRIBUTING.md) for more details.
+See [CONTRIBUTING.md](https://github.com/Lokicoule/nestjs-cognito/blob/main/CONTRIBUTING.md) for details.
 
 ## Documentation
 
-- [Official Documentation](https://lokicoule.github.io/nestjs-cognito/) - Complete guides and API reference
-- [Core Package](./packages/core/README.md) - JWT verification and AWS integration
-- [Auth Package](./packages/auth/README.md) - Authentication and authorization
-- [GraphQL Package](./packages/graphql/README.md) - GraphQL support
-- [Testing Package](./packages/testing/README.md) - Testing utilities
-- [Sample Applications](./sample) - Working examples
+[Full documentation →](https://lokicoule.github.io/nestjs-cognito/)
 
-## Resources
-
-- [AWS Cognito Documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html)
-- [NestJS Documentation](https://docs.nestjs.com/)
-- [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify)
+Package READMEs:
+- [Core](./packages/core/README.md)
+- [Auth](./packages/auth/README.md)
+- [GraphQL](./packages/graphql/README.md)
+- [Testing](./packages/testing/README.md)
+- [Examples](./sample)
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+MIT
 
 ---
 
-<div align="center">
-  <p>Made with ❤️ by <a href="https://github.com/Lokicoule">@Lokicoule</a></p>
-</div>
+Made by [@Lokicoule](https://github.com/Lokicoule)
