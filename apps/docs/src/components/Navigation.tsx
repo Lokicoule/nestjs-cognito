@@ -235,17 +235,35 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: 'Guides',
+    title: 'Core Concepts',
     links: [
-      { title: 'Authentication', href: '/guides/authentication' },
-      { title: 'Authorization', href: '/guides/authorization' },
-      { title: 'Public Routes', href: '/guides/public-route' },
-      { title: 'Token Extraction', href: '/guides/token-extraction' },
-      { title: 'User Information', href: '/guides/cognito-user' },
-      { title: 'GraphQL', href: '/guides/graphql' },
-      { title: 'WebSocket', href: '/guides/websocket' },
-      { title: 'Testing', href: '/guides/testing' },
-      { title: 'Integration', href: '/guides/integration' },
+      { title: 'Authentication', href: '/core/authentication' },
+      { title: 'Authorization', href: '/core/authorization' },
+      { title: 'Public Routes', href: '/core/public-route' },
+      { title: 'User Information', href: '/core/cognito-user' },
+      { title: 'Token Extraction', href: '/core/token-extraction' },
+    ],
+  },
+  {
+    title: 'Integrations',
+    links: [
+      { title: 'Core Adapters', href: '/integrations/core-adapters' },
+      { title: 'GraphQL', href: '/integrations/graphql' },
+      { title: 'WebSocket', href: '/integrations/websocket' },
+    ],
+  },
+  {
+    title: 'Testing & Deployment',
+    links: [
+      { title: 'Testing', href: '/testing-deployment/testing' },
+      { title: 'Error Handling', href: '/testing-deployment/error-handling' },
+      { title: 'Troubleshooting', href: '/testing-deployment/troubleshooting' },
+    ],
+  },
+  {
+    title: 'Advanced',
+    links: [
+      { title: 'Custom Guards', href: '/advanced/custom-guards' },
     ],
   },
   {
@@ -255,12 +273,6 @@ export const navigation: Array<NavGroup> = [
       { title: '@nestjs-cognito/auth', href: '/api/auth' },
       { title: '@nestjs-cognito/graphql', href: '/api/graphql' },
       { title: '@nestjs-cognito/testing', href: '/api/testing' },
-    ],
-  },
-  {
-    title: 'Advanced',
-    links: [
-      { title: 'Custom Guards', href: '/advanced/custom-guards' },
     ],
   },
   {

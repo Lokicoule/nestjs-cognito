@@ -1,0 +1,341 @@
+export const metadata = {
+  title: 'Troubleshooting - NestJS Cognito',
+  description: 'Fix common issues with NestJS Cognito authentication.'
+}
+
+# Troubleshooting
+
+Things break. Here's how to fix them.
+
+## "Cannot read property 'username' of undefined"
+
+**Problem:** You're accessing user data but the user object is undefined.
+
+**Cause:** Missing `@Authentication()` decorator.
+
+```typescript
+// ❌ Missing decorator
+@Get('profile')
+getProfile(@CognitoUser() user: CognitoJwtPayload) {
+  return user.username;  // user is undefined
+}
+
+// ✅ Add decorator
+@Get('profile')
+@Authentication()
+getProfile(@CognitoUser() user: CognitoJwtPayload) {
+  return user.username;
+}
+```
+
+## "Token signature verification failed"
+
+**Problem:** JWT verification fails.
+
+**Possible causes:**
+
+1. **Wrong User Pool ID**
+
+```typescript
+// Check your config
+CognitoAuthModule.register({
+  jwtVerifier: {
+    userPoolId: 'us-east-1_XXXXX',  // ← Wrong region or ID
+    clientId: 'your-client-id',
+    tokenUse: 'access',
+  },
+})
+```
+
+2. **Token from different User Pool**
+
+Your backend expects tokens from User Pool A, but your frontend sends tokens from User Pool B.
+
+3. **Malformed token**
+
+The token is corrupted or not a valid JWT. Test it at [jwt.io](https://jwt.io).
+
+## "Module not found: @nestjs-cognito/auth"
+
+**Problem:** Package not installed.
+
+**Fix:**
+
+```bash
+pnpm add @nestjs-cognito/auth
+# or
+npm install @nestjs-cognito/auth
+```
+
+## Decorators not working
+
+**Problem:** `@Authentication()` doesn't protect routes.
+
+**Causes:**
+
+1. **Module not imported**
+
+```typescript
+// ❌ Missing import
+@Module({
+  controllers: [UserController],
+})
+export class AppModule {}
+
+// ✅ Import CognitoAuthModule
+@Module({
+  imports: [
+    CognitoAuthModule.register({
+      jwtVerifier: {
+        userPoolId: 'us-east-1_xxxxx',
+        clientId: 'your-client-id',
+        tokenUse: 'access',
+      },
+    }),
+  ],
+  controllers: [UserController],
+})
+export class AppModule {}
+```
+
+2. **Using decorators before module initialization**
+
+Make sure `CognitoAuthModule` is imported in the same module or a parent module.
+
+## "Cannot find module '@nestjs-cognito/core'"
+
+**Problem:** Peer dependency not installed.
+
+**Fix:**
+
+```bash
+pnpm add @nestjs-cognito/core
+```
+
+## Token works in Postman but not in browser
+
+**Problem:** CORS or cookie issues.
+
+**For cookies:**
+
+1. **Backend:** Allow credentials
+
+```typescript
+app.enableCors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+});
+```
+
+2. **Frontend:** Include credentials
+
+```typescript
+fetch('/api/protected', {
+  credentials: 'include',
+});
+```
+
+**For headers:**
+
+Make sure the browser sends the `Authorization` header:
+
+```typescript
+fetch('/api/protected', {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
+```
+
+## Groups not working
+
+**Problem:** `@Authorization(['admin'])` doesn't restrict access.
+
+**Causes:**
+
+1. **Groups not in token**
+
+Check the token at [jwt.io](https://jwt.io). Look for `cognito:groups` claim. If it's missing, the user doesn't belong to any groups in Cognito.
+
+2. **Wrong token type**
+
+Groups are in ID tokens, not access tokens. Use ID tokens for group-based authorization.
+
+```typescript
+CognitoAuthModule.register({
+  jwtVerifier: {
+    userPoolId: 'us-east-1_xxxxx',
+    clientId: 'your-client-id',
+    tokenUse: 'id',  // ← Use ID tokens
+  },
+})
+```
+
+## "CognitoTokenTypeMismatchError"
+
+**Problem:** You're using `@CognitoIdUser()` but sending an access token.
+
+**Fix:** Either:
+
+1. Send the correct token type
+2. Use `@CognitoUser()` instead (works with both)
+
+```typescript
+// ✅ Flexible
+@Get('profile')
+@Authentication()
+getProfile(@CognitoUser() user: CognitoJwtPayload) {
+  return user;
+}
+```
+
+## Tests failing with "Cannot verify token"
+
+**Problem:** Tests fail because they try to verify real tokens.
+
+**Fix:** Use the testing module with mocks.
+
+```typescript
+import { CognitoTestingModule } from '@nestjs-cognito/testing';
+
+beforeAll(async () => {
+  const module = await Test.createTestingModule({
+    imports: [
+      CognitoTestingModule.register({}, {
+        enabled: true,
+        user: {
+          username: 'test-user',
+          email: 'test@example.com',
+          groups: ['users'],
+        },
+      }),
+      AppModule,
+    ],
+  }).compile();
+});
+```
+
+## Slow authentication
+
+**Problem:** First request takes several seconds.
+
+**Cause:** JWKS keys are fetched on first request.
+
+**Solution:** This is normal. Subsequent requests are fast because keys are cached. If it's a problem:
+
+1. Warm up the cache on startup
+2. Use a CDN or cache layer
+3. Pre-fetch JWKS keys
+
+## Token extraction not working
+
+**Problem:** Custom token extractor doesn't find the token.
+
+**Debug:**
+
+```typescript
+export class CustomExtractor implements CognitoJwtExtractor {
+  hasAuthenticationInfo(request: any): boolean {
+    console.log('Request headers:', request.headers);  // ← Debug
+    return Boolean(request.headers['x-custom-token']);
+  }
+
+  getAuthorizationToken(request: any): string | null {
+    const token = request.headers['x-custom-token'];
+    console.log('Extracted token:', token);  // ← Debug
+    return token || null;
+  }
+}
+```
+
+## TypeScript errors
+
+**Problem:** Type errors with decorators or user objects.
+
+**Fix:** Import types from the right package.
+
+```typescript
+import type { CognitoJwtPayload } from '@nestjs-cognito/core';
+
+// Not from @nestjs-cognito/auth
+```
+
+## Getting 500 instead of 401
+
+**Problem:** Server crashes instead of returning 401.
+
+**Cause:** Unhandled exception in guard or token verification.
+
+**Fix:** Check logs. Usually:
+
+1. Missing configuration (User Pool ID, Client ID)
+2. Network error fetching JWKS keys
+3. Malformed configuration
+
+## WebSocket authentication not working
+
+**Problem:** WebSocket connections fail authentication.
+
+**Common issues:**
+
+1. **Token in wrong place**
+
+```typescript
+// ❌ Wrong
+const socket = io('http://localhost:3000', {
+  query: { token }
+});
+
+// ✅ Correct
+const socket = io('http://localhost:3000', {
+  extraHeaders: {
+    authorization: `Bearer ${token}`
+  }
+});
+```
+
+2. **Not checking token on connection**
+
+```typescript
+@WebSocketGateway()
+export class Gateway implements OnGatewayConnection {
+  constructor(
+    @InjectCognitoJwtVerifier()
+    private readonly jwtVerifier: CognitoJwtVerifier
+  ) {}
+
+  async handleConnection(client: Socket) {
+    const token = client.handshake.headers.authorization?.replace('Bearer ', '');
+
+    if (!token) {
+      client.disconnect();
+      return;
+    }
+
+    try {
+      const payload = await this.jwtVerifier.verify(token);
+      client.data.user = payload;
+    } catch (error) {
+      client.disconnect();
+    }
+  }
+}
+```
+
+## Still stuck?
+
+1. **Check GitHub issues:** [github.com/Lokicoule/nestjs-cognito/issues](https://github.com/Lokicoule/nestjs-cognito/issues)
+2. **Enable debug logs:**
+
+```typescript
+// Enable NestJS debug logs
+const app = await NestFactory.create(AppModule, {
+  logger: ['debug'],
+});
+```
+
+3. **Verify your token:** Paste it at [jwt.io](https://jwt.io) and check:
+   - Valid JSON structure
+   - `iss` matches your User Pool
+   - `exp` is in the future
+   - Required claims are present

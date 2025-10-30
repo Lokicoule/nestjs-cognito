@@ -1,0 +1,235 @@
+export const metadata = {
+  title: 'Error Handling - NestJS Cognito',
+  description: 'Handle authentication errors and failures gracefully.'
+}
+
+# Error Handling
+
+Authentication fails. Tokens expire. Users get blocked. You need to handle these cases without crashing your app.
+
+Here are the errors you'll encounter and how to handle them.
+
+## Invalid token
+
+**When:** Token is malformed, signature is wrong, or it's not a Cognito token.
+
+**HTTP Status:** 401 Unauthorized
+
+**What happens:** Request is rejected before reaching your route handler.
+
+```typescript
+// No need to handle this in your code
+// The guard rejects it automatically
+@Get('protected')
+@Authentication()
+getProtected() {
+  // This never runs if token is invalid
+  return { data: 'secret' };
+}
+```
+
+## Expired token
+
+**When:** Token's `exp` claim is in the past.
+
+**HTTP Status:** 401 Unauthorized
+
+**Fix:** Refresh the token on the frontend.
+
+```typescript
+// Frontend: Catch 401 and refresh
+try {
+  const response = await fetch('/api/protected', {
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+} catch (error) {
+  if (error.status === 401) {
+    // Refresh token and retry
+    accessToken = await refreshAccessToken();
+    // Retry request
+  }
+}
+```
+
+## Wrong token type
+
+**When:** You use `@CognitoIdUser()` but send an access token (or vice versa).
+
+**Error:** `CognitoTokenTypeMismatchError`
+
+**HTTP Status:** 401 Unauthorized
+
+```typescript
+import { CognitoTokenTypeMismatchError } from '@nestjs-cognito/auth';
+
+// This will throw if you send an access token
+@Get('profile')
+@Authentication()
+getProfile(@CognitoIdUser() user: CognitoIdTokenPayload) {
+  return user;
+}
+```
+
+**Fix:** Use the correct decorator or send the right token.
+
+## Missing groups
+
+**When:** User doesn't belong to required groups.
+
+**HTTP Status:** 403 Forbidden
+
+```typescript
+@Get('admin')
+@Authorization(['admin'])
+getAdmin() {
+  return { data: 'admin only' };
+}
+```
+
+**Handle it:**
+
+```typescript
+import { ForbiddenException } from '@nestjs/common';
+
+@Get('admin')
+@Authorization(['admin', 'moderator'])
+getAdmin(@CognitoUser() user: CognitoJwtPayload) {
+  const groups = user['cognito:groups'] || [];
+
+  if (!groups.includes('admin') && !groups.includes('moderator')) {
+    throw new ForbiddenException('You need admin or moderator access');
+  }
+
+  return { data: 'admin content' };
+}
+```
+
+## No token provided
+
+**When:** Request has no `Authorization` header or cookie.
+
+**HTTP Status:** 401 Unauthorized
+
+**On public routes:** Request goes through, user is `undefined`.
+
+```typescript
+@Get('welcome')
+@PublicRoute()
+welcome(@CognitoUser() user?: CognitoJwtPayload) {
+  return user ? `Hello ${user.username}` : 'Hello guest';
+}
+```
+
+## JWKS errors
+
+**When:** Can't fetch Cognito's public keys (network issue, wrong User Pool ID).
+
+**HTTP Status:** 500 Internal Server Error
+
+**Fix:** Check your configuration.
+
+```typescript
+CognitoAuthModule.register({
+  jwtVerifier: {
+    userPoolId: 'us-east-1_XXXXX',  // ← Check this
+    clientId: 'your-client-id',
+    tokenUse: 'access',
+  },
+})
+```
+
+## Custom error handling
+
+Catch all authentication errors in one place:
+
+```typescript
+import { ExceptionFilter, Catch, ArgumentsHost, UnauthorizedException } from '@nestjs/common';
+
+@Catch(UnauthorizedException)
+export class AuthExceptionFilter implements ExceptionFilter {
+  catch(exception: UnauthorizedException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse();
+
+    response.status(401).json({
+      statusCode: 401,
+      message: 'Authentication failed',
+      timestamp: new Date().toISOString(),
+    });
+  }
+}
+```
+
+Register it globally:
+
+```typescript
+import { APP_FILTER } from '@nestjs/core';
+
+@Module({
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AuthExceptionFilter,
+    },
+  ],
+})
+export class AppModule {}
+```
+
+## Common mistakes
+
+**Forgetting to add @Authentication():**
+
+```typescript
+// ❌ Anyone can access this
+@Get('profile')
+getProfile(@CognitoUser() user: CognitoJwtPayload) {
+  return user;  // user will be undefined
+}
+
+// ✅ Correct
+@Get('profile')
+@Authentication()
+getProfile(@CognitoUser() user: CognitoJwtPayload) {
+  return user;
+}
+```
+
+**Using wrong token type:**
+
+```typescript
+// ❌ Sending access token to ID token route
+@Get('profile')
+@Authentication()
+getProfile(@CognitoIdUser() user: CognitoIdTokenPayload) {
+  // Fails if you send an access token
+  return user.email;
+}
+
+// ✅ Use the right decorator
+@Get('profile')
+@Authentication()
+getProfile(@CognitoUser() user: CognitoJwtPayload) {
+  // Works with both tokens
+  return user;
+}
+```
+
+**Not handling missing groups:**
+
+```typescript
+// ❌ Assumes groups exist
+@Get('data')
+@Authentication()
+getData(@CognitoUser() user: CognitoJwtPayload) {
+  const isAdmin = user['cognito:groups'].includes('admin');  // ← Crashes if no groups
+}
+
+// ✅ Safe
+@Get('data')
+@Authentication()
+getData(@CognitoUser() user: CognitoJwtPayload) {
+  const groups = user['cognito:groups'] || [];
+  const isAdmin = groups.includes('admin');
+}
+```
