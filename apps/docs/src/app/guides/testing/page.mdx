@@ -1,15 +1,15 @@
 export const metadata = {
   title: 'Testing - NestJS Cognito',
-  description: 'Learn how to implement E2E testing with NestJS-Cognito using real and mocked scenarios.'
+  description: 'Test your Cognito-protected routes in E2E tests.'
 }
 
 # Testing
 
-The testing package provides comprehensive utilities and helpers for testing NestJS applications that use AWS Cognito authentication. It supports both real E2E testing with actual AWS services and mocked testing for faster development cycles.
+Testing authentication is annoying. You need valid tokens, but you don't want to create real users or hit AWS in every test.
 
-## Getting Started with Testing
+The testing package solves this. It can generate fake tokens for fast tests, or create real Cognito users for E2E tests.
 
-To begin testing your NestJS Cognito authentication, you'll need to install the required packages:
+## Installation
 
 <CodeGroup>
 ```sh {{ title: 'pnpm' }}
@@ -33,23 +33,9 @@ yarn add --dev @types/jest                  # TypeScript definitions
 </CodeGroup>
 
 
-## HTTP Testing with Pactum
+## Real E2E tests with Cognito
 
-Pactum is a HTTP testing toolkit that makes it easy to test NestJS Cognito authentication endpoints.
-
-<CodeGroup>
-```sh {{ title: 'pnpm' }}
-pnpm add --save-dev pactum    # HTTP testing toolkit
-```
-```sh {{ title: 'npm' }}
-npm install --save-dev pactum   # HTTP testing toolkit
-```
-```sh {{ title: 'yarn' }}
-yarn add --dev pactum   # HTTP testing toolkit
-```
-</CodeGroup>
-
-### Setting Up Pactum
+This creates real users in AWS Cognito. Use this to test your authentication flow end-to-end.
 
 ```typescript
 import { handler, request, spec } from "pactum";
@@ -77,9 +63,7 @@ describe('Auth Tests', () => {
 });
 ```
 
-## Real E2E Testing
-
-Real E2E testing allows you to validate your application against actual AWS Cognito services, ensuring production-ready authentication flows.
+Setup:
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -116,9 +100,9 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
 export class TestModule {}
 ```
 
-## Mock Testing
+## Fast tests with mocks
 
-Mock testing is useful during development and CI/CD pipelines where real AWS Cognito services are not available or desired. Note that you must provide the mock configuration as the second argument to `CognitoTestingModule.register()` and explicitly enable mock mode.
+Skip AWS completely. The mock mode generates fake tokens that pass verification.
 
 ```typescript
 import { COGNITO_JWT_VERIFIER_INSTANCE_TOKEN } from '@nestjs-cognito/core';
@@ -155,61 +139,48 @@ describe('Auth Tests', () => {
 });
 ```
 
-## Testing Scenarios
-
-### Authentication Testing
+## Test protected routes
 
 ```typescript
-// Test authentication using mock service
+// Get a fake token
 const response = await request(app.getHttpServer())
   .post('/cognito-testing-login')
   .send({
     username: 'test-user',
-    password: 'any-password', // Password is not validated in mock mode
+    password: 'any-password',  // Not validated in mock mode
     clientId: 'mock-client-id'
-  })
-  .expect(200);
+  });
 
-// Test protected routes
+// Use it to access protected routes
 await request(app.getHttpServer())
   .get('/protected')
   .set('Authorization', `Bearer ${response.body.AccessToken}`)
-  .expect(200)
-  .expect({
-    username: 'test-user',
-    email: 'test@example.com',
-    groups: ['users'],
-  });
+  .expect(200);
 ```
 
-### Authorization Testing
+## Test authorization
 
 ```typescript
-// Test group-based authorization
-describe('Authorization Tests', () => {
-  it('should allow access to authorized group members', async () => {
-    // Configure mock user with specific group
-    await request(app.getHttpServer())
-      .post('/config')
-      .send({
-        enabled: true,
-        user: {
-          username: 'admin-user',
-          email: 'admin@example.com',
-          groups: ['admin'],
-        },
-      })
-      .expect(200);
+// Configure mock user with specific groups
+await request(app.getHttpServer())
+  .post('/config')
+  .send({
+    enabled: true,
+    user: {
+      username: 'admin-user',
+      email: 'admin@example.com',
+      groups: ['admin'],
+    },
+  });
 
-    // Login and get token
-    const loginResponse = await request(app.getHttpServer())
-      .post('/cognito-testing-login')
-      .send({
-        username: 'admin@example.com',
-        password: 'password',
-        clientId: 'test-client',
-      })
-      .expect(200);
+// Login
+const loginResponse = await request(app.getHttpServer())
+  .post('/cognito-testing-login')
+  .send({
+    username: 'admin@example.com',
+    password: 'password',
+    clientId: 'test-client',
+  });
 
     // Test protected route access
     await request(app.getHttpServer())

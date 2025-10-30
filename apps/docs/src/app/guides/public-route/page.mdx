@@ -1,17 +1,15 @@
 export const metadata = {
   title: 'Public Routes - NestJS Cognito',
-  description: 'Learn how to create public routes that are accessible to both authenticated and unauthenticated users in NestJS-Cognito.'
+  description: 'Allow unauthenticated access while still checking tokens when provided.'
 }
 
-# Public Route
+# Public Routes
 
-The `@PublicRoute` decorator allows you to create endpoints that are accessible to both authenticated and unauthenticated users while maintaining security when credentials are provided.
+Sometimes you want a route that's accessible to everyone but can still recognize logged-in users. Like a homepage that says "Welcome back, John" if you're logged in, or just "Welcome" if you're not.
 
-## Overview
+That's what `@PublicRoute` does.
 
-Sometimes you need routes that can serve different content based on the user's authentication status. For example, you might want to show a personalized message for logged-in users while still allowing access to anonymous users.
-
-## Basic Usage
+## How it works
 
 ```ts
 import { Authentication, PublicRoute, CognitoUser } from '@nestjs-cognito/auth';
@@ -30,23 +28,13 @@ export class AppController {
 }
 ```
 
-## How It Works
+## Three scenarios
 
-When using `@PublicRoute` with `@Authentication`, the behavior is as follows:
+**No token**: Request goes through. User is `undefined`.
 
-1. **No JWT Token Present**:
-   - The route is accessible
-   - The `user` parameter will be `undefined`
-   - No authentication checks are performed
+**Valid token**: Request goes through. User data is available.
 
-2. **Valid JWT Token Present**:
-   - The route is accessible
-   - The token is validated
-   - User information is available via `@CognitoUser()`
-
-3. **Invalid JWT Token Present**:
-   - Returns 401 Unauthorized
-   - The route is not accessible
+**Invalid token**: Request is rejected with 401. Security still matters.
 
 <Mermaid>
 
@@ -64,17 +52,9 @@ flowchart LR
 </Mermaid>
 
 
-## Token Validation Priority
+## Common uses
 
-When both `@Authentication` and `@PublicRoute` decorators are present:
-
-- If a JWT token is provided, `@Authentication` takes precedence
-- The token must pass all validation checks (signature, expiration, issuer, etc.)
-- Invalid tokens will result in a 401 Unauthorized response
-
-## Use Cases
-
-### Welcome Message
+### Personalized welcome
 
 ```ts
 @Controller('api')
@@ -88,7 +68,7 @@ export class AppController {
 }
 ```
 
-### Content Preview
+### Content with preview
 
 ```ts
 @Controller('content')
@@ -101,38 +81,15 @@ export class ContentController {
     @CognitoUser() user?: User
   ) {
     const article = await this.articleService.findById(id);
-    
+
     return user
-      ? article // Full article for authenticated users
-      : article.preview; // Preview for guests
+      ? article              // Full content for logged-in users
+      : article.preview;     // Preview for guests
   }
 }
 ```
 
-## Common Patterns
-
-### Conditional Response
-
-```ts
-@PublicRoute()
-@Get('profile')
-async getProfile(@CognitoUser() user?: User) {
-  if (!user) {
-    return {
-      message: 'Log in to view your full profile',
-      preview: true
-    };
-  }
-
-  return {
-    message: 'Your profile details',
-    data: await this.userService.getFullProfile(user.sub),
-    preview: false
-  };
-}
-```
-
-### Mixed Access Levels
+### Mixed controller
 
 ```ts
 @Controller('api')
@@ -141,12 +98,12 @@ export class ApiController {
   @PublicRoute()
   @Get('basic-info')
   getBasicInfo() {
-    return { version: '1.0.0' };
+    return { version: '1.0.0' };  // Public
   }
 
   @Get('sensitive-info')
   getSensitiveInfo(@CognitoUser() user: User) {
-    return { secretData: 'only for authenticated users' };
+    return { secretData: 'only for authenticated' };  // Protected
   }
 }
 ```

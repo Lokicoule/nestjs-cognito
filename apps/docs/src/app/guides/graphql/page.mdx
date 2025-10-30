@@ -1,11 +1,11 @@
 export const metadata = {
-  title: 'GraphQL Integration - NestJS Cognito',
-  description: 'GraphQL authentication and authorization with AWS Cognito.'
+  title: 'GraphQL - NestJS Cognito',
+  description: 'Protect GraphQL resolvers with Cognito authentication.'
 }
 
-# GraphQL Integration
+# GraphQL
 
-GraphQL-specific decorators and guards for Cognito authentication.
+GraphQL uses resolvers instead of controllers. The decorators are slightly different, but the concept is the same.
 
 ## Installation
 
@@ -72,9 +72,7 @@ export class ProductResolver {
 }
 ```
 
-## Token Types
-
-Use specialized decorators for runtime validation:
+## Access and ID tokens
 
 ```typescript
 import { GqlCognitoIdUser, GqlCognitoAccessUser } from '@nestjs-cognito/graphql';
@@ -82,7 +80,6 @@ import type { CognitoIdTokenPayload, CognitoAccessTokenPayload } from '@nestjs-c
 
 @Resolver()
 export class UserResolver {
-  // ID token (user profile)
   @Query()
   @GqlAuthentication()
   async profile(@GqlCognitoIdUser() user: CognitoIdTokenPayload) {
@@ -92,7 +89,6 @@ export class UserResolver {
     };
   }
 
-  // Access token (authorization)
   @Query()
   @GqlAuthentication()
   async tokenInfo(@GqlCognitoAccessUser() token: CognitoAccessTokenPayload) {
@@ -106,7 +102,7 @@ export class UserResolver {
 
 ## Subscriptions
 
-Secure GraphQL subscriptions with JWT authentication:
+Subscriptions use WebSockets. You need to verify the token during connection:
 
 <Mermaid>
 
@@ -157,7 +153,7 @@ import { CognitoJwtVerifier } from 'aws-jwt-verify';
 export class AppModule {}
 ```
 
-**Protected subscription:**
+Protect subscriptions:
 
 ```typescript
 @Resolver()
@@ -170,7 +166,7 @@ export class NotificationResolver {
 }
 ```
 
-**Client:**
+Client side:
 
 ```typescript
 import { createClient } from 'graphql-ws';

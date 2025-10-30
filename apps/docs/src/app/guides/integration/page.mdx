@@ -1,20 +1,19 @@
 export const metadata = {
-  title: 'Core Adapters Usage - NestJS Cognito',
-  description: 'Guide for using AWS JWT verification and Cognito Identity Provider adapters in NestJS applications'
+  title: 'Core Integration - NestJS Cognito',
+  description: 'Use JWT verification and Cognito Identity Provider in your services.'
 }
 
 # Integration Guide
 
-The @nestjs-cognito/core package provides two main adapters for AWS Cognito integration:
+The `@nestjs-cognito/auth` package is great for protecting routes. But sometimes you need more control. Maybe you want to verify tokens manually, or manage users through the Cognito API.
 
-1. **CognitoJwtVerifier**: An adapter for verifying JWT tokens issued by AWS Cognito
-2. **CognitoIdentityProvider**: An adapter for interacting with AWS Cognito user management services
+That's where the core adapters come in:
 
-This guide demonstrates how to effectively use these adapters in your NestJS applications.
+**CognitoJwtVerifier**: Verify JWT tokens manually.
 
-## Common Integration Patterns
+**CognitoIdentityProvider**: Call Cognito APIs (create users, update attributes, etc).
 
-### Using JWT Verification
+## Verify tokens manually
 
 ```ts
 import { CognitoJwtVerifier, InjectCognitoJwtVerifier } from '@nestjs-cognito/core';
@@ -32,7 +31,7 @@ export class AuthService {
 }
 ```
 
-### Using Identity Provider
+## Manage users with Cognito API
 
 ```ts
 import { CognitoIdentityProvider } from '@aws-sdk/client-cognito-identity-provider';
@@ -54,11 +53,9 @@ export class UserService {
 }
 ```
 
-## Module Integration Examples
+## Which module to use
 
-### Using with @nestjs-cognito/auth Package
-
-When implementing authentication features using the auth package, use `CognitoAuthModule`:
+**Need decorators and guards?** Use `CognitoAuthModule` from `@nestjs-cognito/auth`:
 
 ```ts
 import { CognitoAuthModule } from '@nestjs-cognito/auth';
@@ -84,9 +81,7 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
 export class AppModule {}
 ```
 
-### Using Core Package Only
-
-When you only need core functionality without authentication features, use `CognitoModule`:
+**Just need the core adapters?** Use `CognitoModule` from `@nestjs-cognito/core`:
 
 ```ts
 import { CognitoModule } from '@nestjs-cognito/core';
@@ -112,7 +107,3 @@ import { CognitoModule } from '@nestjs-cognito/core';
 export class AppModule {}
 ```
 
-Choose the appropriate module based on your implementation needs:
-
-- Use `CognitoAuthModule` when you need authentication features from the @nestjs-cognito/auth package
-- Use `CognitoModule` when you only need core functionality like JWT verification and Cognito Identity Provider integration

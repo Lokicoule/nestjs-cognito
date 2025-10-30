@@ -1,37 +1,37 @@
 export const metadata = {
-  title: 'NestJS Cognito - Simple AWS Authentication for NestJS',
-  description: 'The easiest way to add AWS Cognito authentication to your NestJS applications.'
+  title: 'NestJS Cognito - AWS Cognito authentication for NestJS',
+  description: 'AWS Cognito authentication for NestJS. Handle JWT verification, token extraction, and user authorization without the complexity.'
 }
 
 # NestJS Cognito
 
-AWS Cognito authentication for NestJS applications.
+Have you ever tried integrating AWS Cognito with NestJS? If you have, you probably spent hours wrestling with OIDC flows, JWT verification, token extraction, and AWS SDK configuration.
 
-<Note>
-- **5-Minute Setup**: Get authentication running quickly
-- **Production-Ready**: Built on [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify)
-- **Type-Safe**: Full TypeScript support
-</Note>
+To be honest, I built this library because I was tired of copying the same authentication code across projects. It shouldn't take 200 lines of boilerplate to protect a route.
 
-## Why NestJS-Cognito?
+So here's what this does: it handles Cognito authentication in NestJS with a decorator. That's it.
 
-AWS Cognito integration can be complex: OIDC flows, JWT verification, token handling, AWS SDK configuration. NestJS-Cognito handles this for you.
-
-### Key Features
-
-**Simple Authentication**
 ```typescript
 @Controller('profile')
 export class ProfileController {
   @Get()
-  @Authentication()  // ✅ Protected route
+  @Authentication()  // Protected route
   getProfile(@CognitoUser() user: CognitoJwtPayload) {
     return user;
   }
 }
 ```
 
-**Authorization with Cognito Groups**
+The library verifies the JWT, extracts the user data, and injects it into your route. If the token is invalid or expired, the request is rejected before it reaches your handler.
+
+## What it handles
+
+**JWT verification** — Validates tokens against Cognito's public keys. Checks expiration, issuer, and signature automatically.
+
+**Token extraction** — Reads tokens from Authorization headers, cookies, or custom sources. You can combine multiple extractors if needed.
+
+**Authorization** — Restrict routes based on Cognito groups.
+
 ```typescript
 @Get('admin')
 @Authorization({ requiredGroups: ['admin'] })
@@ -40,15 +40,5 @@ getAdminData() {
 }
 ```
 
-**Flexible Token Extraction**
-- Bearer tokens (default)
-- Cookies
-- Custom extractors
-- Multiple sources
-
-**Built-in Security**
-- Automatic JWT verification
-- Token expiration handling
-- Issuer validation
-- JWKS key management
+**Security** — Built on [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify), AWS's official JWT verification library. Handles JWKS key rotation and caching.
 

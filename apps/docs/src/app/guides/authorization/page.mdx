@@ -1,15 +1,19 @@
 export const metadata = {
   title: 'Authorization - NestJS Cognito',
-  description: 'Learn how to implement group-based authorization and access control with NestJS-Cognito.',
+  description: 'Restrict routes based on Cognito user groups.',
 }
 
 # Authorization
 
-Implement group-based access control using NestJS-Cognito's authorization features. The `@Authorization` decorator includes authentication functionality by default, so you don't need to add the `@Authentication` decorator when using authorization.
+Authentication verifies who the user is. Authorization determines what they can access.
 
-## Basic Authorization
+Cognito stores users in groups. The `@Authorization` decorator checks if a user belongs to the right groups before allowing access to a route.
 
-Restrict access to specific Cognito user groups:
+Note: `@Authorization` includes authentication, so you don't need both decorators.
+
+## Require specific groups
+
+Only users in these groups can access the route:
 
 ```typescript
 import { Authorization } from '@nestjs-cognito/auth';
@@ -30,17 +34,17 @@ export class AdminController {
 }
 ```
 
-## Advanced Rules
+## Complex rules
 
-Implement complex permission rules with multiple conditions:
+You can combine multiple conditions:
 
 ```typescript
 @Controller('projects')
 export class ProjectController {
   @Authorization({
-    requiredGroups: ['project-member'],     // Must be a project member
-    allowedGroups: ['manager', 'lead'],     // AND either a manager or lead
-    prohibitedGroups: ['suspended']         // AND not suspended
+    requiredGroups: ['project-member'],     // Must have this group
+    allowedGroups: ['manager', 'lead'],     // AND one of these
+    prohibitedGroups: ['suspended']         // AND none of these
   })
   @Put(':id')
   updateProject() {
@@ -49,7 +53,9 @@ export class ProjectController {
 }
 ```
 
-Apply authorization rules using the guard directly:
+## Using the guard directly
+
+If you prefer guards over decorators:
 
 ```typescript
 import { AuthorizationGuard } from '@nestjs-cognito/auth';
@@ -70,37 +76,26 @@ export class CatsController {
 }
 ```
 
-## Best Practices
+## How the rules work
 
-### Group Structure
+**requiredGroups**: User must belong to ALL of these groups.
 
-1. **Hierarchical Groups**
-   - Create clear group hierarchies (e.g., 'admin' > 'manager' > 'user')
-   - Use descriptive group names that reflect roles
-   - Keep groups focused on specific responsibilities
+**allowedGroups**: User must belong to AT LEAST ONE of these groups.
 
-2. **Permission Management**
-   - Apply the principle of least privilege
-   - Use required groups for mandatory permissions
-   - Use allowed groups for optional access levels
-   - Use prohibited groups for explicit denials
+**prohibitedGroups**: User must NOT belong to ANY of these groups.
 
-### Implementation Tips
+When you combine them, all conditions must pass:
 
-1. **Combining Rules**
-   ```typescript
-   @Authorization({
-     requiredGroups: ['authenticated'],
-     allowedGroups: ['premium', 'vip'],
-     prohibitedGroups: ['banned']
-   })
-   ```
+```typescript
+@Authorization({
+  requiredGroups: ['authenticated'],      // Must be authenticated
+  allowedGroups: ['premium', 'vip'],     // AND (premium OR vip)
+  prohibitedGroups: ['banned']           // AND not banned
+})
+```
 
-2. **Multiple Group Checks**
-   ```typescript
-   @Authorization(['admin', 'moderator'])
-   @Get('reports')
-   getReports() {
-     return 'Access granted to admins or moderators';
-   }
-   ```
+If you just pass an array, it behaves like `allowedGroups`:
+
+```typescript
+@Authorization(['admin', 'moderator'])  // Admin OR moderator
+```

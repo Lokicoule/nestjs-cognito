@@ -1,11 +1,11 @@
 export const metadata = {
-  title: 'Getting Started - NestJS Cognito',
-  description: 'Complete guide to get started with NestJS-Cognito integration.',
+  title: 'Quick Start - NestJS Cognito',
+  description: 'Get NestJS Cognito authentication working in 5 minutes.',
 }
 
-# Quick Start Guide
+# Quick Start
 
-Get up and running with @nestjs-cognito quickly. This guide covers essential setup and basic usage.
+Let's get Cognito authentication working in your NestJS app. This should take about 5 minutes.
 
 ## Installation
 
@@ -21,20 +21,20 @@ yarn add @nestjs-cognito/auth
 ```
 </CodeGroup>
 
-## Basic Setup
+## Setup
 
-### 1. Configure Environment Variables
+### Step 1: Add your Cognito credentials
 
-Create a `.env` file in your project root:
+Create a `.env` file with your User Pool ID and Client ID:
 
 ```
 COGNITO_USER_POOL_ID=your-user-pool-id
 COGNITO_CLIENT_ID=your-client-id
 ```
 
-### 2. Module Configuration
+### Step 2: Configure the module
 
-Import and configure the CognitoAuthModule in your app.module.ts:
+Add `CognitoAuthModule` to your app module:
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -60,11 +60,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 export class AppModule {}
 ```
 
-## Basic Usage
+## Usage
 
-### Protected Routes
+### Protect a route
 
-Use the `@Authentication()` decorator to protect your routes:
+Add `@Authentication()` to any route that needs authentication:
 
 ```typescript
 import { Controller, Get } from '@nestjs/common';
@@ -81,9 +81,9 @@ export class UsersController {
 }
 ```
 
-### Public Routes
+### Allow public access
 
-Use `@PublicRoute()` for routes that don't require authentication:
+Use `@PublicRoute()` on routes that should be accessible without authentication:
 
 ```typescript
 import { Controller, Get } from '@nestjs/common';
@@ -100,9 +100,9 @@ export class AuthController {
 }
 ```
 
-### Group-based Authorization
+### Restrict by user group
 
-Restrict access based on Cognito user groups:
+Require users to belong to specific Cognito groups:
 
 ```typescript
 import { Controller, Get } from '@nestjs/common';

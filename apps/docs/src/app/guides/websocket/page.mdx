@@ -1,13 +1,13 @@
 export const metadata = {
-  title: 'WebSocket Support - NestJS Cognito',
-  description: 'Secure WebSocket connections with AWS Cognito JWT authentication.'
+  title: 'WebSocket - NestJS Cognito',
+  description: 'Authenticate WebSocket connections with Cognito tokens.'
 }
 
-# WebSocket Support
+# WebSocket
 
-Authenticate WebSocket connections using Cognito JWT tokens.
+WebSockets don't have a traditional request/response cycle. You verify the token when the client connects, then store the user data on the socket.
 
-## Basic Setup
+## Verify on connection
 
 ```typescript
 import { WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
@@ -38,7 +38,7 @@ export class MessagesGateway implements OnGatewayConnection {
 }
 ```
 
-**Client:**
+Client:
 
 ```typescript
 import { io } from 'socket.io-client';
@@ -48,9 +48,7 @@ const socket = io('http://localhost:3000', {
 });
 ```
 
-## Cookie Authentication
-
-Extract tokens from cookies instead of headers:
+## From cookies
 
 ```typescript
 import { parse } from 'cookie';
@@ -81,7 +79,7 @@ export class MessagesGateway implements OnGatewayConnection {
 }
 ```
 
-**Client:**
+Client:
 
 ```typescript
 const socket = io('http://localhost:3000', {
@@ -89,9 +87,7 @@ const socket = io('http://localhost:3000', {
 });
 ```
 
-## Authorization
-
-Check user groups in message handlers:
+## Check groups in handlers
 
 ```typescript
 import { SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';

@@ -1,19 +1,17 @@
 export const metadata = {
   title: 'Authentication - NestJS Cognito',
-  description: 'Learn how to implement authentication in your NestJS application using AWS Cognito and @nestjs-cognito/auth.'
+  description: 'Protect your NestJS routes with AWS Cognito JWT tokens.'
 }
 
 # Authentication
 
-Authentication is a crucial aspect of securing your NestJS application with AWS Cognito. This guide will walk you through implementing authentication using @nestjs-cognito/auth.
+When a user logs in through Cognito, they get a JWT token. Your NestJS app needs to verify that token before allowing access to protected routes.
 
-## Overview
+Here's how the `@Authentication()` decorator does that for you.
 
-The authentication process in @nestjs-cognito involves verifying JWT tokens issued by AWS Cognito. When a user successfully logs in through Cognito, they receive JWT tokens that can be used to authenticate subsequent requests to your NestJS application.
+## Setup
 
-## Basic Setup
-
-First, ensure you have the auth package properly configured:
+First, configure the module with your Cognito User Pool:
 
 ```ts
 import { CognitoAuthModule } from '@nestjs-cognito/auth';
@@ -32,18 +30,20 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
 export class AppModule {}
 ```
 
-## Using @Authentication Decorator
+## Protecting routes
 
-The `@Authentication()` decorator is the primary way to protect your routes. You can apply it at both the controller and route levels:
+You can add `@Authentication()` to a controller or to individual routes.
 
-### Controller-level Authentication
+### On the entire controller
+
+Every route in this controller requires authentication:
 
 ```ts
 import { Authentication } from '@nestjs-cognito/auth';
 import { Controller, Get } from '@nestjs/common';
 
 @Controller('users')
-@Authentication() // Protect all routes in this controller
+@Authentication()
 export class UsersController {
   @Get()
   findAll() {
@@ -52,7 +52,9 @@ export class UsersController {
 }
 ```
 
-### Route-level Authentication
+### On specific routes
+
+Only the decorated route requires authentication:
 
 ```ts
 import { Authentication } from '@nestjs-cognito/auth';
@@ -66,16 +68,16 @@ export class UsersController {
   }
 
   @Get('protected')
-  @Authentication() // Protect only this route
+  @Authentication()
   protected() {
     return 'This route is protected';
   }
 }
 ```
 
-## Public Routes
+## Making exceptions
 
-Sometimes you need to make certain routes public while keeping the controller-level authentication. Use the `@PublicRoute()` decorator for this:
+If you protect a controller but need specific routes to be public, use `@PublicRoute()`:
 
 ```ts
 import { Authentication, PublicRoute } from '@nestjs-cognito/auth';
