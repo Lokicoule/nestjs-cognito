@@ -31,8 +31,8 @@
   },
   "devDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "3.920.0",
-    "@nestjs/common": "11.1.6",
-    "@nestjs/testing": "11.1.6",
+    "@nestjs/common": "11.1.8",
+    "@nestjs/testing": "11.1.8",
     "@types/jest": "30.0.0",
     "aws-jwt-verify": "^5.1.0"
   },

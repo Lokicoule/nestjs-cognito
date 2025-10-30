@@ -35,10 +35,10 @@
     "@as-integrations/express5": "^1.1.2",
     "@nestjs-cognito/testing": "workspace:*",
     "@nestjs/apollo": "13.2.1",
-    "@nestjs/common": "11.1.6",
+    "@nestjs/common": "11.1.8",
     "@nestjs/graphql": "13.2.0",
     "@nestjs/jwt": "11.0.1",
-    "@nestjs/testing": "11.1.6"
+    "@nestjs/testing": "11.1.8"
   },
   "dependencies": {
     "@nestjs-cognito/auth": "workspace:*",
