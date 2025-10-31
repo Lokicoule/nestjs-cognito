@@ -13,9 +13,23 @@
     "access": "public"
   },
   "keywords": [
+    "nestjs",
+    "nestjs-cognito",
     "nest",
     "aws",
-    "cognito"
+    "aws-cognito",
+    "cognito",
+    "authentication",
+    "auth",
+    "authorization",
+    "jwt",
+    "jwt-verify",
+    "guard",
+    "decorator",
+    "security",
+    "identity",
+    "user-pool",
+    "typescript"
   ],
   "homepage": "https://lokicoule.github.io/nestjs-cognito/",
   "repository": {

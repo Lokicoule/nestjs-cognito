@@ -13,10 +13,21 @@
     "access": "public"
   },
   "keywords": [
+    "nestjs",
+    "nestjs-cognito",
     "nest",
     "aws",
+    "aws-cognito",
     "cognito",
-    "testing"
+    "testing",
+    "test",
+    "unit-test",
+    "e2e",
+    "mock",
+    "jwt",
+    "test-helpers",
+    "testing-utilities",
+    "typescript"
   ],
   "homepage": "https://lokicoule.github.io/nestjs-cognito/",
   "repository": {

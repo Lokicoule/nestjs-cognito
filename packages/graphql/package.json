@@ -13,10 +13,25 @@
     "access": "public"
   },
   "keywords": [
+    "nestjs",
+    "nestjs-cognito",
     "nest",
     "aws",
+    "aws-cognito",
     "cognito",
-    "graphql"
+    "graphql",
+    "apollo",
+    "apollo-server",
+    "authentication",
+    "auth",
+    "authorization",
+    "jwt",
+    "guard",
+    "decorator",
+    "resolver",
+    "graphql-auth",
+    "security",
+    "typescript"
   ],
   "homepage": "https://lokicoule.github.io/nestjs-cognito/",
   "repository": {
