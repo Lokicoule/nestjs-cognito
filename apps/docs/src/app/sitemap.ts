@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://lokicoule.github.io/nestjs-cognito/';
+    const baseUrl = 'https://lokicoule.github.io/nestjs-cognito';
 
     return [
         {
@@ -16,68 +16,110 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.9,
         },
+        // API Reference
         {
-            url: `${baseUrl}/api/module-configuration`,
+            url: `${baseUrl}/api/auth`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,
         },
         {
-            url: `${baseUrl}/api/integration`,
+            url: `${baseUrl}/api/core`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,
         },
         {
-            url: `${baseUrl}/api/core-package`,
+            url: `${baseUrl}/api/graphql`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,
         },
         {
-            url: `${baseUrl}/api/jwt-verification`,
+            url: `${baseUrl}/api/testing`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
+        // Core Features
+        {
+            url: `${baseUrl}/core/authentication`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/core/authorization`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/core/cognito-user`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/core/public-route`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.7,
         },
         {
-            url: `${baseUrl}/guides/authentication`,
+            url: `${baseUrl}/core/token-extraction`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+        },
+        // Integrations
+        {
+            url: `${baseUrl}/integrations/core-adapters`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,
         },
         {
-            url: `${baseUrl}/guides/authorization`,
+            url: `${baseUrl}/integrations/graphql`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,
         },
         {
-            url: `${baseUrl}/guides/cognito-user`,
+            url: `${baseUrl}/integrations/websocket`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
-            priority: 0.8,
+            priority: 0.7,
         },
+        // Testing & Deployment
         {
-            url: `${baseUrl}/guides/public-route`,
+            url: `${baseUrl}/testing-deployment/testing`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.7,
         },
         {
-            url: `${baseUrl}/guides/testing`,
+            url: `${baseUrl}/testing-deployment/error-handling`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.6,
+        },
+        {
+            url: `${baseUrl}/testing-deployment/troubleshooting`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.6,
+        },
+        // Advanced
+        {
+            url: `${baseUrl}/advanced/custom-guards`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.7,
         },
+        // Other
         {
-            url: `${baseUrl}/guides/graphql`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
-        },
-        {
-            url: `${baseUrl}/guides/websocket`,
+            url: `${baseUrl}/contribution`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.6,
