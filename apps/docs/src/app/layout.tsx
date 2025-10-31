@@ -3,9 +3,10 @@ import glob from 'fast-glob'
 import { Providers } from '@/app/providers'
 import { Layout } from '@/components/Layout'
 
-import '@/styles/tailwind.css'
-import { type Metadata } from 'next'
 import { type Section } from '@/components/SectionProvider'
+import '@/styles/tailwind.css'
+import { GoogleAnalytics } from '@next/third-parties/google'
+import { type Metadata } from 'next'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://lokicoule.github.io/nestjs-cognito'),
@@ -138,6 +139,23 @@ export default async function RootLayout({
             <Layout allSections={allSections}>{children}</Layout>
           </div>
         </Providers>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
+        {process.env.NEXT_PUBLIC_CLARITY_ID && (
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_ID}");
+              `,
+            }}
+          />
+        )}
       </body>
     </html>
   )

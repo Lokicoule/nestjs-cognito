@@ -54,6 +54,9 @@ jobs:
 
       - name: Build documentation
         working-directory: apps/docs
+        env:
+          NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
+          NEXT_PUBLIC_CLARITY_ID: ${{ secrets.NEXT_PUBLIC_CLARITY_ID }}
         run: |
           pnpm next build
           touch out/.nojekyll
