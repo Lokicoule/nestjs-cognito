@@ -60,7 +60,7 @@
     "pactum": "3.8.0",
     "prettier": "3.6.2",
     "reflect-metadata": "0.2.2",
-    "rimraf": "6.0.1",
+    "rimraf": "6.1.0",
     "rxjs": "7.8.2",
     "supertest": "7.1.4",
     "ts-jest": "29.4.5",
