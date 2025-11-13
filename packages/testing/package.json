@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-cognito/testing",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Cognito testing helpers for NestJS-Cognito",
   "author": "Loik Fekkai",
   "license": "MIT",
