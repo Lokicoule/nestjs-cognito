@@ -1,9 +1,11 @@
 import {
   COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
   COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+  COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
   CognitoModule,
   CognitoModuleAsyncOptions,
   CognitoModuleOptions,
+  BearerJwtExtractor,
 } from "@nestjs-cognito/core";
 import { DynamicModule, Global, Module } from "@nestjs/common";
 import { decode } from "jsonwebtoken";
@@ -57,6 +59,10 @@ export class CognitoTestingModule {
         inject: [CognitoMockService],
       },
       {
+        provide: COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
+        useClass: BearerJwtExtractor,
+      },
+      {
         provide: COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         useFactory: (mockService: CognitoMockService) => ({
           initiateAuth: async (request) => ({
@@ -95,6 +101,7 @@ export class CognitoTestingModule {
         exports: [
           COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
           COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+          COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
           CognitoTestingService,
           CognitoMockService,
         ],
@@ -120,6 +127,7 @@ export class CognitoTestingModule {
         exports: [
           COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
           COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+          COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
           CognitoTestingService,
           CognitoMockService,
         ],
