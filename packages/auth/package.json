@@ -46,9 +46,9 @@
   "devDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "3.958.0",
     "@nestjs-cognito/testing": "workspace:*",
-    "@nestjs/common": "11.1.9",
+    "@nestjs/common": "11.1.10",
     "@nestjs/jwt": "11.0.2",
-    "@nestjs/testing": "11.1.9"
+    "@nestjs/testing": "11.1.10"
   },
   "dependencies": {
     "@nestjs-cognito/core": "workspace:*",
