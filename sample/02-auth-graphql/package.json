@@ -12,10 +12,10 @@
   "dependencies": {
     "@nestjs-cognito/auth": "^2.0.0",
     "@nestjs-cognito/graphql": "^3.0.0",
-    "@nestjs/apollo": "13.2.1",
+    "@nestjs/apollo": "13.2.3",
     "@nestjs/common": "11.1.9",
     "@nestjs/core": "11.1.9",
-    "@nestjs/graphql": "13.2.0",
+    "@nestjs/graphql": "13.2.3",
     "@nestjs/platform-express": "11.1.9",
     "@apollo/server": "5.2.0",
     "graphql": "16.12.0",
