@@ -49,9 +49,9 @@
     "@apollo/server": "5.4.0",
     "@as-integrations/express5": "^1.1.2",
     "@nestjs-cognito/testing": "workspace:*",
-    "@nestjs/apollo": "13.2.3",
+    "@nestjs/apollo": "13.2.4",
     "@nestjs/common": "11.1.13",
-    "@nestjs/graphql": "13.2.3",
+    "@nestjs/graphql": "13.2.4",
     "@nestjs/jwt": "11.0.2",
     "@nestjs/testing": "11.1.13"
   },
