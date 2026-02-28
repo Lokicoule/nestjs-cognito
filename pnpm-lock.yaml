@@ -99,8 +99,8 @@ importers:
         specifier: 16.2.7
         version: 16.2.7
       pactum:
-        specifier: 3.9.0
-        version: 3.9.0
+        specifier: 3.9.1
+        version: 3.9.1
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -6642,11 +6642,11 @@ packages:
     engines: {node: ^20.17.0 || >=22.9.0}
     hasBin: true
 
-  pactum-matchers@1.1.7:
-    resolution: {integrity: sha512-RqwewcUje6vhcYQGbPfdSXkcp/Vtwn4WmmTWLSmqp0CGxBroCEqRg3JMIjkjQTZCd2VmG+tTcQw+n4P/iuqv3Q==}
+  pactum-matchers@1.2.0:
+    resolution: {integrity: sha512-1L4H1nc0yN97XsJ/r76l5Z3V1o1JN5m4qaVpAiMZSw3wSoHKXdTNsTEObuqfn0LBhh9k30GNRYjakJiJKjdhnw==}
 
-  pactum@3.9.0:
-    resolution: {integrity: sha512-fIcLNLu8wn1cXKx0M+rXW18Cri82KtCmpgFjhxKTR072THoYvRk09HiV6E4prCJPAjejfco990tYojF/uu36bg==}
+  pactum@3.9.1:
+    resolution: {integrity: sha512-edY31OTqYoxAATq2y1nJgFPX4+smgxTcEHKoa0gT/nIEK+2ouDYwWHAH9aE3A5AKirEKBydhdJ3PUXeSMLEaTw==}
     engines: {node: '>=10'}
 
   parent-module@1.0.1:
@@ -16868,9 +16868,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  pactum-matchers@1.1.7: {}
+  pactum-matchers@1.2.0: {}
 
-  pactum@3.9.0:
+  pactum@3.9.1:
     dependencies:
       '@exodus/schemasafe': 1.3.0
       component-type: 2.0.0
@@ -16880,7 +16880,7 @@ snapshots:
       json-query: 2.2.2
       klona: 2.0.6
       openapi-fuzzer-core: 1.0.6
-      pactum-matchers: 1.1.7
+      pactum-matchers: 1.2.0
       parse-graphql: 1.0.0
       phinx: 1.1.0
       polka: 0.5.2
