@@ -54,7 +54,7 @@
     "eslint-plugin-prettier": "5.5.5",
     "graphql": "16.12.0",
     "jest": "30.3.0",
-    "lerna": "9.0.6",
+    "lerna": "9.0.7",
     "lerna-changelog": "2.2.0",
     "lint-staged": "16.3.3",
     "pactum": "3.9.1",
