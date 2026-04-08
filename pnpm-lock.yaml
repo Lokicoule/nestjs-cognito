@@ -287,8 +287,8 @@ importers:
         version: 5.1.1
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.1026.0
-        version: 3.1026.0
+        specifier: 3.1027.0
+        version: 3.1027.0
       '@nestjs-cognito/testing':
         specifier: workspace:*
         version: link:../testing
@@ -305,8 +305,8 @@ importers:
   packages/core:
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.1026.0
-        version: 3.1026.0
+        specifier: 3.1027.0
+        version: 3.1027.0
       '@nestjs/common':
         specifier: 11.1.18
         version: 11.1.18(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -361,8 +361,8 @@ importers:
         version: 9.0.3
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.1026.0
-        version: 3.1026.0
+        specifier: 3.1027.0
+        version: 3.1027.0
       '@nestjs-cognito/core':
         specifier: workspace:*
         version: link:../core
@@ -566,8 +566,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-cognito-identity-provider@3.1026.0':
-    resolution: {integrity: sha512-MXsI5MdbeF5AGxoJg0SZUnEXeEPK/Tj9xb8onSsK7uKQIoFM66wEBYQywc8KzqaOJEyqyZXoGUQ/R5XtJpwI5A==}
+  '@aws-sdk/client-cognito-identity-provider@3.1027.0':
+    resolution: {integrity: sha512-M6sb0RXBMVuBfafgU0yGEJ/TimT5ZYWMMQevwaOprsONPujl4GO89aOcAd5Y612i6Jh4NGipHjbr+MLGLMQx/Q==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.973.27':
@@ -3088,7 +3088,7 @@ packages:
   basic-ftp@5.0.5:
     resolution: {integrity: sha512-4Bcg1P8xhUuqcii/S0Z9wiHIrQVPMermM1any+MX5GeGD7faD3/msQUDGLol9wOcz4/jbg/WJnGqoJF6LiBdtg==}
     engines: {node: '>=10.0.0'}
-    deprecated: Security vulnerability fixed in 5.2.0, please upgrade
+    deprecated: Security vulnerability fixed in 5.2.1, please upgrade
 
   bcrypt-pbkdf@1.0.2:
     resolution: {integrity: sha512-qeFIXtP4MSoi6NLqO12WfqARWWuCKi2Rn/9hJLEmtB5yTNr9DqFWkJRCf2qShWzPeAMRnOgCrq0sg/KLv5ES9w==}
@@ -8590,7 +8590,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-cognito-identity-provider@3.1026.0':
+  '@aws-sdk/client-cognito-identity-provider@3.1027.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
