@@ -38,7 +38,7 @@
     "@nestjs/testing": "12.1.0",
     "@types/express": "5.0.6",
     "@types/jest": "30.0.0",
-    "@types/node": "24.12.2",
+    "@types/node": "24.13.6",
     "coveralls": "3.1.1",
     "eslint": "10.11.0",
     "eslint-config-prettier": "10.1.8",
@@ -48,7 +48,7 @@
     "jest": "30.5.2",
     "lint-staged": "16.4.0",
     "pactum": "3.9.1",
-    "prettier": "3.8.2",
+    "prettier": "3.9.9",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2",
     "ts-jest": "29.4.13",
@@ -87,5 +87,5 @@
     "type": "git",
     "url": "https://github.com/Lokicoule/nestjs-cognito.git"
   },
-  "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017"
+  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e"
 }

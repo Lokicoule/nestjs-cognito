@@ -46,11 +46,11 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "3.1030.0",
+    "@aws-sdk/client-cognito-identity-provider": "3.1139.0",
     "@nestjs/common": "12.1.0",
     "@nestjs/testing": "12.1.0",
     "@types/jest": "30.0.0",
-    "aws-jwt-verify": "^5.1.0"
+    "aws-jwt-verify": "^5.2.1"
   },
   "peerDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.744.0",

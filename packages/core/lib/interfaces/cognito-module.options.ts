@@ -52,8 +52,7 @@ export type CognitoJwtRsaVerifier = Prettify<
 
 export type JwtVerifierOptions = {
   jwtVerifier: (
-    | CognitoJwtVerifierProperties
-    | CognitoJwtVerifierMultiProperties[]
+    CognitoJwtVerifierProperties | CognitoJwtVerifierMultiProperties[]
   ) & {
     additionalProperties?: {
       jwksCache: JwksCache;
@@ -92,8 +91,7 @@ export type CognitoModuleOptions = Prettify<
  */
 export interface CognitoModuleOptionsFactory {
   createCognitoModuleOptions():
-    | Promise<CognitoModuleOptions>
-    | CognitoModuleOptions;
+    Promise<CognitoModuleOptions> | CognitoModuleOptions;
 }
 
 /**
