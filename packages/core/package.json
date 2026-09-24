@@ -36,22 +36,22 @@
     "url": "git+https://github.com/Lokicoule/nestjs-cognito.git"
   },
   "scripts": {
-    "test:e2e": "jest --config ./tests/jest-e2e.json --detectOpenHandles",
-    "test:e2e:dev": "jest --config ./tests/jest-e2e.json --watch --detectOpenHandles"
+    "test:e2e": "node --experimental-vm-modules --disable-warning=ExperimentalWarning ../../node_modules/jest/bin/jest.js --config ./tests/jest-e2e.json --detectOpenHandles",
+    "test:e2e:dev": "node --experimental-vm-modules --disable-warning=ExperimentalWarning ../../node_modules/jest/bin/jest.js --config ./tests/jest-e2e.json --watch --detectOpenHandles"
   },
   "bugs": {
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "3.1030.0",
-    "@nestjs/common": "11.1.18",
-    "@nestjs/testing": "11.1.18",
+    "@nestjs/common": "12.1.0",
+    "@nestjs/testing": "12.1.0",
     "@types/jest": "30.0.0",
     "aws-jwt-verify": "^5.1.0"
   },
   "peerDependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.744.0",
-    "@nestjs/common": "^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0",
+    "@nestjs/common": "^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
     "aws-jwt-verify": "^3.4.0 || ^4.0.0 || ^5.0.0"
   }
 }
