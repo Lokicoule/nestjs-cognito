@@ -42,10 +42,14 @@ jobs:
       - name: Check for changesets
         run: pnpm changeset status --since=origin/main
 
+      # On pull requests only validate the changesets; versioning and
+      # publishing must only happen from main.
       - name: Build
+        if: github.event_name != 'pull_request'
         run: pnpm run build
 
       - name: Create Release Pull Request or Publish
+        if: github.event_name != 'pull_request'
         id: changesets
         uses: changesets/action@v1
         with:
