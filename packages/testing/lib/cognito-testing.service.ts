@@ -20,7 +20,7 @@ export class CognitoTestingService {
   constructor(
     @InjectCognitoIdentityProvider()
     private readonly client: CognitoIdentityProvider,
-    private readonly cognitoMockService: CognitoMockService
+    private readonly cognitoMockService: CognitoMockService,
   ) {}
 
   setMockConfig(config: MockConfig) {
@@ -40,12 +40,12 @@ export class CognitoTestingService {
   async getAccessToken(
     { username, password }: Record<string, string>,
     clientId: string,
-    retry = true
+    retry = true,
   ): Promise<AuthenticationResultType | undefined> {
     if (this.#mockConfig.enabled) {
       if (!this.#mockConfig.user) {
         throw new BadRequestException(
-          "Mock configuration error: No mock user configured. Please set up a mock user before making requests."
+          "Mock configuration error: No mock user configured. Please set up a mock user before making requests.",
         );
       }
       return this.cognitoMockService.getMockTokens(clientId);
@@ -115,22 +115,22 @@ export class CognitoTestingService {
       case "UserNotFoundException":
         throw new UnauthorizedException(
           "Authentication failed: Invalid username or password.",
-          { cause: error }
+          { cause: error },
         );
       case "UserNotConfirmedException":
         throw new UnauthorizedException(
           "Authentication incomplete: Please verify your email address to activate your account.",
-          { cause: error }
+          { cause: error },
         );
       case "InvalidParameterException":
         throw new BadRequestException(
           "Invalid request parameters. Please check your input.",
-          { cause: error }
+          { cause: error },
         );
       default:
         throw new UnauthorizedException(
           "Authentication failed. Please try again or contact support.",
-          { cause: error }
+          { cause: error },
         );
     }
   }
@@ -140,18 +140,18 @@ export class CognitoTestingService {
       case "NotAuthorizedException":
         throw new UnauthorizedException(
           "Authentication failed: Invalid credentials.",
-          { cause: error }
+          { cause: error },
         );
       case "ExpiredCodeException":
       case "CodeMismatchException":
         throw new UnauthorizedException(
           "Authentication session expired. Please log in again.",
-          { cause: error }
+          { cause: error },
         );
       default:
         throw new UnauthorizedException(
           "Authentication failed. Please try again or contact support.",
-          { cause: error }
+          { cause: error },
         );
     }
   }

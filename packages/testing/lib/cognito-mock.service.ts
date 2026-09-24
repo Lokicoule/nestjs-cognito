@@ -19,7 +19,7 @@ export class CognitoMockService {
   }
 
   private createBasePayload(
-    clientId: string
+    clientId: string,
   ): Omit<TokenPayload, "token_use" | "scope"> {
     const mockUser = this.#mockConfig.user;
     if (!mockUser) {

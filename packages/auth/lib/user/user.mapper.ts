@@ -8,13 +8,12 @@ export class UserMapper {
     USERNAME: "User must have a username or client ID",
   };
 
-  public static fromCognitoJwtPayload(
-    payload: CognitoJwtPayload,
-  ): User {
+  public static fromCognitoJwtPayload(payload: CognitoJwtPayload): User {
     const username = payload["cognito:username"] || payload["username"] || null;
     const clientId = payload["client_id"]?.toString() || null;
     const email = payload["email"]?.toString() ?? null;
-    const isClientCredentialsFlow = payload["token_use"] === "access" && payload["scope"] && clientId;
+    const isClientCredentialsFlow =
+      payload["token_use"] === "access" && payload["scope"] && clientId;
 
     if (isClientCredentialsFlow) {
       const groups = this.extractGroups(payload);
@@ -25,7 +24,7 @@ export class UserMapper {
         .build();
     }
 
-    if (!(username)) {
+    if (!username) {
       throw new UnauthorizedException(UserMapper.ERRORS.USERNAME);
     }
 

@@ -42,6 +42,6 @@ export abstract class AbstractValidator implements Validator {
    */
   public abstract onValidate(
     user?: User,
-    options?: AuthorizationOptions
+    options?: AuthorizationOptions,
   ): boolean;
 }

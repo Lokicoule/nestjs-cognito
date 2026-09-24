@@ -3,7 +3,7 @@ import type { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.in
 /**
  * JWT extractor implementation that extracts tokens from HTTP-only cookies.
  * Useful for web applications that store JWT tokens in secure cookies instead of headers.
- * 
+ *
  * @example
  * ```typescript
  * // Usage in module configuration
@@ -20,7 +20,7 @@ export class CookieJwtExtractor implements CognitoJwtExtractor {
    * Creates a new cookie-based JWT extractor.
    * @param cookieName - The name of the cookie containing the JWT token. Defaults to 'access_token'
    */
-  constructor(cookieName: string = 'access_token') {
+  constructor(cookieName: string = "access_token") {
     this.cookieName = cookieName;
   }
 

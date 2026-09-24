@@ -10,25 +10,25 @@ describe("ValidatorBuilder", () => {
           public onValidate(user: any, _options: any): boolean {
             return Boolean(user);
           }
-        })()
+        })(),
       )
       .with(
         new (class GroupValidator extends AbstractValidator {
           public onValidate(_user: any, options: any): boolean {
             return Boolean(options);
           }
-        })()
+        })(),
       )
       .build();
 
     expect(
-      validator.validate(new UserBuilder().setUsername("test").build(), {})
+      validator.validate(new UserBuilder().setUsername("test").build(), {}),
     ).toBeTruthy();
     expect(
-      validator.validate(new UserBuilder().setUsername("test").build())
+      validator.validate(new UserBuilder().setUsername("test").build()),
     ).toBeFalsy();
     expect(
-      validator.validate(undefined, { prohibitedGroups: ["Admin"] })
+      validator.validate(undefined, { prohibitedGroups: ["Admin"] }),
     ).toBeFalsy();
   });
 });

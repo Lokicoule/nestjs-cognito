@@ -13,7 +13,7 @@ export const parseCookies = (cookies?: string): Record<string, string> => {
     const value = valueParts.join("=")?.trim();
 
     if (key) {
-      acc[key.trim()] = decodeURIComponent(value || '');
+      acc[key.trim()] = decodeURIComponent(value || "");
     }
 
     return acc;

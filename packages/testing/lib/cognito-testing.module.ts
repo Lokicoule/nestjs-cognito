@@ -75,11 +75,11 @@ export class CognitoTestingModule {
         provide: CognitoTestingService,
         useFactory: (
           cognitoProvider: any,
-          cognitoMockService: CognitoMockService
+          cognitoMockService: CognitoMockService,
         ) => {
           const service = new CognitoTestingService(
             cognitoProvider,
-            cognitoMockService
+            cognitoMockService,
           );
           service.setMockConfig(mockConfig);
           return service;
@@ -91,7 +91,7 @@ export class CognitoTestingModule {
 
   static register(
     config: CognitoModuleOptions,
-    mockConfig?: MockConfig
+    mockConfig?: MockConfig,
   ): DynamicModule {
     if (mockConfig?.enabled) {
       const providers = this.createMockProviders(mockConfig);
@@ -117,7 +117,7 @@ export class CognitoTestingModule {
 
   static registerAsync(
     options: CognitoModuleAsyncOptions,
-    mockConfig?: MockConfig
+    mockConfig?: MockConfig,
   ): DynamicModule {
     if (mockConfig?.enabled) {
       const providers = this.createMockProviders(mockConfig);

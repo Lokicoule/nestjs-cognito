@@ -11,15 +11,18 @@ import { CognitoTokenTypeMismatchError } from "../../errors/cognito-token-type-m
  */
 export function extractCognitoUserData(
   payload: CognitoJwtPayload | undefined,
-  expectedTokenType?: 'access' | 'id',
-  data?: string | string[]
+  expectedTokenType?: "access" | "id",
+  data?: string | string[],
 ): any {
   if (!Boolean(payload)) {
     return undefined;
   }
 
   if (expectedTokenType && payload.token_use !== expectedTokenType) {
-    throw new CognitoTokenTypeMismatchError(expectedTokenType, payload.token_use);
+    throw new CognitoTokenTypeMismatchError(
+      expectedTokenType,
+      payload.token_use,
+    );
   }
 
   if (!data) {

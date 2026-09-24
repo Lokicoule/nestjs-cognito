@@ -15,7 +15,7 @@ export const createAuthorizationGuard =
       public onValidate(user: User): boolean {
         return AuthorizationValidator.useFactory(options).validate(
           user,
-          options
+          options,
         );
       }
     }
@@ -24,7 +24,7 @@ export const createAuthorizationGuard =
   };
 
 export const AuthorizationGuard: (
-  options: AuthorizationOptions
+  options: AuthorizationOptions,
 ) => Type<CanActivate> = memoize((options: AuthorizationOptions) =>
-  createAuthorizationGuard(options)(AuthenticationGuard)
+  createAuthorizationGuard(options)(AuthenticationGuard),
 );

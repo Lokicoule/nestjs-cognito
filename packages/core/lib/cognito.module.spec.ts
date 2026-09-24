@@ -102,9 +102,7 @@ describe("CognitoModule", () => {
         const module = await Test.createTestingModule({
           imports: [
             CognitoModule.registerAsync({
-              useClass: class TestService
-                implements CognitoModuleOptionsFactory
-              {
+              useClass: class TestService implements CognitoModuleOptionsFactory {
                 createCognitoModuleOptions(): CognitoModuleOptions {
                   return {
                     identityProvider: {
