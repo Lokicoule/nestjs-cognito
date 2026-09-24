@@ -285,6 +285,9 @@ importers:
       aws-jwt-verify:
         specifier: ^5.1.0
         version: 5.1.1
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
         specifier: 3.1030.0
@@ -303,6 +306,10 @@ importers:
         version: 12.1.0(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(@nestjs/platform-express@12.1.0)
 
   packages/core:
+    dependencies:
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
         specifier: 3.1030.0
@@ -328,6 +335,9 @@ importers:
       '@nestjs-cognito/core':
         specifier: workspace:*
         version: link:../core
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
     devDependencies:
       '@apollo/server':
         specifier: 5.5.1
@@ -359,6 +369,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.3
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
         specifier: 3.1030.0
