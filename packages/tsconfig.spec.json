@@ -1,3 +1,8 @@
 {
-  "extends": "./tsconfig.build.json"
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "bundler",
+    "types": ["jest", "node"]
+  }
 }

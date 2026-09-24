@@ -64,7 +64,7 @@
     "ts-jest": "29.4.9",
     "ts-node": "10.9.2",
     "tslib": "^2.6.2",
-    "typescript": "5.9.3",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.70.1",
     "whoami": "^0.0.3"
   },
@@ -73,11 +73,6 @@
     "collectCoverageFrom": [
       "packages/*/lib/**/*.ts"
     ],
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "packages/tsconfig.spec.json"
-      }
-    },
     "moduleFileExtensions": [
       "js",
       "json",
@@ -86,7 +81,12 @@
     "testEnvironment": "node",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "tsconfig": "<rootDir>/packages/tsconfig.spec.json"
+        }
+      ]
     },
     "preset": "ts-jest"
   },
