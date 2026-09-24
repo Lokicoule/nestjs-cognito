@@ -26,15 +26,22 @@ describe("extractCognitoUserData", () => {
 
   describe("property extraction", () => {
     it("should extract a single property", () => {
-      expect(extractCognitoUserData(mockAccessTokenPayload, undefined, "username")).toBe("testuser");
+      expect(
+        extractCognitoUserData(mockAccessTokenPayload, undefined, "username"),
+      ).toBe("testuser");
     });
 
     it("should extract property with cognito: prefix fallback", () => {
-      expect(extractCognitoUserData(mockIdTokenPayload, undefined, "username")).toBe("testuser");
+      expect(
+        extractCognitoUserData(mockIdTokenPayload, undefined, "username"),
+      ).toBe("testuser");
     });
 
     it("should extract multiple properties as an object", () => {
-      const result = extractCognitoUserData(mockIdTokenPayload, undefined, ["username", "email"]);
+      const result = extractCognitoUserData(mockIdTokenPayload, undefined, [
+        "username",
+        "email",
+      ]);
       expect(result).toEqual({
         username: "testuser",
         email: "test@example.com",
@@ -46,13 +53,19 @@ describe("extractCognitoUserData", () => {
     it.each([
       ["access", mockAccessTokenPayload],
       ["id", mockIdTokenPayload],
-    ] as const)("should not throw when %s token type matches", (expectedType, payload) => {
-      expect(() => extractCognitoUserData(payload, expectedType)).not.toThrow();
-    });
+    ] as const)(
+      "should not throw when %s token type matches",
+      (expectedType, payload) => {
+        expect(() =>
+          extractCognitoUserData(payload, expectedType),
+        ).not.toThrow();
+      },
+    );
 
     it("should throw CognitoTokenTypeMismatchError when token type doesn't match", () => {
-      expect(() => extractCognitoUserData(mockAccessTokenPayload, "id"))
-        .toThrow(new CognitoTokenTypeMismatchError("id", "access"));
+      expect(() =>
+        extractCognitoUserData(mockAccessTokenPayload, "id"),
+      ).toThrow(new CognitoTokenTypeMismatchError("id", "access"));
     });
   });
 });

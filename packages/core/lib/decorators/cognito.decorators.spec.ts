@@ -28,7 +28,9 @@ describe("Cognito Decorators", () => {
 
       const result = InjectCognitoIdentityProvider();
 
-      expect(mockInject).toHaveBeenCalledWith(COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN);
+      expect(mockInject).toHaveBeenCalledWith(
+        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
+      );
       expect(result).toBe(mockDecorator);
     });
   });
@@ -40,7 +42,9 @@ describe("Cognito Decorators", () => {
 
       const result = InjectCognitoJwtVerifier();
 
-      expect(mockInject).toHaveBeenCalledWith(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN);
+      expect(mockInject).toHaveBeenCalledWith(
+        COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+      );
       expect(result).toBe(mockDecorator);
     });
   });
@@ -52,7 +56,9 @@ describe("Cognito Decorators", () => {
 
       const result = InjectCognitoJwtExtractor();
 
-      expect(mockInject).toHaveBeenCalledWith(COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN);
+      expect(mockInject).toHaveBeenCalledWith(
+        COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
+      );
       expect(result).toBe(mockDecorator);
     });
   });

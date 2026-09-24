@@ -4,6 +4,6 @@
 export class CognitoTokenTypeMismatchError extends Error {
   constructor(expectedType: string, actualType: string) {
     super(`Expected ${expectedType} token but received ${actualType} token`);
-    this.name = 'CognitoTokenTypeMismatchError';
+    this.name = "CognitoTokenTypeMismatchError";
   }
 }

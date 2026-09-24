@@ -12,10 +12,11 @@
     "build": "tsc -b -v packages",
     "clean": "tsc -b --clean packages",
     "clean:deps": "pnpm -r exec rm -rf node_modules && pnpm install",
-    "coverage": "jest --coverage && coveralls < coverage/lcov.info",
+    "coverage": "pnpm test --coverage && coveralls < coverage/lcov.info",
     "format": "prettier packages/**/*.ts --ignore-path ./.prettierignore --write",
-    "lint": "eslint 'packages/**/*.ts' --fix",
-    "test": "jest",
+    "lint": "eslint 'packages/**/*.ts'",
+    "lint:fix": "eslint 'packages/**/*.ts' --fix",
+    "test": "node --experimental-vm-modules --disable-warning=ExperimentalWarning node_modules/jest/bin/jest.js",
     "test:e2e": "pnpm -r run test:e2e",
     "test:e2e:auth": "pnpm --filter @nestjs-cognito/auth run test:e2e",
     "test:e2e:core": "pnpm --filter @nestjs-cognito/core run test:e2e",
@@ -26,58 +27,39 @@
     "release": "changeset publish"
   },
   "devDependencies": {
-    "@apollo/server": "5.4.0",
-    "@changesets/cli": "^2.27.12",
-    "@commitlint/cli": "20.5.0",
-    "@commitlint/config-angular": "20.5.0",
+    "@apollo/server": "5.5.1",
+    "@changesets/cli": "^2.31.1",
+    "@commitlint/cli": "21.2.3",
+    "@commitlint/config-angular": "21.2.3",
     "@golevelup/ts-jest": "3.0.0",
-    "@nestjs/config": "4.0.4",
-    "@nestjs/core": "11.1.18",
-    "@nestjs/platform-express": "11.1.18",
-    "@nestjs/testing": "11.1.18",
-    "@types/graphql": "14.5.0",
-    "@types/jest": "30.0.0",
-    "@types/node": "24.12.2",
-    "@types/node-fetch": "3.0.3",
-    "tslib": "^2.6.2",
-    "@types/normalize-path": "3.0.2",
-    "@types/ws": "8.18.1",
+    "@nestjs/config": "12.0.1",
+    "@nestjs/core": "12.1.0",
+    "@nestjs/platform-express": "12.1.0",
+    "@nestjs/testing": "12.1.0",
     "@types/express": "5.0.6",
-    "@typescript-eslint/eslint-plugin": "8.58.2",
-    "@typescript-eslint/parser": "8.58.2",
-    "class-transformer": "0.5.1",
-    "class-validator": "0.14.3",
+    "@types/jest": "30.0.0",
+    "@types/node": "24.13.6",
     "coveralls": "3.1.1",
-    "eslint": "10.2.0",
+    "eslint": "10.11.0",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-import": "2.32.0",
-    "eslint-plugin-prettier": "5.5.5",
-    "graphql": "16.13.2",
-    "jest": "30.3.0",
-    "lerna": "9.0.7",
-    "lerna-changelog": "2.2.0",
-    "lint-staged": "16.4.0",
+    "eslint-plugin-prettier": "5.5.6",
+    "globals": "17.12.0",
+    "graphql": "16.14.2",
+    "jest": "30.5.2",
+    "lint-staged": "17.5.1",
     "pactum": "3.9.1",
-    "prettier": "3.8.2",
+    "prettier": "3.9.9",
     "reflect-metadata": "0.2.2",
-    "rimraf": "6.1.3",
     "rxjs": "7.8.2",
-    "supertest": "7.2.2",
-    "ts-jest": "29.4.9",
-    "ts-node": "10.9.2",
-    "typescript": "5.9.3",
-    "whoami": "^0.0.3"
+    "ts-jest": "29.4.13",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.1"
   },
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
       "packages/*/lib/**/*.ts"
     ],
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "packages/tsconfig.spec.json"
-      }
-    },
     "moduleFileExtensions": [
       "js",
       "json",
@@ -86,7 +68,12 @@
     "testEnvironment": "node",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "tsconfig": "<rootDir>/packages/tsconfig.spec.json"
+        }
+      ]
     },
     "preset": "ts-jest"
   },
@@ -100,5 +87,5 @@
     "type": "git",
     "url": "https://github.com/Lokicoule/nestjs-cognito.git"
   },
-  "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017"
+  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e"
 }

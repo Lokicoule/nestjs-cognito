@@ -8,8 +8,8 @@ import type { JwksCache } from "aws-jwt-verify/jwk";
 import type {
   CognitoAccessTokenPayload as AwsCognitoAccessTokenPayload,
   CognitoIdTokenPayload as AwsCognitoIdTokenPayload,
-  CognitoJwtPayload as AwsCognitoJwtPayload
-} from 'aws-jwt-verify/jwt-model';
+  CognitoJwtPayload as AwsCognitoJwtPayload,
+} from "aws-jwt-verify/jwt-model";
 import type {
   JwtVerifierMultiIssuer as JwtRsaVerifierMultiIssuer,
   JwtVerifierMultiProperties as JwtRsaVerifierMultiProperties,
@@ -17,7 +17,7 @@ import type {
   JwtVerifierSingleIssuer as JwtRsaVerifierSingleIssuer,
   VerifyProperties,
 } from "aws-jwt-verify/jwt-verifier";
-import type { CognitoJwtExtractor } from './cognito-jwt-extractor.interface';
+import type { CognitoJwtExtractor } from "./cognito-jwt-extractor.interface";
 
 export type CognitoJwtPayload = Prettify<AwsCognitoJwtPayload>;
 export type CognitoAccessTokenPayload = Prettify<AwsCognitoAccessTokenPayload>;
@@ -26,15 +26,19 @@ export type CognitoIdTokenPayload = Prettify<AwsCognitoIdTokenPayload>;
 /**
  * Type guard to check if a payload is an access token
  */
-export function isAccessTokenPayload(payload: CognitoJwtPayload): payload is CognitoAccessTokenPayload {
-  return payload.token_use === 'access';
+export function isAccessTokenPayload(
+  payload: CognitoJwtPayload,
+): payload is CognitoAccessTokenPayload {
+  return payload.token_use === "access";
 }
 
 /**
  * Type guard to check if a payload is an ID token
  */
-export function isIdTokenPayload(payload: CognitoJwtPayload): payload is CognitoIdTokenPayload {
-  return payload.token_use === 'id';
+export function isIdTokenPayload(
+  payload: CognitoJwtPayload,
+): payload is CognitoIdTokenPayload {
+  return payload.token_use === "id";
 }
 
 /**
@@ -43,12 +47,12 @@ export function isIdTokenPayload(payload: CognitoJwtPayload): payload is Cognito
  */
 export type CognitoJwtRsaVerifier = Prettify<
   | JwtRsaVerifierSingleIssuer<JwtRsaVerifierProperties<VerifyProperties>>
-  | JwtRsaVerifierMultiIssuer<JwtRsaVerifierMultiProperties<VerifyProperties>>>;
+  | JwtRsaVerifierMultiIssuer<JwtRsaVerifierMultiProperties<VerifyProperties>>
+>;
 
 export type JwtVerifierOptions = {
   jwtVerifier: (
-    | CognitoJwtVerifierProperties
-    | CognitoJwtVerifierMultiProperties[]
+    CognitoJwtVerifierProperties | CognitoJwtVerifierMultiProperties[]
   ) & {
     additionalProperties?: {
       jwksCache: JwksCache;
@@ -70,10 +74,12 @@ export type JwtRsaVerifierOptions = {
   };
 };
 
-export type CognitoModuleOptions = Prettify<{
-  identityProvider?: CognitoIdentityProviderClientConfig;
-  jwtExtractor?: CognitoJwtExtractor;
-} & Partial<JwtVerifierOptions | JwtRsaVerifierOptions>>;
+export type CognitoModuleOptions = Prettify<
+  {
+    identityProvider?: CognitoIdentityProviderClientConfig;
+    jwtExtractor?: CognitoJwtExtractor;
+  } & Partial<JwtVerifierOptions | JwtRsaVerifierOptions>
+>;
 
 /**
  * @interface CognitoModuleOptionsFactory - Metadata for the CognitoModule
@@ -85,8 +91,7 @@ export type CognitoModuleOptions = Prettify<{
  */
 export interface CognitoModuleOptionsFactory {
   createCognitoModuleOptions():
-    | Promise<CognitoModuleOptions>
-    | CognitoModuleOptions;
+    Promise<CognitoModuleOptions> | CognitoModuleOptions;
 }
 
 /**
@@ -97,8 +102,10 @@ export interface CognitoModuleOptionsFactory {
  * @property {CognitoModuleOptions} useClass - The class to create the CognitoModuleOptions
  * @property {CognitoModuleOptions} useExisting - The existing instance of the CognitoModuleOptions
  */
-export interface CognitoModuleAsyncOptions
-  extends Pick<ModuleMetadata, "imports"> {
+export interface CognitoModuleAsyncOptions extends Pick<
+  ModuleMetadata,
+  "imports"
+> {
   extraProviders?: Provider[];
   inject?: any[];
   useClass?: Type<CognitoModuleOptionsFactory>;

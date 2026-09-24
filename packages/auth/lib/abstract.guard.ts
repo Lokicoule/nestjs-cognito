@@ -21,7 +21,6 @@ import { UserMapper } from "./user/user.mapper";
 import { User } from "./user/user.model";
 import { IS_PUBLIC_KEY } from "./whitelist";
 
-
 /**
  * Abstract guard class that implements authentication logic for routes.
  * Handles both public and protected routes with JWT verification.

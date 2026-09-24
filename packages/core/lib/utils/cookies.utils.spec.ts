@@ -2,7 +2,10 @@ import { parseCookies } from "./cookies.utils";
 
 describe("parseCookies", () => {
   it("should parse simple cookies", () => {
-    expect(parseCookies("foo=bar; baz=qux")).toEqual({ foo: "bar", baz: "qux" });
+    expect(parseCookies("foo=bar; baz=qux")).toEqual({
+      foo: "bar",
+      baz: "qux",
+    });
   });
 
   it("should return an empty object when no cookies are provided", () => {

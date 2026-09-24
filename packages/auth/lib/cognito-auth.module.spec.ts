@@ -21,7 +21,7 @@ describe("CognitoAuthModule", () => {
       }).compile();
 
       const cognito = module.get<CognitoIdentityProvider>(
-        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
+        COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
       );
       expect(cognito).toBeDefined();
     });
@@ -43,7 +43,7 @@ describe("CognitoAuthModule", () => {
         }).compile();
 
         const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
+          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         );
         expect(cognito).toBeDefined();
       });
@@ -54,9 +54,7 @@ describe("CognitoAuthModule", () => {
         const module = await Test.createTestingModule({
           imports: [
             CognitoAuthModule.registerAsync({
-              useClass: class TestService
-                implements CognitoModuleOptionsFactory
-              {
+              useClass: class TestService implements CognitoModuleOptionsFactory {
                 createCognitoModuleOptions(): CognitoModuleOptions {
                   return {
                     jwtVerifier: {
@@ -70,7 +68,7 @@ describe("CognitoAuthModule", () => {
         }).compile();
 
         const cognito = module.get<CognitoIdentityProvider>(
-          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN
+          COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         );
         expect(cognito).toBeDefined();
       });

@@ -7,7 +7,7 @@ import {
 import { AuthenticationGuard } from "../authentication/authentication.guard";
 
 export const AuthorizationGuard: (
-  options: AuthorizationOptions
+  options: AuthorizationOptions,
 ) => Type<CanActivate> = memoize((options: AuthorizationOptions) =>
-  createAuthorizationGuard(options)(AuthenticationGuard)
+  createAuthorizationGuard(options)(AuthenticationGuard),
 );

@@ -6,7 +6,7 @@
  */
 export function memoize(
   fn: (...args) => any,
-  defaultKey?: string
+  defaultKey?: string,
 ): (...args) => any {
   const memoized = new Map();
   return (...args) => {

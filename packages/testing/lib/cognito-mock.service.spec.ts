@@ -50,7 +50,7 @@ describe("CognitoMockService", () => {
     it("should include correct claims in access token", () => {
       const tokens = service.getMockTokens(clientId);
       const decodedToken = service.verifyToken(
-        tokens.AccessToken!
+        tokens.AccessToken!,
       ) as TokenPayload;
 
       expect(decodedToken.token_use).toBe("access");
@@ -74,7 +74,7 @@ describe("CognitoMockService", () => {
     it("should include correct claims in refresh token", () => {
       const tokens = service.getMockTokens(clientId);
       const decodedToken = service.verifyToken(
-        tokens.RefreshToken!
+        tokens.RefreshToken!,
       ) as TokenPayload;
 
       expect(decodedToken.token_use).toBe("refresh");
@@ -84,7 +84,7 @@ describe("CognitoMockService", () => {
     it("should throw error when no mock user is configured", () => {
       service.setMockConfig({});
       expect(() => service.getMockTokens(clientId)).toThrow(
-        "No mock user configured"
+        "No mock user configured",
       );
     });
   });

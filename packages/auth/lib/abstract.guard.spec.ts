@@ -1,12 +1,15 @@
 import { createMock } from "@golevelup/ts-jest";
-import { type CognitoJwtExtractor, CognitoJwtVerifier } from "@nestjs-cognito/core";
+import {
+  type CognitoJwtExtractor,
+  CognitoJwtVerifier,
+} from "@nestjs-cognito/core";
 import { ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AbstractGuard } from "./abstract.guard";
 import { User } from "./user/user.model";
 
 class TestGuard extends AbstractGuard {
-  public onValidate(user: User): boolean {
+  public onValidate(_user: User): boolean {
     return true;
   }
 
@@ -16,11 +19,11 @@ class TestGuard extends AbstractGuard {
 }
 
 class BadTestGuard extends AbstractGuard {
-  public onValidate(user: User): boolean {
+  public onValidate(_user: User): boolean {
     return true;
   }
 
-  public getRequest(context: ExecutionContext): any {
+  public getRequest(_context: ExecutionContext): any {
     return undefined;
   }
 }

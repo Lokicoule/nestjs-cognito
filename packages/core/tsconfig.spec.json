@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": ["./tsconfig.json", "../tsconfig.spec.json"],
   "compilerOptions": {
     "outDir": "./dist/tests",
     "types": ["jest", "node"],

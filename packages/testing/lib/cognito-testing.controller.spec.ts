@@ -56,7 +56,7 @@ describe("CognitoTestingController", () => {
         controller.login({
           userPoolId: "test-user-pool-id",
           clientId: "test-client-id",
-        })
+        }),
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -81,9 +81,9 @@ describe("CognitoTestingController", () => {
         clientId: "test-client-id",
       });
 
-      const [headerEncoded, payloadEncoded] = result!.AccessToken!.split(".");
+      const [, payloadEncoded] = result!.AccessToken!.split(".");
       const payload = JSON.parse(
-        Buffer.from(payloadEncoded, "base64").toString()
+        Buffer.from(payloadEncoded, "base64").toString(),
       );
 
       expect(payload.sub).toBe("testuser");

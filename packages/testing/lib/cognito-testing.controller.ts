@@ -14,7 +14,7 @@ export class CognitoTestingController {
         username: body.username,
         password: body.password,
       },
-      body.clientId
+      body.clientId,
     );
 
     return token;

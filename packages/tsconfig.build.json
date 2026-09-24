@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "composite": true,
-    "module": "commonjs",
+    "module": "node20",
+    "strict": false,
+    "types": ["node"],
     "declaration": true,
     "declarationMap": true,
     "noImplicitAny": false,
