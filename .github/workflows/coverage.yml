@@ -27,16 +27,14 @@ env:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     environment: production
-    strategy:
-      matrix:
-        node-version: [18.x]
-        os: [ubuntu-latest]
-
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/ci-setup
+
+      - name: Lint
+        run: pnpm run lint
 
       - name: Build
         run: pnpm run build
