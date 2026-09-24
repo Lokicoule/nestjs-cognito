@@ -6,7 +6,7 @@ import { AbstractGuard } from "./abstract.guard";
 import { User } from "./user/user.model";
 
 class TestGuard extends AbstractGuard {
-  public onValidate(user: User): boolean {
+  public onValidate(_user: User): boolean {
     return true;
   }
 
@@ -16,11 +16,11 @@ class TestGuard extends AbstractGuard {
 }
 
 class BadTestGuard extends AbstractGuard {
-  public onValidate(user: User): boolean {
+  public onValidate(_user: User): boolean {
     return true;
   }
 
-  public getRequest(context: ExecutionContext): any {
+  public getRequest(_context: ExecutionContext): any {
     return undefined;
   }
 }

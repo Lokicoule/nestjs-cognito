@@ -7,14 +7,14 @@ describe("ValidatorBuilder", () => {
     const validator = ValidatorChainBuilder.create()
       .with(
         new (class UserValidator extends AbstractValidator {
-          public onValidate(user: any, options: any): boolean {
+          public onValidate(user: any, _options: any): boolean {
             return Boolean(user);
           }
         })()
       )
       .with(
         new (class GroupValidator extends AbstractValidator {
-          public onValidate(user: any, options: any): boolean {
+          public onValidate(_user: any, options: any): boolean {
             return Boolean(options);
           }
         })()
