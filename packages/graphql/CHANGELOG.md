@@ -1,5 +1,30 @@
 # Changelog:
 
+## 3.3.0
+
+### Minor Changes
+
+- 6898aa5: Support NestJS 12.
+
+  The `@nestjs/common` peer range now includes `^12.0.0`. The packages still ship CommonJS; on NestJS 12, which is ESM-only, this relies on Node.js `require(esm)`, so it needs Node.js 20.19+ or 22.12+ (the same floor NestJS 12 itself requires). NestJS 8–11 users are unaffected.
+
+### Patch Changes
+
+- 6898aa5: Declare peer dependencies that were imported but not declared. The packages only worked when these modules were hoisted, which strict installs (pnpm without hoisting, Yarn PnP) do not do:
+
+  - `@nestjs-cognito/auth`: `@nestjs/core`
+  - `@nestjs-cognito/graphql`: `@nestjs/common`, `@nestjs/graphql`
+  - `@nestjs-cognito/testing`: `@nestjs/common`, `@nestjs-cognito/core`, `@aws-sdk/client-cognito-identity-provider`
+
+  Every application using these packages already has these modules installed, so no action is needed.
+
+- 6898aa5: Declare `tslib` as a dependency. The compiled output imports its helpers from `tslib` (`importHelpers`), but the package did not declare it. It only resolved when a hoisted copy happened to be available, and failed with `Cannot find module 'tslib'` under strict installs.
+- Updated dependencies [6898aa5]
+- Updated dependencies [6898aa5]
+- Updated dependencies [6898aa5]
+  - @nestjs-cognito/auth@2.6.0
+  - @nestjs-cognito/core@2.5.0
+
 ## 3.2.1
 
 ### Patch Changes
