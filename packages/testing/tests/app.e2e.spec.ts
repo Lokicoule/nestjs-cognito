@@ -42,15 +42,15 @@ describe("Cognito Module : Testing", () => {
         .expectBodyContains("AccessToken");
     });
 
-    it("should be unsuccessful and return http code 403", async () => {
+    it("should be unsuccessful with invalid credentials and return http code 401", async () => {
       await spec()
         .post("/cognito-testing-login")
         .withBody({
-          username: "John Doe",
-          password: "123456",
+          username: "nonexistent-user@example.com",
+          password: "Invalid-Passw0rd!",
           clientId: config.get("COGNITO_CLIENT_ID"),
         })
-        .expectStatus(400);
+        .expectStatus(401);
     });
   });
 });
