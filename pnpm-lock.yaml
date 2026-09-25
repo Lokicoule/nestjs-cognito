@@ -254,8 +254,8 @@ importers:
         version: 2.8.1
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.1140.0
-        version: 3.1140.0
+        specifier: 3.1141.0
+        version: 3.1141.0
       '@fastify/cookie':
         specifier: 11.1.2
         version: 11.1.2
@@ -297,8 +297,8 @@ importers:
         version: 2.8.1
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.1140.0
-        version: 3.1140.0
+        specifier: 3.1141.0
+        version: 3.1141.0
       '@nestjs/common':
         specifier: 12.1.0
         version: 12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -374,8 +374,8 @@ importers:
         version: 2.8.1
     devDependencies:
       '@aws-sdk/client-cognito-identity-provider':
-        specifier: 3.1140.0
-        version: 3.1140.0
+        specifier: 3.1141.0
+        version: 3.1141.0
       '@nestjs-cognito/core':
         specifier: workspace:*
         version: link:../core
@@ -556,8 +556,8 @@ packages:
       '@apollo/server': ^4.0.0 || ^5.0.0
       express: ^5.0.0
 
-  '@aws-sdk/client-cognito-identity-provider@3.1140.0':
-    resolution: {integrity: sha512-J0TDxgHbhqahk5Ag9BW7oDH20Y+iozEbDaZKaawCWWCBsuRuvFmeyjhZ6Hr5oEWhe89O4N4ZaAmNNHbToFh2zQ==}
+  '@aws-sdk/client-cognito-identity-provider@3.1141.0':
+    resolution: {integrity: sha512-CScKgzT9XYUqXniVGMEbES1Uo3GewVY8QthAz8HrAjPqliDt8h+EXGuGG99aPMBb7rgYCVHUU0BOIAGcWBd6HA==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.978.1':
@@ -6866,7 +6866,7 @@ snapshots:
       '@apollo/server': 5.5.1(graphql@16.14.2)
       express: 5.2.1
 
-  '@aws-sdk/client-cognito-identity-provider@3.1140.0':
+  '@aws-sdk/client-cognito-identity-provider@3.1141.0':
     dependencies:
       '@aws-sdk/core': 3.978.1
       '@aws-sdk/credential-provider-node': 3.972.84
