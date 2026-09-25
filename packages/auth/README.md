@@ -235,7 +235,7 @@ export class CatsController {
 
 ### Global Guard and Other Transports
 
-Register the guard globally and open routes with `@PublicRoute()`. The same guard covers HTTP (Express and Fastify), GraphQL, socket.io and microservices:
+Register the guard globally and open routes with `@PublicRoute()`. The same guard covers HTTP (Express and Fastify), GraphQL, socket.io and microservices, and every decorator of this package also works on GraphQL resolvers:
 
 ```typescript
 providers: [{ provide: APP_GUARD, useClass: AuthenticationGuard }]

@@ -13,17 +13,24 @@ export function createCognitoUserDecorator(
   return createParamDecorator(
     (data: string | string[], ctx: ExecutionContext) => {
       const request = (
-        getRequest
-          ? getRequest(ctx)
-          : ctx.getType() === "rpc"
-            ? ctx.switchToRpc().getContext()
-            : ctx.switchToHttp().getRequest()
+        getRequest ? getRequest(ctx) : getPayloadHolder(ctx)
       ) as Record<string, CognitoJwtPayload | undefined>;
       const payload = request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY];
 
       return extractCognitoUserData(payload, validateTokenType, data);
     },
   );
+}
+
+function getPayloadHolder(ctx: ExecutionContext): object {
+  switch (ctx.getType<string>()) {
+    case "rpc":
+      return ctx.switchToRpc().getContext();
+    case "graphql":
+      return ctx.getArgByIndex(2)?.req;
+    default:
+      return ctx.switchToHttp().getRequest();
+  }
 }
 
 /**
