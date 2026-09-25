@@ -1,7 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
-
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
@@ -10,6 +9,11 @@
     {
       "matchPaths": ["apps/docs/**"],
       "enabled": false
+    },
+    {
+      "description": "ts-jest 29.4.13 writes file: URLs into coverage source paths, which breaks lcov/Coveralls",
+      "matchPackageNames": ["ts-jest"],
+      "allowedVersions": "!/^29\\.4\\.13$/"
     }
   ]
 }
