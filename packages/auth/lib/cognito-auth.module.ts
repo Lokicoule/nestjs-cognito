@@ -1,4 +1,10 @@
-import { DynamicModule, Global, Module, OnModuleInit } from "@nestjs/common";
+import {
+  DynamicModule,
+  Global,
+  Logger,
+  Module,
+  OnModuleInit,
+} from "@nestjs/common";
 import {
   CognitoJwtVerifier,
   CognitoModule,
@@ -10,6 +16,8 @@ import {
 @Global()
 @Module({})
 export class CognitoAuthModule implements OnModuleInit {
+  private readonly logger = new Logger(CognitoAuthModule.name);
+
   constructor(
     @InjectCognitoJwtVerifier()
     private readonly jwtVerifier: CognitoJwtVerifier | null,
@@ -31,11 +39,16 @@ export class CognitoAuthModule implements OnModuleInit {
     };
   }
 
-  onModuleInit() {
+  async onModuleInit() {
     if (!this.jwtVerifier) {
       throw new Error(
         "No JWT verifier configured: set jwtVerifier or jwtRsaVerifier",
       );
     }
+
+    // Overridden verifiers (e.g. CognitoTestingModule mocks) may not hydrate.
+    await this.jwtVerifier.hydrate?.().catch((error: Error) => {
+      this.logger.warn(`Could not preload the JWKS: ${error.message}`);
+    });
   }
 }

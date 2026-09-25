@@ -219,13 +219,9 @@ beforeAll(async () => {
 
 **Problem:** First request takes several seconds.
 
-**Cause:** JWKS keys are fetched on first request.
+**Cause:** The JWKS keys could not be fetched at startup. `CognitoAuthModule` preloads them when the app starts; if that fails, it logs `Could not preload the JWKS` and fetches them on the first request instead.
 
-**Solution:** This is normal. Subsequent requests are fast because keys are cached. If it's a problem:
-
-1. Warm up the cache on startup
-2. Use a CDN or cache layer
-3. Pre-fetch JWKS keys
+**Fix:** Check that the app can reach `https://cognito-idp.<region>.amazonaws.com` at startup.
 
 ## Token extraction not working
 

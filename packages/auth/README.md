@@ -139,6 +139,8 @@ export class AppModule {}
 
 > **Note:** You can define an identity provider without importing the separate [CognitoModule](https://www.npmjs.com/package/@nestjs-cognito/core) by using `CognitoAuthModule`.
 
+`CognitoAuthModule` preloads the user pool's signing keys (JWKS) at startup, so the first request doesn't wait for them. If they can't be fetched, it logs a warning and fetches them on the first request.
+
 ### Asynchronous Configuration
 
 Use `CognitoAuthModule.registerAsync()` to configure the module with dynamic options from ConfigService or other providers:
