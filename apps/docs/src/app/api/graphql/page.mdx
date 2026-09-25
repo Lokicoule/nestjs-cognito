@@ -31,7 +31,7 @@ export class UserResolver {}
 ```
 
 #### `@GqlAuthorization(options: string[] | AuthorizationOptions)`
-Require Cognito groups or OAuth scopes for GraphQL operations. `AuthorizationOptions`: `allowedGroups`, `requiredGroups`, `prohibitedGroups`, `requiredScopes`.
+Require Cognito groups or OAuth scopes for GraphQL operations. `AuthorizationOptions`: `allowedGroups`, `requiredGroups`, `prohibitedGroups`, `allowedScopes`, `requiredScopes`.
 
 ```typescript
 @Mutation()

@@ -255,7 +255,8 @@ The `@Authorization()` decorator enforces access control with these rules:
 - **`allowedGroups`** - User must belong to at least one of these groups
 - **`requiredGroups`** - User must belong to all of these groups
 - **`prohibitedGroups`** - User must not belong to any of these groups
-- **`requiredScopes`** - The token's `scope` claim must contain all of these scopes (case-sensitive). Use it for client credentials (machine-to-machine) tokens.
+- **`allowedScopes`** - The token's `scope` claim must contain at least one of these scopes (case-sensitive)
+- **`requiredScopes`** - The token's `scope` claim must contain all of these scopes (case-sensitive). Use scopes for client credentials (machine-to-machine) tokens.
 
 **Controller-level authorization:**
 

@@ -1,8 +1,7 @@
 import { COGNITO_JWT_VERIFIER_INSTANCE_TOKEN } from "@nestjs-cognito/core";
 import { Controller, Get, INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { CognitoAuthModule } from "../cognito-auth.module";
-import { Authorization } from "./authorization.decorator";
+import { Authorization, CognitoAuthModule } from "../lib";
 
 @Controller("orders")
 @Authorization({ requiredScopes: ["orders/read", "orders/write"] })
@@ -13,14 +12,23 @@ class OrdersController {
   }
 }
 
-describe("requiredScopes", () => {
+@Controller("invoices")
+@Authorization({ allowedScopes: ["invoices/read", "invoices/admin"] })
+class InvoicesController {
+  @Get()
+  list() {
+    return [];
+  }
+}
+
+describe("scopes", () => {
   let app: INestApplication;
   let scope: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [CognitoAuthModule.register({})],
-      controllers: [OrdersController],
+      controllers: [OrdersController, InvoicesController],
     })
       .overrideProvider(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
       .useValue({
@@ -38,10 +46,10 @@ describe("requiredScopes", () => {
 
   afterAll(() => app.close());
 
-  async function status(tokenScope: string) {
+  async function status(tokenScope: string, path = "/orders") {
     scope = tokenScope;
     const url = (await app.getUrl()).replace("[::1]", "localhost");
-    const res = await fetch(`${url}/orders`, {
+    const res = await fetch(url + path, {
       headers: { Authorization: "Bearer token" },
     });
     return res.status;
@@ -57,5 +65,13 @@ describe("requiredScopes", () => {
 
   it("compares scopes case-sensitively", async () => {
     expect(await status("Orders/Read orders/write")).toBe(403);
+  });
+
+  it("allows a token with one of the allowed scopes", async () => {
+    expect(await status("invoices/admin", "/invoices")).toBe(200);
+  });
+
+  it("forbids a token with none of the allowed scopes", async () => {
+    expect(await status("orders/read", "/invoices")).toBe(403);
   });
 });

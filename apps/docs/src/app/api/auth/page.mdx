@@ -36,7 +36,7 @@ export class UsersController {}
 ```
 
 #### `@Authorization(options: string[] | AuthorizationOptions)`
-Require Cognito groups or OAuth scopes. `AuthorizationOptions`: `allowedGroups`, `requiredGroups`, `prohibitedGroups`, `requiredScopes`.
+Require Cognito groups or OAuth scopes. `AuthorizationOptions`: `allowedGroups`, `requiredGroups`, `prohibitedGroups`, `allowedScopes`, `requiredScopes`.
 
 ```typescript
 @Authorization(['admin', 'manager'])
