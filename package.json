@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@apollo/server": "5.5.1",
-    "@changesets/cli": "^2.31.1",
+    "@changesets/cli": "^3.0.0",
     "@commitlint/cli": "21.2.3",
     "@commitlint/config-angular": "21.2.3",
     "@golevelup/ts-jest": "3.0.0",
