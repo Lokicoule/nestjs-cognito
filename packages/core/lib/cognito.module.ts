@@ -35,15 +35,15 @@ export class CognitoModule {
       providers: [
         {
           provide: COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
-          useValue: createCognitoIdentityProviderInstance(options),
+          useFactory: () => createCognitoIdentityProviderInstance(options),
         },
         {
           provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-          useValue: createCognitoJwtVerifierInstance(options),
+          useFactory: () => createCognitoJwtVerifierInstance(options),
         },
         {
           provide: COGNITO_JWT_EXTRACTOR_INSTANCE_TOKEN,
-          useValue: createCognitoJwtExtractorInstance(options),
+          useFactory: () => createCognitoJwtExtractorInstance(options),
         },
       ],
       exports: [
