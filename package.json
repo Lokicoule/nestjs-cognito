@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "build": "tsc -b -v packages",
+    "check:types": "tsc -p packages/consumer-check",
     "clean": "tsc -b --clean packages",
     "clean:deps": "pnpm -r exec rm -rf node_modules && pnpm install",
     "coverage": "pnpm test --coverage",
