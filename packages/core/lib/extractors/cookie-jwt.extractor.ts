@@ -1,5 +1,7 @@
 import type { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.interface";
 
+type CookiesRequest = { cookies?: Record<string, string | undefined> };
+
 /**
  * JWT extractor implementation that extracts tokens from HTTP-only cookies.
  * Useful for web applications that store JWT tokens in secure cookies instead of headers.
@@ -13,7 +15,7 @@ import type { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.in
  * })
  * ```
  */
-export class CookieJwtExtractor implements CognitoJwtExtractor {
+export class CookieJwtExtractor implements CognitoJwtExtractor<CookiesRequest> {
   private readonly cookieName: string;
 
   /**
@@ -29,7 +31,7 @@ export class CookieJwtExtractor implements CognitoJwtExtractor {
    * @param request - The request object (must have cookies property)
    * @returns True if the cookie is present and not empty
    */
-  hasAuthenticationInfo(request: any): boolean {
+  hasAuthenticationInfo(request: CookiesRequest): boolean {
     const cookies = request?.cookies || {};
     const token = cookies?.[this.cookieName];
 
@@ -41,7 +43,7 @@ export class CookieJwtExtractor implements CognitoJwtExtractor {
    * @param request - The request object (must have cookies property)
    * @returns The JWT token string or null if not found
    */
-  getAuthorizationToken(request: any): string | null {
+  getAuthorizationToken(request: CookiesRequest): string | null {
     const cookies = request?.cookies || {};
     const token = cookies?.[this.cookieName];
 

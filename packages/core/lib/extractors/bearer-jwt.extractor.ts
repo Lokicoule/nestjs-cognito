@@ -1,16 +1,22 @@
+import type { IncomingHttpHeaders } from "node:http";
 import type { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.interface";
+
+type HeadersRequest = {
+  headers?: IncomingHttpHeaders;
+  handshake?: { headers?: IncomingHttpHeaders };
+};
 
 /**
  * Default implementation that extracts JWT tokens from the "Bearer" authorization request header.
  * Supports both HTTP requests and WebSocket handshake headers.
  */
-export class BearerJwtExtractor implements CognitoJwtExtractor {
+export class BearerJwtExtractor implements CognitoJwtExtractor<HeadersRequest> {
   /**
    * Checks if the request has authentication information in the Authorization header.
    * @param request - The request object (HTTP or WebSocket)
    * @returns True if Authorization header is present and not empty
    */
-  hasAuthenticationInfo(request: any): boolean {
+  hasAuthenticationInfo(request: HeadersRequest): boolean {
     const headers = request?.headers || request?.handshake?.headers;
     const authorization = headers?.authorization;
 
@@ -22,7 +28,7 @@ export class BearerJwtExtractor implements CognitoJwtExtractor {
    * @param request - The request object (HTTP or WebSocket)
    * @returns The JWT token string or null if not found
    */
-  getAuthorizationToken(request: any): string | null {
+  getAuthorizationToken(request: HeadersRequest): string | null {
     const authorization =
       request?.headers?.authorization ||
       request?.handshake?.headers?.authorization;

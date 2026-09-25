@@ -91,6 +91,7 @@ import {
   CognitoJwtVerifier,
   InjectCognitoJwtVerifier
 } from '@nestjs-cognito/core';
+import type { Request } from 'express';
 
 export class AuthService {
   constructor(
@@ -147,6 +148,7 @@ import {
   JwtRsaVerifier,
   InjectCognitoJwtVerifier
 } from '@nestjs-cognito/core';
+import type { Request } from 'express';
 
 export class AuthService {
   constructor(
@@ -235,6 +237,7 @@ import {
   CognitoJwtExtractor,
   InjectCognitoJwtExtractor,
 } from '@nestjs-cognito/core';
+import type { Request } from 'express';
 
 export class AuthService {
   constructor(
@@ -242,7 +245,7 @@ export class AuthService {
     private readonly jwtExtractor: CognitoJwtExtractor,
   ) {}
 
-  extractToken(request: any): string | null {
+  extractToken(request: Request): string | null {
     if (this.jwtExtractor.hasAuthenticationInfo(request)) {
       return this.jwtExtractor.getAuthorizationToken(request);
     }
@@ -257,14 +260,15 @@ Create custom token extractors by implementing the `CognitoJwtExtractor` interfa
 
 ```typescript
 import { CognitoJwtExtractor } from '@nestjs-cognito/core';
+import type { Request } from 'express';
 
-export class CustomHeaderExtractor implements CognitoJwtExtractor {
-  hasAuthenticationInfo(request: any): boolean {
-    return Boolean(request.headers['x-custom-auth']);
+export class CustomHeaderExtractor implements CognitoJwtExtractor<Request> {
+  hasAuthenticationInfo(request: Request): boolean {
+    return Boolean(request.header('x-custom-auth'));
   }
 
-  getAuthorizationToken(request: any): string | null {
-    const header = request.headers['x-custom-auth'];
+  getAuthorizationToken(request: Request): string | null {
+    const header = request.header('x-custom-auth');
     if (!header) return null;
 
     // Extract token from custom format

@@ -2,7 +2,7 @@ import { memoize } from "./memoize.util";
 
 describe("memoize", () => {
   it("should memo function", () => {
-    const fn = jest.fn(() => "result");
+    const fn = jest.fn((_input: string) => "result");
     const memoizedFn = memoize(fn);
     expect(memoizedFn("input")).toBe("result");
     expect(memoizedFn("input")).toBe("result");
@@ -18,7 +18,7 @@ describe("memoize", () => {
   });
 
   it("should memo function with passed defaultKey", () => {
-    const fn = jest.fn(() => "result");
+    const fn = jest.fn((_input?: string) => "result");
     const memoizedFn = memoize(fn, "generateKey");
     expect(memoizedFn()).toBe("result");
     expect(memoizedFn()).toBe("result");
@@ -26,7 +26,7 @@ describe("memoize", () => {
   });
 
   it("should memo function with built-in defaultKey", () => {
-    const fn = jest.fn(() => "result");
+    const fn = jest.fn((_input?: string) => "result");
     const memoizedFn = memoize(fn);
     expect(memoizedFn()).toBe("result");
     expect(memoizedFn()).toBe("result");

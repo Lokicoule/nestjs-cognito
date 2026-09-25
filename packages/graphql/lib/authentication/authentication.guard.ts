@@ -3,6 +3,11 @@ import { parseCookies } from "@nestjs-cognito/core";
 import { ExecutionContext, Injectable } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
 
+type GqlRequest = {
+  cookies?: Record<string, string>;
+  extra?: { request?: { headers?: { cookie?: string } } };
+};
+
 @Injectable()
 export class AuthenticationGuard extends CoreAuthenticationGuard {
   /**
@@ -13,9 +18,10 @@ export class AuthenticationGuard extends CoreAuthenticationGuard {
    * @returns The request object with cookies populated
    * @memberof AuthenticationGuard
    */
-  public getRequest(context: ExecutionContext): any {
-    const ctx = GqlExecutionContext.create(context).getContext();
-    const request = ctx.req;
+  public getRequest(context: ExecutionContext): GqlRequest {
+    const request = GqlExecutionContext.create(context).getContext<{
+      req: GqlRequest;
+    }>().req;
 
     // graphql-ws stores WebSocket connection headers in request.extra.request.headers
     // Extract cookies from there if available and not already parsed

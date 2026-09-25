@@ -10,21 +10,5 @@ import { AuthorizationOptions } from "./authorization.options";
 export function Authorization(
   options: AuthorizationOptions,
 ): ClassDecorator & MethodDecorator {
-  return (
-    target: object,
-    propertyKey?: string | symbol,
-    descriptor?: TypedPropertyDescriptor<any>,
-  ) => {
-    if (propertyKey && descriptor) {
-      // MethodDecorator
-      return applyDecorators(UseGuards(AuthorizationGuard(options)))(
-        target,
-        propertyKey,
-        descriptor,
-      );
-    } else {
-      // ClassDecorator
-      return applyDecorators(UseGuards(AuthorizationGuard(options)))(target);
-    }
-  };
+  return applyDecorators(UseGuards(AuthorizationGuard(options)));
 }

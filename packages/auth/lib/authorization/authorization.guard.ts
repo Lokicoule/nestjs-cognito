@@ -5,11 +5,9 @@ import { memoize } from "../utils/memoize.util";
 import { AuthorizationOptions } from "./authorization.options";
 import { AuthorizationValidator } from "./authorization.validator";
 
-type Constructor<T extends AuthenticationGuard> = new (...args: any[]) => T;
-
 export const createAuthorizationGuard =
   (options: AuthorizationOptions) =>
-  <T extends Constructor<AuthenticationGuard>>(Guard: T): Type<CanActivate> => {
+  <T extends Type<AuthenticationGuard>>(Guard: T): Type<CanActivate> => {
     @Injectable()
     class AuthorizationGuardMixin extends Guard {
       public onValidate(user: User): boolean {

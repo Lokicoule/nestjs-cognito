@@ -7,7 +7,10 @@ import { COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN } from "@nestjs-cognito/core";
 describe("CognitoTestingService", () => {
   let service: CognitoTestingService;
   let cognitoMockService: CognitoMockService;
-  let cognitoClient: any;
+  let cognitoClient: {
+    initiateAuth: jest.Mock;
+    respondToAuthChallenge: jest.Mock;
+  };
 
   const mockTokens = {
     AccessToken: "mock-access-token",

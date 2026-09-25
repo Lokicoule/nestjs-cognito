@@ -7,7 +7,11 @@ import {
   CognitoModuleOptions,
   BearerJwtExtractor,
 } from "@nestjs-cognito/core";
-import { DynamicModule, Global, Module } from "@nestjs/common";
+import type {
+  CognitoIdentityProvider,
+  InitiateAuthRequest,
+} from "@aws-sdk/client-cognito-identity-provider";
+import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import { decode } from "jsonwebtoken";
 import { CognitoMockService } from "./cognito-mock.service";
 import { CognitoTestingController } from "./cognito-testing.controller";
@@ -37,7 +41,7 @@ export class CognitoTestingModule {
     };
   }
 
-  private static createMockProviders(mockConfig: MockConfig): any[] {
+  private static createMockProviders(mockConfig: MockConfig): Provider[] {
     return [
       {
         provide: MOCK_CONFIG_TOKEN,
@@ -65,7 +69,7 @@ export class CognitoTestingModule {
       {
         provide: COGNITO_IDENTITY_PROVIDER_INSTANCE_TOKEN,
         useFactory: (mockService: CognitoMockService) => ({
-          initiateAuth: async (request) => ({
+          initiateAuth: async (request: InitiateAuthRequest) => ({
             AuthenticationResult: mockService.getMockTokens(request.ClientId),
           }),
         }),
@@ -74,7 +78,7 @@ export class CognitoTestingModule {
       {
         provide: CognitoTestingService,
         useFactory: (
-          cognitoProvider: any,
+          cognitoProvider: CognitoIdentityProvider,
           cognitoMockService: CognitoMockService,
         ) => {
           const service = new CognitoTestingService(

@@ -56,7 +56,7 @@ export abstract class AbstractGuard implements CanActivate {
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.#isWhitelisted(context);
-    const request = this.getRequest(context);
+    const request = this.getRequest(context) as Record<string, unknown>;
 
     if (!this.#jwtExtractor.hasAuthenticationInfo(request)) {
       if (isPublic) {
@@ -115,18 +115,18 @@ export abstract class AbstractGuard implements CanActivate {
    * @abstract
    * @protected
    * @param {ExecutionContext} context - The execution context
-   * @returns {any} The request object
+   * @returns {object} The request object
    */
-  protected abstract getRequest(context: ExecutionContext): any;
+  protected abstract getRequest(context: ExecutionContext): object;
 
-  #getAuthenticatedUser(request): User {
-    const user = request[COGNITO_USER_CONTEXT_PROPERTY];
+  #getAuthenticatedUser(request: Record<string, unknown>): User {
+    const user = request[COGNITO_USER_CONTEXT_PROPERTY] as User | undefined;
 
-    if (!Boolean(user)) {
+    if (!user) {
       throw new UnauthorizedException("User is not authenticated.");
     }
 
-    return request[COGNITO_USER_CONTEXT_PROPERTY];
+    return user;
   }
 
   #isWhitelisted(context: ExecutionContext): boolean {

@@ -109,8 +109,8 @@ export class CognitoTestingService {
     }
   }
 
-  #handleAuthError(error: any): never {
-    switch (error.name) {
+  #handleAuthError(error: unknown): never {
+    switch ((error as Error).name) {
       case "NotAuthorizedException":
       case "UserNotFoundException":
         throw new UnauthorizedException(
@@ -135,8 +135,8 @@ export class CognitoTestingService {
     }
   }
 
-  #handleChallengeError(error: any): never {
-    switch (error.name) {
+  #handleChallengeError(error: unknown): never {
+    switch ((error as Error).name) {
       case "NotAuthorizedException":
         throw new UnauthorizedException(
           "Authentication failed: Invalid credentials.",
