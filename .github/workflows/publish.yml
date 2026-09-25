@@ -29,7 +29,13 @@ jobs:
   release:
     needs: [coverage]
     runs-on: ubuntu-latest
+    # Must match the "Environment name" of the npm trusted publisher.
     environment: production
+    permissions:
+      contents: write
+      pull-requests: write
+      # npm trusted publishing (OIDC): no npm token is used.
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -48,6 +54,16 @@ jobs:
         if: github.event_name != 'pull_request'
         run: pnpm run build
 
+      - name: Check npm supports trusted publishing
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "node $(node --version), npm $(npm --version), pnpm $(pnpm --version)"
+          node -e '
+            const [maj, min, pat] = process.argv[1].split(".").map(Number);
+            const ok = maj > 11 || (maj === 11 && (min > 5 || (min === 5 && pat >= 1)));
+            if (!ok) { console.error("npm >= 11.5.1 is required for trusted publishing"); process.exit(1); }
+          ' "$(npm --version)"
+
       - name: Create Release Pull Request or Publish
         if: github.event_name != 'pull_request'
         id: changesets
@@ -58,5 +74,3 @@ jobs:
           title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
