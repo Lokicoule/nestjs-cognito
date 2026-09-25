@@ -5,6 +5,8 @@
 <div align="center">
 
 [![Coverage Status](https://coveralls.io/repos/github/Lokicoule/nestjs-cognito/badge.svg?branch=main)](https://coveralls.io/github/Lokicoule/nestjs-cognito?branch=main)
+[![npm](https://img.shields.io/npm/v/@nestjs-cognito/auth)](https://www.npmjs.com/package/@nestjs-cognito/auth)
+[![npm downloads](https://img.shields.io/npm/dm/@nestjs-cognito/core)](https://www.npmjs.com/package/@nestjs-cognito/core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Stars](https://img.shields.io/github/stars/Lokicoule/nestjs-cognito?style=social)](https://github.com/Lokicoule/nestjs-cognito/stargazers)
 
@@ -16,6 +18,16 @@
 </div>
 
 ---
+
+## What's new in 4.0
+
+- **NestJS 12** support. All packages now share one version.
+- **OAuth scopes** for machine-to-machine tokens: `@Authorization({ requiredScopes: ['orders/read'] })`.
+- **One global guard** for HTTP, GraphQL, socket.io and microservices.
+- **Typed custom attributes** (`custom:*`), `tokenUse` on guards, JWKS preloaded at startup.
+- Realistic mock tokens in `@nestjs-cognito/testing` (M2M, expired, custom claims).
+
+See the [migration guide](./packages/auth/CHANGELOG.md#400).
 
 ## What is this?
 
@@ -251,6 +263,10 @@ Package READMEs:
 - [GraphQL](./packages/graphql/README.md)
 - [Testing](./packages/testing/README.md)
 - [Examples](./sample)
+
+## Support
+
+If nestjs-cognito saves you time, a [⭐ on GitHub](https://github.com/Lokicoule/nestjs-cognito) helps other NestJS developers find it.
 
 ## License
 
