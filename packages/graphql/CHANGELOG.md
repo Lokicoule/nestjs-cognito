@@ -1,5 +1,14 @@
 # Changelog:
 
+## 4.1.0
+
+### Patch Changes
+
+- Updated dependencies [7246a6f]
+- Updated dependencies [5692dbc]
+  - @nestjs-cognito/auth@4.1.0
+  - @nestjs-cognito/core@4.1.0
+
 ## 4.0.0
 
 ### Major Changes
