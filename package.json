@@ -50,7 +50,7 @@
     "prettier": "3.9.9",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2",
-    "ts-jest": "29.4.12",
+    "ts-jest": "29.4.14",
     "typescript": "6.0.3",
     "typescript-eslint": "8.70.1"
   },
