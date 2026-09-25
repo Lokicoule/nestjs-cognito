@@ -42,7 +42,18 @@ jobs:
       - name: Tests coverage
         run: pnpm run coverage
 
+      - name: Check coverage report paths
+        # Guard against tooling regressions that write URLs instead of paths
+        # into the report (ts-jest 29.4.13), which silently gives 0% on Coveralls.
+        run: |
+          if grep -q '^SF:.*file:' coverage/lcov.info; then
+            echo "::error::coverage/lcov.info contains file: URLs instead of source paths"
+            grep -m 3 '^SF:' coverage/lcov.info
+            exit 1
+          fi
+
       - name: Coveralls
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: coverage/lcov.info
