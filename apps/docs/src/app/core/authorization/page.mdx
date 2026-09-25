@@ -63,7 +63,7 @@ Machine-to-machine clients (client credentials flow) have no user and no groups.
 export class OrdersController {}
 ```
 
-The token's `scope` claim must contain every listed scope. Scopes are case-sensitive, unlike groups.
+The token's `scope` claim must contain every listed scope. Use `allowedScopes` to accept any one of them instead, e.g. `['orders/read', 'orders/admin']`. Scopes are case-sensitive, unlike groups.
 
 ## Using the guard directly
 
@@ -97,6 +97,8 @@ export class CatsController {
 **prohibitedGroups**: User must NOT belong to ANY of these groups.
 
 **requiredScopes**: The token must carry ALL of these scopes.
+
+**allowedScopes**: The token must carry AT LEAST ONE of these scopes.
 
 When you combine them, all conditions must pass:
 

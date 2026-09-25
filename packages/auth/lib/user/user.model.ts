@@ -71,6 +71,10 @@ export class User {
     return scopes.every((scope) => this._scopes.includes(scope));
   }
 
+  public hasSomeScope(scopes: string[]): boolean {
+    return scopes.some((scope) => this._scopes.includes(scope));
+  }
+
   public hasGroup(group: string): boolean {
     return this._groups.includes(group.toLowerCase());
   }

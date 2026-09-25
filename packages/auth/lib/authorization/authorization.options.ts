@@ -19,6 +19,11 @@ export type AuthorizationOptions =
       requiredGroups?: string[];
 
       /**
+       * The allowed OAuth scopes (case-sensitive): the token needs at least one
+       */
+      allowedScopes?: string[];
+
+      /**
        * The required OAuth scopes (case-sensitive), e.g. for client credentials tokens
        */
       requiredScopes?: string[];
