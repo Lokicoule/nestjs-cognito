@@ -13,7 +13,7 @@ class TestGuard extends AbstractGuard {
     return true;
   }
 
-  public getRequest(context: ExecutionContext): any {
+  public getRequest(context: ExecutionContext): object {
     return context.switchToHttp().getRequest();
   }
 }
@@ -23,7 +23,7 @@ class BadTestGuard extends AbstractGuard {
     return true;
   }
 
-  public getRequest(_context: ExecutionContext): any {
+  public getRequest(_context: ExecutionContext): object {
     return undefined;
   }
 }

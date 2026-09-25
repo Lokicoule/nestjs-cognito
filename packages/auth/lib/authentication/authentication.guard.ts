@@ -12,12 +12,12 @@ export class AuthenticationGuard extends AbstractGuard {
    * @param {ExecutionContext} context - The context
    * @returns {Request} - The request
    */
-  public getRequest(context: ExecutionContext) {
+  public getRequest(context: ExecutionContext): object {
     if (context.getType() === "ws") {
       return context.switchToWs().getClient();
     }
 
-    return context.switchToHttp().getRequest<Request>();
+    return context.switchToHttp().getRequest();
   }
 
   /**

@@ -1,5 +1,10 @@
 import type { CognitoIdentityProviderClientConfig } from "@aws-sdk/client-cognito-identity-provider";
-import type { ModuleMetadata, Provider, Type } from "@nestjs/common";
+import type {
+  FactoryProvider,
+  ModuleMetadata,
+  Provider,
+  Type,
+} from "@nestjs/common";
 import type {
   CognitoJwtVerifierMultiProperties,
   CognitoJwtVerifierProperties,
@@ -84,10 +89,6 @@ export type CognitoModuleOptions = Prettify<
 /**
  * @interface CognitoModuleOptionsFactory - Metadata for the CognitoModule
  * @property {() => Promise<CognitoModuleOptions>} createCognitoModuleOptions - A factory function to create the CognitoModuleOptions
- * @property {Type<any>[]} imports - The imports to be used by the module
- * @property {Provider[]} providers - The providers to be used by the module
- * @property {(string | Provider)[]} exports - The exports to be used by the module
- * @property {string} name - The name of the module
  */
 export interface CognitoModuleOptionsFactory {
   createCognitoModuleOptions():
@@ -107,12 +108,12 @@ export interface CognitoModuleAsyncOptions extends Pick<
   "imports"
 > {
   extraProviders?: Provider[];
-  inject?: any[];
+  inject?: FactoryProvider["inject"];
   useClass?: Type<CognitoModuleOptionsFactory>;
   useExisting?: Type<CognitoModuleOptionsFactory>;
-  useFactory?: (
-    ...args: any[]
-  ) => Promise<CognitoModuleOptions> | CognitoModuleOptions;
+  useFactory?: FactoryProvider<
+    Promise<CognitoModuleOptions> | CognitoModuleOptions
+  >["useFactory"];
 }
 
 type Prettify<T> = {

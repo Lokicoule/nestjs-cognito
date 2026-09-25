@@ -13,7 +13,7 @@ export function extractCognitoUserData(
   payload: CognitoJwtPayload | undefined,
   expectedTokenType?: "access" | "id",
   data?: string | string[],
-): any {
+): unknown {
   if (!Boolean(payload)) {
     return undefined;
   }
@@ -30,10 +30,9 @@ export function extractCognitoUserData(
   }
 
   if (Array.isArray(data)) {
-    return data.reduce((result, key) => {
-      result[key] = payload[`cognito:${key}`] || payload[key];
-      return result;
-    }, {});
+    return Object.fromEntries(
+      data.map((key) => [key, payload[`cognito:${key}`] || payload[key]]),
+    );
   }
 
   return payload[`cognito:${data}`] || payload[data];
