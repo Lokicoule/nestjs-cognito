@@ -1,5 +1,5 @@
 import { COGNITO_JWT_VERIFIER_INSTANCE_TOKEN } from "@nestjs-cognito/core";
-import { Controller, Get, INestApplication } from "@nestjs/common";
+import { Controller, Get, INestApplication, Logger } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { Authentication } from "./authentication";
 import { CognitoAuthModule } from "./cognito-auth.module";
@@ -61,5 +61,25 @@ describe("CognitoAuthModule", () => {
 
   it("refuses to start without a JWT verifier", async () => {
     await expect(createApp(null)).rejects.toThrow("No JWT verifier configured");
+  });
+
+  it("preloads the JWKS at startup", async () => {
+    const hydrate = jest.fn().mockResolvedValue(undefined);
+    const preloaded = await createApp({ verify: jest.fn(), hydrate });
+
+    expect(hydrate).toHaveBeenCalledTimes(1);
+    await preloaded.close();
+  });
+
+  it("starts with a warning when the JWKS cannot be preloaded", async () => {
+    const warn = jest.spyOn(Logger.prototype, "warn").mockImplementation();
+    const hydrate = jest.fn().mockRejectedValue(new Error("network down"));
+    const started = await createApp({ verify: jest.fn(), hydrate });
+
+    expect(warn).toHaveBeenCalledWith(
+      "Could not preload the JWKS: network down",
+    );
+    warn.mockRestore();
+    await started.close();
   });
 });

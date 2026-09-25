@@ -79,4 +79,11 @@ export class CognitoJwtVerifier {
 
     throw new Error("No verifier found.");
   }
+
+  /**
+   * Fetch and cache the JWKS of the configured issuer(s).
+   */
+  async hydrate(): Promise<void> {
+    await (this.#props.jwtVerifier ?? this.#props.jwtRsaVerifier)?.hydrate();
+  }
 }
