@@ -1,3 +1,14 @@
+## 4.1.0
+
+### Minor Changes
+
+- 7246a6f: Add `allowedScopes` to `@Authorization()`: the token must carry at least one of the listed OAuth scopes.
+
+### Patch Changes
+
+- 5692dbc: Fix a type error in the published declarations (`user.builder.d.ts`, TS2411) for apps compiled with `strict` and `skipLibCheck: false`. The builder's `payload` getter now uses `CognitoJwtPayload`, so it also picks up custom claims declared through `CognitoCustomClaims`.
+- @nestjs-cognito/core@4.1.0
+
 ## 4.0.0
 
 ### Major Changes
