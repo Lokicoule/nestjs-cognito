@@ -78,6 +78,17 @@ describe("UserMapper", () => {
       expect(user.scopes).toEqual(["api/read", "api/write"]);
     });
 
+    it("exposes the sub and the raw payload", () => {
+      const payload = {
+        sub: "user-id",
+        "cognito:username": "john",
+        "custom:tenant": "acme",
+      } as unknown as CognitoJwtPayload;
+      const user = UserMapper.fromCognitoJwtPayload(payload);
+      expect(user.sub).toEqual("user-id");
+      expect(user.payload).toBe(payload);
+    });
+
     it("keeps the username of a user access token", () => {
       const user = UserMapper.fromCognitoJwtPayload({
         username: "john",

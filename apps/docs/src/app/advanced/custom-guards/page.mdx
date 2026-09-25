@@ -48,7 +48,7 @@ export class ProtectedController {
 ## How it works
 
 1. `AbstractGuard` verifies the JWT token
-2. It calls your `onValidate()` method with the user data
+2. It calls your `onValidate()` method with the user: `username`, `clientId`, `email`, `groups`, `scopes`, `sub`, and `payload` (all token claims, including custom attributes)
 3. If you return `false`, the request is rejected
 
 ## Different request types

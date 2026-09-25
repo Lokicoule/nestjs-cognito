@@ -1,3 +1,4 @@
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 import { User } from "./user.model";
 
 export class UserBuilder {
@@ -6,6 +7,7 @@ export class UserBuilder {
   private _email: string | null;
   private _groups: string[];
   private _scopes: string[];
+  private _payload?: CognitoJwtPayload;
 
   /**
    * Get the username of the user
@@ -80,6 +82,15 @@ export class UserBuilder {
 
   public setScopes(scopes: string[]) {
     this._scopes = scopes;
+    return this;
+  }
+
+  public get payload() {
+    return this._payload;
+  }
+
+  public setPayload(payload: CognitoJwtPayload) {
+    this._payload = payload;
     return this;
   }
 

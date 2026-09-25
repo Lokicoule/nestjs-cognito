@@ -1,3 +1,4 @@
+import type { CognitoJwtPayload } from "@nestjs-cognito/core";
 import { UserBuilder } from "./user.builder";
 
 export class User {
@@ -6,6 +7,7 @@ export class User {
   private _email: string;
   private _groups: string[];
   private _scopes: string[];
+  private _payload?: CognitoJwtPayload;
 
   constructor(builder: UserBuilder) {
     this._username = builder.username;
@@ -13,6 +15,7 @@ export class User {
     this._email = builder.email;
     this._groups = builder.groups ?? [];
     this._scopes = builder.scopes ?? [];
+    this._payload = builder.payload;
   }
 
   /**
@@ -52,6 +55,14 @@ export class User {
    * @param {string} group - The group
    * @returns {boolean} - True if the user has the group
    */
+  public get sub(): string | undefined {
+    return this._payload?.sub;
+  }
+
+  public get payload(): CognitoJwtPayload | undefined {
+    return this._payload;
+  }
+
   public get scopes(): string[] {
     return this._scopes;
   }

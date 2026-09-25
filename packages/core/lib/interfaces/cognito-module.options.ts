@@ -24,9 +24,22 @@ import type {
 } from "aws-jwt-verify/jwt-verifier";
 import type { CognitoJwtExtractor } from "./cognito-jwt-extractor.interface";
 
-export type CognitoJwtPayload = Prettify<AwsCognitoJwtPayload>;
-export type CognitoAccessTokenPayload = Prettify<AwsCognitoAccessTokenPayload>;
-export type CognitoIdTokenPayload = Prettify<AwsCognitoIdTokenPayload>;
+/**
+ * The custom claims of your user pool, empty by default. Type them with module augmentation:
+ * `declare module "@nestjs-cognito/core" { interface CognitoCustomClaims { "custom:tenant"?: string } }`
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface CognitoCustomClaims {}
+
+export type CognitoJwtPayload = Prettify<
+  AwsCognitoJwtPayload & CognitoCustomClaims
+>;
+export type CognitoAccessTokenPayload = Prettify<
+  AwsCognitoAccessTokenPayload & CognitoCustomClaims
+>;
+export type CognitoIdTokenPayload = Prettify<
+  AwsCognitoIdTokenPayload & CognitoCustomClaims
+>;
 
 /**
  * Type guard to check if a payload is an access token
