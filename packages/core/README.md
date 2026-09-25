@@ -331,6 +331,21 @@ CognitoModule.register({
 })
 ```
 
+`credentials` also accepts a credential provider. The AWS SDK caches its result and calls it again when the credentials expire, so temporary credentials are renewed without restarting the app:
+
+```typescript
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
+
+CognitoModule.register({
+  identityProvider: {
+    region: 'us-east-1',
+    credentials: fromTemporaryCredentials({
+      params: { RoleArn: 'arn:aws:iam::123456789012:role/cognito-admin' },
+    }),
+  },
+})
+```
+
 ## Advanced Configuration
 
 ### JWK Cache Configuration

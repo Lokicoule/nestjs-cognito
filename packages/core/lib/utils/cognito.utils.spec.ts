@@ -24,6 +24,32 @@ describe("CognitoUtils", () => {
     );
   });
 
+  it("renews expiring credentials through the credentials provider", async () => {
+    jest.useFakeTimers({ now: new Date("2026-01-01T00:00:00Z") });
+    let calls = 0;
+    const cognito = createCognitoIdentityProviderInstance({
+      identityProvider: {
+        region: "us-east-1",
+        credentials: async () => ({
+          accessKeyId: `key-${++calls}`,
+          secretAccessKey: "secret",
+          expiration: new Date(Date.now() + 60 * 60 * 1000),
+        }),
+      },
+    });
+
+    const cached = [
+      await cognito.config.credentials(),
+      await cognito.config.credentials(),
+    ];
+    jest.setSystemTime(new Date("2026-01-01T02:00:00Z"));
+    const renewed = await cognito.config.credentials();
+    jest.useRealTimers();
+
+    expect(cached.map((c) => c.accessKeyId)).toEqual(["key-1", "key-1"]);
+    expect(renewed.accessKeyId).toBe("key-2");
+  });
+
   it("should get cognito jwt verifier single user pool instance", async () => {
     const options: CognitoModuleOptions = {
       jwtVerifier: {
