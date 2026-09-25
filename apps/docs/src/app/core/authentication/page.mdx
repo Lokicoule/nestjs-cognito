@@ -75,6 +75,18 @@ export class UsersController {
 }
 ```
 
+### Accept only one token type
+
+Pass `tokenUse` to reject the other token type with a 401. A handler-level value overrides the controller:
+
+```ts
+@Controller('orders')
+@Authentication({ tokenUse: 'access' })
+export class OrdersController {}
+```
+
+`@Authorization({ ..., tokenUse })` accepts the same option.
+
 ## Making exceptions
 
 If you protect a controller but need specific routes to be public, use `@PublicRoute()`:

@@ -208,6 +208,12 @@ export class DogsController {
 }
 ```
 
+To accept only one token type, pass `tokenUse`. The other type is rejected with a 401:
+
+```typescript
+@Authentication({ tokenUse: "access" })
+```
+
 ### AuthenticationGuard
 
 Alternatively, use the `AuthenticationGuard` directly with the `@UseGuards()` decorator:

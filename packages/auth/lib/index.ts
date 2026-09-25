@@ -5,5 +5,6 @@ export * from "./cognito-auth.module";
 export * from "./errors";
 export * from "./user";
 export * from "./utils";
+export * from "./token-use";
 export * from "./validators";
 export * from "./whitelist";
