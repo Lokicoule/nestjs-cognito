@@ -12,7 +12,7 @@
     "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
-    "@nestjs-cognito/auth": "^2.6.0",
+    "@nestjs-cognito/auth": "^4.0.0",
     "@nestjs/common": "12.1.0",
     "@nestjs/core": "12.1.0",
     "@nestjs/platform-express": "12.1.0",
