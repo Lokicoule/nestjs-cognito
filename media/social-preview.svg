@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.85" cy="0.1" r="0.7">
+      <stop offset="0" stop-color="#3B82F6" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#3B82F6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="640" fill="#0B1220"/>
+  <rect width="1280" height="640" fill="url(#glow)"/>
+  <rect x="0" y="0" width="1280" height="6" fill="url(#brand)"/>
+
+  <text x="96" y="178" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="84" font-weight="700" fill="url(#brand)">@nestjs-cognito</text>
+  <text x="98" y="240" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="34" fill="#E2E8F0">AWS Cognito authentication for NestJS</text>
+
+  <rect x="96" y="292" width="1088" height="150" rx="14" fill="#111A2E" stroke="#1E2A44" stroke-width="2"/>
+  <text font-family="Menlo, Monaco, monospace" font-size="27" fill="#94A3B8">
+    <tspan x="132" y="350"><tspan fill="#2DD4BF">@Controller</tspan>('orders')</tspan>
+    <tspan x="132" y="398"><tspan fill="#2DD4BF">@Authorization</tspan>({ requiredScopes: [<tspan fill="#FBBF24">'orders/read'</tspan>] })</tspan>
+  </text>
+
+  <text x="98" y="512" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="27" fill="#CBD5E1">JWT guards · Groups &amp; OAuth scopes · GraphQL · WebSockets · Microservices</text>
+  <text x="98" y="568" font-family="Menlo, Monaco, monospace" font-size="24" fill="#64748B">v4 · NestJS 11 &amp; 12 · npm i @nestjs-cognito/auth</text>
+</svg>
