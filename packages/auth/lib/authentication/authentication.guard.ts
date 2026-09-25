@@ -5,6 +5,7 @@ import { User } from "../user/user.model";
 import { AuthenticationValidator } from "./authentication.validator";
 
 import type { ExecutionContext } from "@nestjs/common";
+import type { IncomingHttpHeaders } from "node:http";
 
 @Injectable()
 export class AuthenticationGuard extends AbstractGuard {
@@ -37,16 +38,24 @@ export class AuthenticationGuard extends AbstractGuard {
 }
 
 type GraphqlRequest = {
+  headers?: IncomingHttpHeaders;
   cookies?: Record<string, string>;
-  extra?: { request?: { headers?: { cookie?: string } } };
+  connectionParams?: { authorization?: unknown };
+  extra?: { request?: { headers?: IncomingHttpHeaders } };
 };
 
 function getGraphqlRequest(context: ExecutionContext): GraphqlRequest {
   const request: GraphqlRequest = context.getArgByIndex(2)?.req;
-  // graphql-ws subscriptions carry the connection headers in extra.request.
-  const cookie = request?.extra?.request?.headers?.cookie;
-  if (cookie && !request.cookies) {
-    request.cookies = parseCookies(cookie);
+  // graphql-ws subscriptions: req is the graphql-ws context. Expose the
+  // connection headers (with connectionParams.authorization) and cookies.
+  const headers = request?.extra?.request?.headers;
+  if (headers && !request.headers) {
+    const { authorization } = request.connectionParams ?? {};
+    request.headers =
+      typeof authorization === "string"
+        ? { ...headers, authorization }
+        : headers;
+    request.cookies ??= parseCookies(headers.cookie);
   }
   return request;
 }

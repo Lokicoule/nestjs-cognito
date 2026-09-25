@@ -92,83 +92,38 @@ export class UserResolver {
 
 ## Subscriptions
 
-Subscriptions use WebSockets. You need to verify the token during connection.
-
-<Note>
-This section has not been checked against NestJS 12 and graphql-ws yet.
-</Note>
-
-<Mermaid>
-
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant WS as WebSocket
-    participant V as JWT Verifier
-    participant S as Subscription
-
-    C->>WS: Connect + Bearer Token
-    WS->>V: Verify Token
-    V-->>WS: Valid Payload
-    WS->>C: Connection Established
-    C->>S: Subscribe to Events
-    S-->>C: Stream Data
-```
-
-</Mermaid>
+With `graphql-ws`, the decorators work on subscriptions too:
 
 ```typescript
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { GraphQLModule } from '@nestjs/graphql';
-import { CognitoJwtVerifier } from 'aws-jwt-verify';
-
-@Module({
-  imports: [
-    GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      useFactory: (cognitoVerifier: CognitoJwtVerifier) => ({
-        autoSchemaFile: true,
-        subscriptions: {
-          'graphql-ws': {
-            onConnect: async (context) => {
-              const token = context.connectionParams?.authorization?.replace('Bearer ', '');
-              if (!token) throw new Error('Missing token');
-
-              const payload = await cognitoVerifier.verify(token);
-              return { user: payload };
-            },
-          },
-        },
-      }),
-      inject: [CognitoJwtVerifier],
-    }),
-  ],
+GraphQLModule.forRoot<ApolloDriverConfig>({
+  driver: ApolloDriver,
+  autoSchemaFile: true,
+  subscriptions: { 'graphql-ws': true },
 })
-export class AppModule {}
 ```
-
-Protect subscriptions:
 
 ```typescript
 @Resolver()
 export class NotificationResolver {
-  @Subscription()
+  @Subscription(() => Notification)
   @Authentication()
-  notificationAdded(@CognitoUser() user: CognitoJwtPayload) {
-    return pubSub.asyncIterator(`notifications.${user.sub}`);
+  notificationAdded(@CognitoUser('sub') sub: string) {
+    return pubSub.asyncIterableIterator(`notifications.${sub}`);
   }
 }
 ```
 
-Client side:
+The client sends the token in `connectionParams`:
 
 ```typescript
 import { createClient } from 'graphql-ws';
 
-const wsClient = createClient({
-  url: 'ws://localhost:3000/graphql',
-  connectionParams: {
-    authorization: `Bearer ${accessToken}`,
-  },
+const client = createClient({
+  url: 'wss://api.example.com/graphql',
+  connectionParams: { authorization: `Bearer ${accessToken}` },
 });
 ```
+
+Cookies sent with the WebSocket connection work with `CookieJwtExtractor`.
+
+The token is checked when a subscription starts, not for each event it then pushes.
