@@ -23,5 +23,5 @@ export interface TokenPayload {
   email_verified: boolean;
   token_use: "access" | "id" | "refresh";
   scope?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }

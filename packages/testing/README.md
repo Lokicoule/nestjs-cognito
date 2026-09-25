@@ -79,7 +79,7 @@ describe("Auth Tests", () => {
       })
       .expect(200);
 
-    expect(response.body.token).toBeDefined();
+    expect(response.body.AccessToken).toBeDefined();
   });
 });
 ```
@@ -235,7 +235,7 @@ describe("Authentication (Mock)", () => {
       })
       .expect(200);
 
-    expect(response.body.token).toBeDefined();
+    expect(response.body.AccessToken).toBeDefined();
   });
 
   it("should access protected route with mock token", async () => {
@@ -249,7 +249,7 @@ describe("Authentication (Mock)", () => {
 
     const response = await request(app.getHttpServer())
       .get("/protected-route")
-      .set("Authorization", `Bearer ${loginResponse.body.token}`)
+      .set("Authorization", `Bearer ${loginResponse.body.AccessToken}`)
       .expect(200);
 
     expect(response.body.username).toBe("john.doe");
@@ -322,7 +322,7 @@ describe("Dynamic User Tests", () => {
       })
       .expect(200);
 
-    expect(response.body.token).toBeDefined();
+    expect(response.body.AccessToken).toBeDefined();
   });
 });
 ```
@@ -366,7 +366,7 @@ describe("Real Cognito E2E", () => {
   });
 
   it("should get access token from real Cognito", async () => {
-    const accessToken = await cognitoTestingService.getAccessToken(
+    const { AccessToken } = await cognitoTestingService.getAccessToken(
       {
         username: "test@example.com",
         password: "TestPassword123!",
@@ -374,12 +374,11 @@ describe("Real Cognito E2E", () => {
       "your-client-id"
     );
 
-    expect(accessToken).toBeDefined();
-    expect(typeof accessToken).toBe("string");
+    expect(typeof AccessToken).toBe("string");
   });
 
   it("should access protected route with real token", async () => {
-    const accessToken = await cognitoTestingService.getAccessToken(
+    const { AccessToken } = await cognitoTestingService.getAccessToken(
       {
         username: "test@example.com",
         password: "TestPassword123!",
@@ -389,7 +388,7 @@ describe("Real Cognito E2E", () => {
 
     const response = await request(app.getHttpServer())
       .get("/protected-route")
-      .set("Authorization", `Bearer ${accessToken}`)
+      .set("Authorization", `Bearer ${AccessToken}`)
       .expect(200);
 
     expect(response.body).toBeDefined();
@@ -522,12 +521,12 @@ Service for managing test authentication.
 
 **Methods:**
 
-**`getAccessToken(credentials, clientId): Promise<string>`**
+**`getAccessToken(credentials, clientId): Promise<AuthenticationResultType | undefined>`**
 
-Obtain an access token for testing (works with both real and mock modes).
+Authenticate a user and return Cognito's authentication result, which holds the `AccessToken`, `IdToken` and `RefreshToken`. It works in both real and mock modes; in real mode, a `NEW_PASSWORD_REQUIRED` challenge is completed automatically.
 
 ```typescript
-const accessToken = await cognitoTestingService.getAccessToken(
+const { AccessToken, IdToken } = await cognitoTestingService.getAccessToken(
   {
     username: "test@example.com",
     password: "TestPassword123!",
@@ -536,21 +535,7 @@ const accessToken = await cognitoTestingService.getAccessToken(
 );
 ```
 
-**`getIdToken(credentials, clientId): Promise<string>`**
-
-Obtain an ID token for testing (works with both real and mock modes).
-
-```typescript
-const idToken = await cognitoTestingService.getIdToken(
-  {
-    username: "test@example.com",
-    password: "TestPassword123!",
-  },
-  "your-client-id"
-);
-```
-
-**`setMockConfig(mockOptions): Promise<void>`**
+**`setMockConfig(config: MockConfig): void`**
 
 Update the mock configuration at runtime.
 
@@ -567,17 +552,21 @@ await cognitoTestingService.setMockConfig({
 
 ### CognitoMockService
 
-Low-level service for mock JWT token generation and verification.
+Low-level service behind mock mode: it holds the mock configuration, issues the mock tokens and verifies them.
 
 **Methods:**
 
-**`generateToken(user): string`**
+**`setMockConfig(config: MockConfig): void`** / **`getMockConfig(): MockConfig`**
 
-Generate a mock JWT token for the specified user.
+Set or read the mock configuration (the mocked user, and whether mock mode is enabled).
 
-**`verify(token): Promise<any>`**
+**`getMockTokens(clientId: string): AuthenticationResultType`**
 
-Verify and decode a mock JWT token.
+Issue mock `AccessToken`, `IdToken` and `RefreshToken` for the configured user, in the same shape as Cognito's `InitiateAuth` response.
+
+**`verifyToken(token: string): TokenPayload`**
+
+Verify and decode a mock token. Throws if the token is invalid or expired.
 
 ## Testing Patterns
 
@@ -619,26 +608,6 @@ describe("Role-based Authorization", () => {
       .delete("/admin/users/123")
       .set("Authorization", `Bearer ${token}`)
       .expect(403);
-  });
-});
-```
-
-### Testing Token Expiration
-
-```typescript
-describe("Token Expiration", () => {
-  it("should reject expired tokens", async () => {
-    // Generate token with custom expiration
-    const expiredToken = cognitoMockService.generateToken({
-      username: "test-user",
-      email: "test@example.com",
-      exp: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
-    });
-
-    await request(app.getHttpServer())
-      .get("/protected-route")
-      .set("Authorization", `Bearer ${expiredToken}`)
-      .expect(401);
   });
 });
 ```
