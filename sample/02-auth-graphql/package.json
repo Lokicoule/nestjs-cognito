@@ -15,7 +15,7 @@
     "@apollo/server": "5.5.1",
     "@as-integrations/express5": "1.1.2",
     "@nestjs-cognito/auth": "^2.6.0",
-    "@nestjs-cognito/graphql": "^3.3.0",
+    "@nestjs-cognito/graphql": "^4.0.0",
     "@nestjs/apollo": "14.0.2",
     "@nestjs/common": "12.1.0",
     "@nestjs/core": "12.1.0",
