@@ -1,5 +1,46 @@
 # Changelog:
 
+## 4.0.0
+
+### Major Changes
+
+- 8af38fb: All packages now share one version, starting at 4.0.0.
+
+  **Breaking changes**
+
+  - NestJS 11 or 12 is required. Support for NestJS 8, 9 and 10 is dropped.
+  - Node.js 20.19+ or 22.12+ is required (NestJS 12 needs `require(esm)`).
+  - `CognitoAuthModule` throws at startup when neither `jwtVerifier` nor `jwtRsaVerifier` is configured. Before, the app started and every protected route answered 401.
+  - `@nestjs-cognito/testing` mock tokens match Cognito's: read `email` and custom attributes from the ID token, not the access token. The mock refresh token is opaque.
+
+  **Deprecated**
+
+  - `@nestjs-cognito/graphql`: the `@nestjs-cognito/auth` decorators work on resolvers. The `Gql*` exports still work, as aliases, until 5.0.
+
+  **Migrating from 2.x / 3.x**
+
+  1. Upgrade to NestJS 11 or 12, and to Node.js 20.19+ or 22.12+.
+  2. Install the same version of every `@nestjs-cognito/*` package you use (`^4.0.0`).
+  3. Make sure `CognitoAuthModule.register()` / `registerAsync()` receives a `jwtVerifier` or `jwtRsaVerifier`.
+
+### Minor Changes
+
+- 83711ed: - Type your user pool's custom attributes by augmenting `CognitoCustomClaims`. They are added to `CognitoJwtPayload`, `CognitoIdTokenPayload` and `CognitoAccessTokenPayload`.
+  - `User` exposes `sub` and `payload` (all token claims).
+- 0067991: `CognitoAuthModule` preloads the JWKS at startup, so the first request doesn't wait for the key download. If it fails, a warning is logged and the keys are fetched on the first request. The verifier adapter exposes `hydrate()`.
+- 58b4e4b: Remove `any` from the public types. `CognitoJwtExtractor` takes an optional request type (`CognitoJwtExtractor<Request>`), defaulting to `unknown`. Existing extractors and guards compile unchanged.
+- f6f6e7a: - One global `AuthenticationGuard` (`APP_GUARD`) covers HTTP, GraphQL, socket.io and microservices.
+  - socket.io: `BearerJwtExtractor` also reads `handshake.auth.token`, which browsers can send.
+  - Microservices: the user is stored on the transport context instead of the message data.
+  - `CognitoWsExceptionFilter` and `CognitoRpcExceptionFilter` return authentication errors to the client with the HTTP body, instead of "Internal server error".
+
+### Patch Changes
+
+- 3d70248: - Mock tokens match Cognito's. The access token carries `client_id`, `username` and `scope`. The ID token carries `aud`, `email` and the custom attributes. The refresh token is opaque.
+  - `MockUserConfig` accepts `sub` and `scopes`, and `MockConfig.expiresIn` sets the token lifetime (a negative value issues expired tokens). `CognitoMockService.createClientCredentialsToken()` issues machine-to-machine tokens.
+  - `createJwtVerifierFactory()` rejects expired tokens.
+  - `CognitoModule.register()` provides its instances through factories, so `overrideProvider(...).useFactory(...)` applies to them. It was silently ignored before.
+
 ## 2.5.0
 
 ### Minor Changes

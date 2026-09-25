@@ -1,3 +1,54 @@
+## 4.0.0
+
+### Major Changes
+
+- 8af38fb: All packages now share one version, starting at 4.0.0.
+
+  **Breaking changes**
+
+  - NestJS 11 or 12 is required. Support for NestJS 8, 9 and 10 is dropped.
+  - Node.js 20.19+ or 22.12+ is required (NestJS 12 needs `require(esm)`).
+  - `CognitoAuthModule` throws at startup when neither `jwtVerifier` nor `jwtRsaVerifier` is configured. Before, the app started and every protected route answered 401.
+  - `@nestjs-cognito/testing` mock tokens match Cognito's: read `email` and custom attributes from the ID token, not the access token. The mock refresh token is opaque.
+
+  **Deprecated**
+
+  - `@nestjs-cognito/graphql`: the `@nestjs-cognito/auth` decorators work on resolvers. The `Gql*` exports still work, as aliases, until 5.0.
+
+  **Migrating from 2.x / 3.x**
+
+  1. Upgrade to NestJS 11 or 12, and to Node.js 20.19+ or 22.12+.
+  2. Install the same version of every `@nestjs-cognito/*` package you use (`^4.0.0`).
+  3. Make sure `CognitoAuthModule.register()` / `registerAsync()` receives a `jwtVerifier` or `jwtRsaVerifier`.
+
+### Minor Changes
+
+- 7abdaa6: - `@Authorization` / `@GqlAuthorization` accept `requiredScopes`: the token's `scope` claim must contain all of them (case-sensitive). This covers client credentials (machine-to-machine) tokens. `User` exposes `scopes`.
+  - User access tokens keep their `username`: they were mistaken for client credentials tokens.
+- 83711ed: - Type your user pool's custom attributes by augmenting `CognitoCustomClaims`. They are added to `CognitoJwtPayload`, `CognitoIdTokenPayload` and `CognitoAccessTokenPayload`.
+  - `User` exposes `sub` and `payload` (all token claims).
+- f6f6e7a: - `@nestjs-cognito/auth` handles GraphQL resolvers: `@Authentication`, `@Authorization` and `@CognitoUser` / `@CognitoAccessUser` / `@CognitoIdUser` work on them, including graphql-ws cookies.
+  - `@nestjs-cognito/graphql` is deprecated. Its `Gql*` exports and guards are now aliases of the `@nestjs-cognito/auth` ones, and it no longer requires `@nestjs/graphql`. It will be removed in 5.0.
+- fc1ad75: `@Authentication`, `@Authorization`, `@GqlAuthentication` and `@GqlAuthorization` accept `tokenUse: "access" | "id"`: the other token type is rejected with a 401. A handler-level value overrides the controller.
+- 0067991: `CognitoAuthModule` preloads the JWKS at startup, so the first request doesn't wait for the key download. If it fails, a warning is logged and the keys are fetched on the first request. The verifier adapter exposes `hydrate()`.
+- f6f6e7a: - One global `AuthenticationGuard` (`APP_GUARD`) covers HTTP, GraphQL, socket.io and microservices.
+  - socket.io: `BearerJwtExtractor` also reads `handshake.auth.token`, which browsers can send.
+  - Microservices: the user is stored on the transport context instead of the message data.
+  - `CognitoWsExceptionFilter` and `CognitoRpcExceptionFilter` return authentication errors to the client with the HTTP body, instead of "Internal server error".
+
+### Patch Changes
+
+- c2a2240: `CognitoTokenTypeMismatchError` extends `UnauthorizedException`: a token type mismatch returns 401 instead of 500.
+- 14ecd55: GraphQL subscriptions over graphql-ws read the bearer token from `connectionParams.authorization`, where graphql-ws clients send it. Only connection cookies worked before.
+- 58b4e4b: Remove `any` from the public types. `CognitoJwtExtractor` takes an optional request type (`CognitoJwtExtractor<Request>`), defaulting to `unknown`. Existing extractors and guards compile unchanged.
+- Updated dependencies [83711ed]
+- Updated dependencies [0067991]
+- Updated dependencies [58b4e4b]
+- Updated dependencies [3d70248]
+- Updated dependencies [f6f6e7a]
+- Updated dependencies [8af38fb]
+  - @nestjs-cognito/core@4.0.0
+
 ## 2.6.0
 
 ### Minor Changes
