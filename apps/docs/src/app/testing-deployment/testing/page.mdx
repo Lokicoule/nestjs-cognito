@@ -100,6 +100,18 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
 export class TestModule {}
 ```
 
+### App clients with a secret
+
+If your app client has a secret, pass it as the third argument. A function is read on every login, so a rotated secret applies without restarting:
+
+```typescript
+CognitoTestingModule.register(
+  { identityProvider: { region: process.env.COGNITO_REGION } },
+  undefined,
+  { clientSecret: () => process.env.COGNITO_CLIENT_SECRET },
+)
+```
+
 ## Fast tests with mocks
 
 Skip AWS completely. The mock mode generates fake tokens that pass verification.

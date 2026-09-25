@@ -173,7 +173,7 @@ CognitoAuthModule.register({
 
 ## "CognitoTokenTypeMismatchError"
 
-**Problem:** You're using `@CognitoIdUser()` but sending an access token.
+**Problem:** You're using `@CognitoIdUser()` but sending an access token. The request is rejected with a 401.
 
 **Fix:** Either:
 
@@ -234,16 +234,16 @@ beforeAll(async () => {
 **Debug:**
 
 ```typescript
-export class CustomExtractor implements CognitoJwtExtractor {
-  hasAuthenticationInfo(request: any): boolean {
+export class CustomExtractor implements CognitoJwtExtractor<Request> {
+  hasAuthenticationInfo(request: Request): boolean {
     console.log('Request headers:', request.headers);  // ← Debug
-    return Boolean(request.headers['x-custom-token']);
+    return Boolean(request.header('x-custom-token'));
   }
 
-  getAuthorizationToken(request: any): string | null {
-    const token = request.headers['x-custom-token'];
+  getAuthorizationToken(request: Request): string | null {
+    const token = request.header('x-custom-token');
     console.log('Extracted token:', token);  // ← Debug
-    return token || null;
+    return token ?? null;
   }
 }
 ```
@@ -260,6 +260,12 @@ import type { CognitoJwtPayload } from '@nestjs-cognito/core';
 // Not from @nestjs-cognito/auth
 ```
 
+## "No JWT verifier configured"
+
+**Problem:** The app fails at startup with `No JWT verifier configured: set jwtVerifier or jwtRsaVerifier`.
+
+**Cause:** `CognitoAuthModule` received neither `jwtVerifier` nor `jwtRsaVerifier`. With `registerAsync`, check that the factory returns them.
+
 ## Getting 500 instead of 401
 
 **Problem:** Server crashes instead of returning 401.
@@ -268,7 +274,7 @@ import type { CognitoJwtPayload } from '@nestjs-cognito/core';
 
 **Fix:** Check logs. Usually:
 
-1. Missing configuration (User Pool ID, Client ID)
+1. Invalid configuration values (User Pool ID, Client ID)
 2. Network error fetching JWKS keys
 3. Malformed configuration
 

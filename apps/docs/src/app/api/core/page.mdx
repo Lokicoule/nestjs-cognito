@@ -47,7 +47,7 @@ Verifies JWT tokens using RSA public keys from JWKS endpoints.
 
 ```typescript
 interface JwtRsaVerifier {
-  verify(token: string): Promise<any>;
+  verify(token: string): Promise<JwtPayload>;
 }
 ```
 
@@ -58,9 +58,9 @@ interface JwtRsaVerifier {
 Interface for extracting JWT tokens from HTTP requests.
 
 ```typescript
-interface CognitoJwtExtractor {
-  hasAuthenticationInfo(request: any): boolean;
-  getAuthorizationToken(request: any): string | null;
+interface CognitoJwtExtractor<TRequest = unknown> {
+  hasAuthenticationInfo(request: TRequest): boolean;
+  getAuthorizationToken(request: TRequest): string | null;
 }
 ```
 
@@ -94,7 +94,7 @@ interface CognitoModuleOptions {
   jwtVerifier?: CognitoJwtVerifierOptions | CognitoJwtVerifierOptions[];
   jwtRsaVerifier?: JwtRsaVerifierOptions | JwtRsaVerifierOptions[];
   jwtExtractor?: CognitoJwtExtractor;
-  identityProvider?: CognitoIdentityProviderOptions;
+  identityProvider?: CognitoIdentityProviderClientConfig; // AWS SDK client config
 }
 ```
 
@@ -117,17 +117,13 @@ interface JwtRsaVerifierOptions {
 }
 ```
 
-### CognitoIdentityProviderOptions
-
-```typescript
-interface CognitoIdentityProviderOptions {
-  region: string;
-}
-```
+`identityProvider` is passed as is to the AWS SDK `CognitoIdentityProvider` client (`region`, `credentials`, ...).
 
 ## TypeScript Types
 
 ### Token Payloads
+
+Based on the `aws-jwt-verify` types.
 
 ```typescript
 interface CognitoJwtPayload {
@@ -137,7 +133,7 @@ interface CognitoJwtPayload {
   exp: number;
   iat: number;
   token_use?: 'access' | 'id';
-  [key: string]: any;
+  [claim: string]: Json; // any other claim
 }
 ```
 
@@ -147,7 +143,7 @@ interface CognitoIdTokenPayload extends CognitoJwtPayload {
   email_verified?: boolean;
   'cognito:username': string;
   'cognito:groups'?: string[];
-  [key: string]: any;
+  [claim: string]: Json;
 }
 ```
 
@@ -156,7 +152,7 @@ interface CognitoAccessTokenPayload extends CognitoJwtPayload {
   scope: string;
   client_id: string;
   username?: string;
-  [key: string]: any;
+  [claim: string]: Json;
 }
 ```
 

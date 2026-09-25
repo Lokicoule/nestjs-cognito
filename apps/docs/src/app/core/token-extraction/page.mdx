@@ -48,17 +48,20 @@ fetch('/api/protected', {
 
 ```typescript
 import { CognitoJwtExtractor } from '@nestjs-cognito/core';
+import type { Request } from 'express';
 
-export class CustomHeaderExtractor implements CognitoJwtExtractor {
-  hasAuthenticationInfo(request: any): boolean {
-    return Boolean(request.headers['x-api-key']);
+export class CustomHeaderExtractor implements CognitoJwtExtractor<Request> {
+  hasAuthenticationInfo(request: Request): boolean {
+    return Boolean(request.header('x-api-key'));
   }
 
-  getAuthorizationToken(request: any): string | null {
-    return request.headers['x-api-key'] || null;
+  getAuthorizationToken(request: Request): string | null {
+    return request.header('x-api-key') ?? null;
   }
 }
 ```
+
+The type argument sets the request type your extractor receives. It is optional and defaults to `unknown`.
 
 Register it:
 
@@ -93,13 +96,14 @@ fetch('/api/protected', {
 Useful for WebSockets where you can't set headers easily:
 
 ```typescript
-export class QueryParamExtractor implements CognitoJwtExtractor {
-  hasAuthenticationInfo(request: any): boolean {
-    return Boolean(request.query?.token);
+export class QueryParamExtractor implements CognitoJwtExtractor<Request> {
+  hasAuthenticationInfo(request: Request): boolean {
+    return typeof request.query.token === 'string';
   }
 
-  getAuthorizationToken(request: any): string | null {
-    return request.query?.token || null;
+  getAuthorizationToken(request: Request): string | null {
+    const { token } = request.query;
+    return typeof token === 'string' ? token : null;
   }
 }
 ```
@@ -115,19 +119,19 @@ GET /api/stream?token=<your-jwt-token>
 ## Try multiple sources
 
 ```typescript
-export class MultiSourceExtractor implements CognitoJwtExtractor {
-  private extractors = [
+export class MultiSourceExtractor implements CognitoJwtExtractor<Request> {
+  private extractors: CognitoJwtExtractor<Request>[] = [
     new BearerJwtExtractor(),
     new CookieJwtExtractor('access_token'),
   ];
 
-  hasAuthenticationInfo(request: any): boolean {
+  hasAuthenticationInfo(request: Request): boolean {
     return this.extractors.some(extractor =>
       extractor.hasAuthenticationInfo(request)
     );
   }
 
-  getAuthorizationToken(request: any): string | null {
+  getAuthorizationToken(request: Request): string | null {
     for (const extractor of this.extractors) {
       if (extractor.hasAuthenticationInfo(request)) {
         return extractor.getAuthorizationToken(request);

@@ -59,13 +59,13 @@ export class AdminResolver {
 ## Public Routes
 
 ```typescript
-import { GqlPublicRoute } from '@nestjs-cognito/graphql';
+import { PublicRoute } from '@nestjs-cognito/auth';
 
 @Resolver()
 @GqlAuthentication()
 export class ProductResolver {
   @Query()
-  @GqlPublicRoute()
+  @PublicRoute()
   async products() {
     return [{ id: 1, name: 'Product 1' }];
   }
