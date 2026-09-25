@@ -14,6 +14,11 @@
       "description": "ts-jest 29.4.13 writes file: URLs into coverage source paths, which breaks lcov/Coveralls",
       "matchPackageNames": ["ts-jest"],
       "allowedVersions": "!/^29\\.4\\.13$/"
+    },
+    {
+      "description": "@apollo/server 5 only supports graphql 16",
+      "matchPackageNames": ["graphql"],
+      "allowedVersions": "<17"
     }
   ]
 }
