@@ -387,7 +387,7 @@ export class ProfileController {
 
 ### @CognitoAccessUser - Access Token Decorator
 
-The `@CognitoAccessUser()` decorator validates that the token is an access token and provides access to access token-specific properties like `scope` and `client_id`. It throws `CognitoTokenTypeMismatchError` if an ID token is provided.
+The `@CognitoAccessUser()` decorator validates that the token is an access token and provides access to access token-specific properties like `scope` and `client_id`. It throws `CognitoTokenTypeMismatchError` (an `UnauthorizedException`, answered with HTTP 401) if an ID token is provided.
 
 **When to use:** When you need access token properties or want to enforce that only access tokens are accepted.
 
@@ -412,7 +412,7 @@ export class ApiController {
 
 ### @CognitoIdUser - ID Token Decorator
 
-The `@CognitoIdUser()` decorator validates that the token is an ID token and provides access to ID token-specific properties like `email`, `cognito:groups`, and custom attributes. It throws `CognitoTokenTypeMismatchError` if an access token is provided.
+The `@CognitoIdUser()` decorator validates that the token is an ID token and provides access to ID token-specific properties like `email`, `cognito:groups`, and custom attributes. It throws `CognitoTokenTypeMismatchError` (an `UnauthorizedException`, answered with HTTP 401) if an access token is provided.
 
 **When to use:** When you need ID token properties like email, groups, or custom attributes, or want to enforce that only ID tokens are accepted.
 
