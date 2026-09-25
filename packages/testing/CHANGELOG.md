@@ -1,5 +1,48 @@
 # Change Log
 
+## 4.0.0
+
+### Major Changes
+
+- 8af38fb: All packages now share one version, starting at 4.0.0.
+
+  **Breaking changes**
+
+  - NestJS 11 or 12 is required. Support for NestJS 8, 9 and 10 is dropped.
+  - Node.js 20.19+ or 22.12+ is required (NestJS 12 needs `require(esm)`).
+  - `CognitoAuthModule` throws at startup when neither `jwtVerifier` nor `jwtRsaVerifier` is configured. Before, the app started and every protected route answered 401.
+  - `@nestjs-cognito/testing` mock tokens match Cognito's: read `email` and custom attributes from the ID token, not the access token. The mock refresh token is opaque.
+
+  **Deprecated**
+
+  - `@nestjs-cognito/graphql`: the `@nestjs-cognito/auth` decorators work on resolvers. The `Gql*` exports still work, as aliases, until 5.0.
+
+  **Migrating from 2.x / 3.x**
+
+  1. Upgrade to NestJS 11 or 12, and to Node.js 20.19+ or 22.12+.
+  2. Install the same version of every `@nestjs-cognito/*` package you use (`^4.0.0`).
+  3. Make sure `CognitoAuthModule.register()` / `registerAsync()` receives a `jwtVerifier` or `jwtRsaVerifier`.
+
+### Minor Changes
+
+- ee18a16: Support app clients with a secret: `CognitoTestingModule.register(config, mockConfig, { clientSecret })` sends the `SECRET_HASH` Cognito requires. `clientSecret` can be a function, read on every call, so rotated secrets apply without a restart.
+- 3d70248: - Mock tokens match Cognito's. The access token carries `client_id`, `username` and `scope`. The ID token carries `aud`, `email` and the custom attributes. The refresh token is opaque.
+  - `MockUserConfig` accepts `sub` and `scopes`, and `MockConfig.expiresIn` sets the token lifetime (a negative value issues expired tokens). `CognitoMockService.createClientCredentialsToken()` issues machine-to-machine tokens.
+  - `createJwtVerifierFactory()` rejects expired tokens.
+  - `CognitoModule.register()` provides its instances through factories, so `overrideProvider(...).useFactory(...)` applies to them. It was silently ignored before.
+
+### Patch Changes
+
+- 58b4e4b: Remove `any` from the public types. `CognitoJwtExtractor` takes an optional request type (`CognitoJwtExtractor<Request>`), defaulting to `unknown`. Existing extractors and guards compile unchanged.
+- c2a2240: Export `CognitoTestingService`, `CognitoMockService` and the `MockConfig`, `MockUserConfig` and `TokenPayload` types used in the README, and fix the README examples that did not match the API.
+- Updated dependencies [83711ed]
+- Updated dependencies [0067991]
+- Updated dependencies [58b4e4b]
+- Updated dependencies [3d70248]
+- Updated dependencies [f6f6e7a]
+- Updated dependencies [8af38fb]
+  - @nestjs-cognito/core@4.0.0
+
 ## 2.3.0
 
 ### Minor Changes
