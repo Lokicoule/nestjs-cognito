@@ -20,7 +20,8 @@ export class UserMapper {
 
     const builder = new UserBuilder()
       .setEmail(payload["email"]?.toString() ?? null)
-      .setGroups(this.extractGroups(payload));
+      .setGroups(this.extractGroups(payload))
+      .setScopes(payload["scope"]?.toString().split(" ").filter(Boolean) ?? []);
     if (username) builder.setUsername(username.toString());
     if (clientId) builder.setClientId(clientId);
 

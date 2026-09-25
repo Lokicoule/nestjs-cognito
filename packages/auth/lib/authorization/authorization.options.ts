@@ -15,4 +15,9 @@ export type AuthorizationOptions =
        * The required groups
        */
       requiredGroups?: string[];
+
+      /**
+       * The required OAuth scopes (case-sensitive), e.g. for client credentials tokens
+       */
+      requiredScopes?: string[];
     };

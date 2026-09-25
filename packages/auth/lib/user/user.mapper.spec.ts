@@ -75,6 +75,7 @@ describe("UserMapper", () => {
       expect(user.clientId).toEqual("client123");
       expect(user.email).toBeUndefined();
       expect(user.groups).toEqual(["admin"]);
+      expect(user.scopes).toEqual(["api/read", "api/write"]);
     });
 
     it("keeps the username of a user access token", () => {
