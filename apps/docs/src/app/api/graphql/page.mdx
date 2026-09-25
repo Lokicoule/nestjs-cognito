@@ -26,8 +26,8 @@ Apply JWT authentication to GraphQL resolvers or operations.
 export class UserResolver {}
 ```
 
-#### `@GqlAuthorization(groups: string[])`
-Require specific Cognito groups for GraphQL operations.
+#### `@GqlAuthorization(options: string[] | AuthorizationOptions)`
+Require Cognito groups or OAuth scopes for GraphQL operations. `AuthorizationOptions`: `allowedGroups`, `requiredGroups`, `prohibitedGroups`, `requiredScopes`.
 
 ```typescript
 @Mutation()
@@ -35,12 +35,12 @@ Require specific Cognito groups for GraphQL operations.
 async adminMutation() {}
 ```
 
-#### `@GqlPublicRoute()`
-Bypass authentication for specific GraphQL operations.
+#### `@PublicRoute()`
+Bypass authentication for specific GraphQL operations. Import it from `@nestjs-cognito/auth`; there is no GraphQL-specific variant.
 
 ```typescript
 @Query()
-@GqlPublicRoute()
+@PublicRoute()
 async publicQuery() {}
 ```
 
@@ -74,8 +74,8 @@ async permissions(@GqlCognitoAccessUser() token: CognitoAccessTokenPayload) {}
 
 **Decorators:**
 - `@GqlAuthentication()`
-- `@GqlAuthorization(groups: string[])`
-- `@GqlPublicRoute()`
+- `@GqlAuthorization(options: string[] | AuthorizationOptions)`
+- `@PublicRoute()` (from `@nestjs-cognito/auth`)
 - `@GqlCognitoUser(property?: string)`
 - `@GqlCognitoIdUser(property?: string)`
 - `@GqlCognitoAccessUser(property?: string)`

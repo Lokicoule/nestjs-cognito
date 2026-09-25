@@ -107,3 +107,20 @@ import { CognitoModule } from '@nestjs-cognito/core';
 export class AppModule {}
 ```
 
+### Temporary credentials
+
+`credentials` also accepts a credential provider. The AWS SDK caches its result and calls it again when the credentials expire, so they are renewed without restarting the app:
+
+```typescript
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
+
+CognitoModule.register({
+  identityProvider: {
+    region: process.env.AWS_REGION,
+    credentials: fromTemporaryCredentials({
+      params: { RoleArn: process.env.COGNITO_ADMIN_ROLE_ARN },
+    }),
+  },
+});
+```
+

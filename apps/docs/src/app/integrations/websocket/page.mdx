@@ -97,7 +97,7 @@ import type { CognitoJwtPayload } from '@nestjs-cognito/core';
 export class MessagesGateway {
   @SubscribeMessage('adminAction')
   handleAdminAction(
-    @MessageBody() data: any,
+    @MessageBody() data: unknown,
     @ConnectedSocket() client: Socket,
   ) {
     const user: CognitoJwtPayload = client.data.user;

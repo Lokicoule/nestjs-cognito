@@ -35,8 +35,8 @@ Apply JWT authentication to controllers or routes.
 export class UsersController {}
 ```
 
-#### `@Authorization(groups: string[])`
-Require specific Cognito groups.
+#### `@Authorization(options: string[] | AuthorizationOptions)`
+Require Cognito groups or OAuth scopes. `AuthorizationOptions`: `allowedGroups`, `requiredGroups`, `prohibitedGroups`, `requiredScopes`.
 
 ```typescript
 @Authorization(['admin', 'manager'])
@@ -107,7 +107,7 @@ interface CognitoJwtVerifierOptions {
 
 **Decorators:**
 - `@Authentication()`
-- `@Authorization(groups: string[])`
+- `@Authorization(options: string[] | AuthorizationOptions)`
 - `@PublicRoute()`
 - `@CognitoUser(property?: string)`
 - `@CognitoIdUser(property?: string)`

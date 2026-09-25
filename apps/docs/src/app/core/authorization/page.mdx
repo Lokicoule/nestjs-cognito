@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Authorization - NestJS Cognito',
-  description: 'Restrict routes based on Cognito user groups.',
+  description: 'Restrict routes based on Cognito user groups or OAuth scopes.',
 }
 
 # Authorization
@@ -53,6 +53,18 @@ export class ProjectController {
 }
 ```
 
+## Require OAuth scopes
+
+Machine-to-machine clients (client credentials flow) have no user and no groups. Their access token carries OAuth scopes instead:
+
+```typescript
+@Controller('orders')
+@Authorization({ requiredScopes: ['orders/read'] })
+export class OrdersController {}
+```
+
+The token's `scope` claim must contain every listed scope. Scopes are case-sensitive, unlike groups.
+
 ## Using the guard directly
 
 If you prefer guards over decorators:
@@ -83,6 +95,8 @@ export class CatsController {
 **allowedGroups**: User must belong to AT LEAST ONE of these groups.
 
 **prohibitedGroups**: User must NOT belong to ANY of these groups.
+
+**requiredScopes**: The token must carry ALL of these scopes.
 
 When you combine them, all conditions must pass:
 
