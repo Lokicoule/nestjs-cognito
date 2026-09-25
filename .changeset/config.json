@@ -7,7 +7,11 @@
         }
     ],
     "commit": false,
-    "fixed": [],
+    "fixed": [
+        [
+            "@nestjs-cognito/*"
+        ]
+    ],
     "linked": [],
     "access": "public",
     "baseBranch": "main",
