@@ -7,13 +7,13 @@
       "automerge": true
     },
     {
-      "matchPaths": ["apps/docs/**"],
-      "enabled": false
+      "description": "Majors can break consumers or CI: review them by hand",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     },
     {
-      "description": "ts-jest 29.4.13 writes file: URLs into coverage source paths, which breaks lcov/Coveralls",
-      "matchPackageNames": ["ts-jest"],
-      "allowedVersions": "!/^29\\.4\\.13$/"
+      "matchPaths": ["apps/docs/**"],
+      "enabled": false
     },
     {
       "description": "@apollo/server 5 only supports graphql 16",
