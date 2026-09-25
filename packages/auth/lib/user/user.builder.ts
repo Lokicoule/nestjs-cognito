@@ -85,7 +85,7 @@ export class UserBuilder {
     return this;
   }
 
-  public get payload() {
+  public get payload(): CognitoJwtPayload | undefined {
     return this._payload;
   }
 

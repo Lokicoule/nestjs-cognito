@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "node20",
+    "target": "es2022",
+    "strict": true,
+    "skipLibCheck": false,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@nestjs-cognito/auth": [
+        "../auth/dist/index.d.ts"
+      ],
+      "@nestjs-cognito/core": [
+        "../core/dist/index.d.ts"
+      ],
+      "@nestjs-cognito/graphql": [
+        "../graphql/dist/index.d.ts"
+      ],
+      "@nestjs-cognito/testing": [
+        "../testing/dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "index.ts"
+  ]
+}

@@ -39,6 +39,9 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Check published types (strict consumer)
+        run: pnpm run check:types
+
       - name: Tests coverage
         run: pnpm run coverage
 
