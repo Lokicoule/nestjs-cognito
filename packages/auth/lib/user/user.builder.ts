@@ -5,6 +5,7 @@ export class UserBuilder {
   private _clientId?: string;
   private _email: string | null;
   private _groups: string[];
+  private _scopes: string[];
 
   /**
    * Get the username of the user
@@ -70,6 +71,15 @@ export class UserBuilder {
    */
   public setGroups(groups: string[]) {
     this._groups = groups?.map((group) => group?.toLowerCase());
+    return this;
+  }
+
+  public get scopes() {
+    return this._scopes;
+  }
+
+  public setScopes(scopes: string[]) {
+    this._scopes = scopes;
     return this;
   }
 

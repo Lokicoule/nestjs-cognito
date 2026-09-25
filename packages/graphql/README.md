@@ -189,11 +189,12 @@ Implement role-based access control (RBAC) for your GraphQL API using Cognito us
 
 ### @GqlAuthorization Decorator
 
-The `@GqlAuthorization()` decorator enforces group-based access control with three types of rules:
+The `@GqlAuthorization()` decorator enforces access control with these rules:
 
 - **`allowedGroups`** - User must belong to at least one of these groups
 - **`requiredGroups`** - User must belong to all of these groups
 - **`prohibitedGroups`** - User must not belong to any of these groups
+- **`requiredScopes`** - The token's `scope` claim must contain all of these scopes (case-sensitive). Use it for client credentials (machine-to-machine) tokens.
 
 **Resolver-level authorization:**
 

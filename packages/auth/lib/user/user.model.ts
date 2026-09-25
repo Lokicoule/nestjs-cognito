@@ -5,12 +5,14 @@ export class User {
   private _clientId?: string;
   private _email: string;
   private _groups: string[];
+  private _scopes: string[];
 
   constructor(builder: UserBuilder) {
     this._username = builder.username;
     this._clientId = builder.clientId;
     this._email = builder.email;
     this._groups = builder.groups ?? [];
+    this._scopes = builder.scopes ?? [];
   }
 
   /**
@@ -50,6 +52,14 @@ export class User {
    * @param {string} group - The group
    * @returns {boolean} - True if the user has the group
    */
+  public get scopes(): string[] {
+    return this._scopes;
+  }
+
+  public hasAllScopes(scopes: string[]): boolean {
+    return scopes.every((scope) => this._scopes.includes(scope));
+  }
+
   public hasGroup(group: string): boolean {
     return this._groups.includes(group.toLowerCase());
   }

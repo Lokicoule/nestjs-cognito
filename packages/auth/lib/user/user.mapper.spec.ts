@@ -75,6 +75,18 @@ describe("UserMapper", () => {
       expect(user.clientId).toEqual("client123");
       expect(user.email).toBeUndefined();
       expect(user.groups).toEqual(["admin"]);
+      expect(user.scopes).toEqual(["api/read", "api/write"]);
+    });
+
+    it("keeps the username of a user access token", () => {
+      const user = UserMapper.fromCognitoJwtPayload({
+        username: "john",
+        client_id: "client123",
+        token_use: "access",
+        scope: "aws.cognito.signin.user.admin",
+      } as unknown as CognitoJwtPayload);
+      expect(user.username).toEqual("john");
+      expect(user.clientId).toEqual("client123");
     });
   });
 });

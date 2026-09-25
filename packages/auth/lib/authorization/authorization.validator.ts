@@ -4,6 +4,7 @@ import { AuthorizationOptions } from "./authorization.options";
 import { AllowedGroupsValidator } from "./validators/allowed-groups.validator";
 import { ProhibitedGroupsValidator } from "./validators/prohibited-groups.validator";
 import { RequiredGroupsValidator } from "./validators/required-groups.validator";
+import { RequiredScopesValidator } from "./validators/required-scopes.validator";
 
 const DEFAULT_AUTHORIZATION_VALIDATION = "DEFAULT_AUTHORIZATION_VALIDATION";
 const STRICT_AUTHORIZATION_VALIDATION = "STRICT_AUTHORIZATION_VALIDATION";
@@ -12,10 +13,12 @@ export const AuthorizationValidator = {
   DEFAULT_AUTHORIZATION_VALIDATION: ValidatorChainBuilder.create()
     .with(new AllowedGroupsValidator())
     .with(new ProhibitedGroupsValidator())
+    .with(new RequiredScopesValidator())
     .build(),
   STRICT_AUTHORIZATION_VALIDATION: ValidatorChainBuilder.create()
     .with(new ProhibitedGroupsValidator())
     .with(new RequiredGroupsValidator())
+    .with(new RequiredScopesValidator())
     .build(),
 
   /**

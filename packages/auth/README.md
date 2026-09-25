@@ -231,11 +231,12 @@ Implement role-based access control (RBAC) using Cognito user groups. Authorizat
 
 ### @Authorization Decorator
 
-The `@Authorization()` decorator enforces group-based access control with three types of rules:
+The `@Authorization()` decorator enforces access control with these rules:
 
 - **`allowedGroups`** - User must belong to at least one of these groups
 - **`requiredGroups`** - User must belong to all of these groups
 - **`prohibitedGroups`** - User must not belong to any of these groups
+- **`requiredScopes`** - The token's `scope` claim must contain all of these scopes (case-sensitive). Use it for client credentials (machine-to-machine) tokens.
 
 **Controller-level authorization:**
 
@@ -256,6 +257,14 @@ export class AdminController {
     return "Admin dashboard";
   }
 }
+```
+
+**Machine-to-machine (client credentials) tokens:**
+
+```typescript
+@Controller("orders")
+@Authorization({ requiredScopes: ["orders/read"] })
+export class OrdersController {}
 ```
 
 **Simplified syntax for allowed groups:**
