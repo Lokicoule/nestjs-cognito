@@ -1,113 +1,106 @@
 export const metadata = {
   title: 'WebSocket - NestJS Cognito',
-  description: 'Authenticate WebSocket connections with Cognito tokens.'
+  description: 'Authenticate socket.io gateways with Cognito tokens.'
 }
 
 # WebSocket
 
-WebSockets don't have a traditional request/response cycle. You verify the token when the client connects, then store the user data on the socket.
+`@Authentication()` and `@Authorization()` work on socket.io gateways. The token is verified on every message, so a token that expires during a long-lived connection is rejected from the next message on.
 
-## Verify on connection
+## Protect messages
 
 ```typescript
-import { WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import { CognitoJwtVerifier, InjectCognitoJwtVerifier } from '@nestjs-cognito/core';
+import {
+  Authentication,
+  Authorization,
+  CognitoUser,
+  CognitoWsExceptionFilter,
+} from '@nestjs-cognito/auth';
+import { UseFilters } from '@nestjs/common';
+import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 
 @WebSocketGateway()
-export class MessagesGateway implements OnGatewayConnection {
-  constructor(
-    @InjectCognitoJwtVerifier()
-    private readonly jwtVerifier: CognitoJwtVerifier
-  ) {}
+@UseFilters(CognitoWsExceptionFilter)
+export class MessagesGateway {
+  @SubscribeMessage('messages')
+  @Authentication()
+  findAll(@CognitoUser('username') username: string) {
+    return { username };
+  }
 
-  async handleConnection(client: Socket) {
-    try {
-      const token = client.handshake.headers.authorization?.replace('Bearer ', '');
-      if (!token) {
-        client.disconnect();
-        return;
-      }
-
-      const payload = await this.jwtVerifier.verify(token);
-      client.data.user = payload;
-    } catch (error) {
-      client.disconnect();
-    }
+  @SubscribeMessage('moderate')
+  @Authorization(['moderator'])
+  moderate() {
+    return { ok: true };
   }
 }
 ```
 
-Client:
+`CognitoWsExceptionFilter` sends authentication errors to the client as an `exception` event, with the same body as an HTTP response: `{ statusCode: 401, message, error }`. Without it, Nest reports them as `Internal server error`.
+
+## Send the token
+
+Browsers can't set headers on a WebSocket connection. Pass the token in `auth`:
 
 ```typescript
-import { io } from 'socket.io-client';
+const socket = io('https://api.example.com', { auth: { token: accessToken } });
+```
 
-const socket = io('http://localhost:3000', {
-  extraHeaders: { authorization: `Bearer ${token}` }
-});
+Node.js clients can also send `extraHeaders: { authorization: 'Bearer <token>' }`.
+
+## Reject connections without a valid token
+
+The guard protects each message. To close a connection as soon as it opens, add a socket.io middleware that reuses the module's verifier and extractor:
+
+```typescript
+import {
+  CognitoJwtExtractor,
+  CognitoJwtVerifier,
+  InjectCognitoJwtExtractor,
+  InjectCognitoJwtVerifier,
+} from '@nestjs-cognito/core';
+import { OnGatewayInit, WebSocketGateway } from '@nestjs/websockets';
+import { Server } from 'socket.io';
+
+@WebSocketGateway()
+export class MessagesGateway implements OnGatewayInit {
+  constructor(
+    @InjectCognitoJwtVerifier() private readonly verifier: CognitoJwtVerifier,
+    @InjectCognitoJwtExtractor() private readonly extractor: CognitoJwtExtractor,
+  ) {}
+
+  afterInit(server: Server) {
+    server.use(async (socket, next) => {
+      try {
+        await this.verifier.verify(this.extractor.getAuthorizationToken(socket) ?? '');
+        next();
+      } catch {
+        next(new Error('Unauthorized'));
+      }
+    });
+  }
+}
 ```
 
 ## From cookies
 
+Sockets have no parsed cookies. Read them from the handshake with a custom extractor:
+
 ```typescript
-import { parse } from 'cookie';
+import { CognitoJwtExtractor, parseCookies } from '@nestjs-cognito/core';
+import { Socket } from 'socket.io';
 
-@WebSocketGateway({ cors: { origin: 'http://localhost:3000', credentials: true } })
-export class MessagesGateway implements OnGatewayConnection {
-  constructor(
-    @InjectCognitoJwtVerifier()
-    private readonly jwtVerifier: CognitoJwtVerifier
-  ) {}
+export class SocketCookieExtractor implements CognitoJwtExtractor<Socket> {
+  hasAuthenticationInfo(socket: Socket): boolean {
+    return Boolean(this.getAuthorizationToken(socket));
+  }
 
-  async handleConnection(client: Socket) {
-    try {
-      const cookies = parse(client.handshake.headers.cookie || '');
-      const token = cookies['access_token'];
-
-      if (!token) {
-        client.disconnect();
-        return;
-      }
-
-      const payload = await this.jwtVerifier.verify(token);
-      client.data.user = payload;
-    } catch (error) {
-      client.disconnect();
-    }
+  getAuthorizationToken(socket: Socket): string | null {
+    return parseCookies(socket.handshake.headers.cookie)['access_token'] ?? null;
   }
 }
 ```
 
-Client:
+## Plain `ws`
 
-```typescript
-const socket = io('http://localhost:3000', {
-  withCredentials: true
-});
-```
-
-## Check groups in handlers
-
-```typescript
-import { SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
-import type { CognitoJwtPayload } from '@nestjs-cognito/core';
-
-@WebSocketGateway()
-export class MessagesGateway {
-  @SubscribeMessage('adminAction')
-  handleAdminAction(
-    @MessageBody() data: unknown,
-    @ConnectedSocket() client: Socket,
-  ) {
-    const user: CognitoJwtPayload = client.data.user;
-    const groups = user['cognito:groups'] || [];
-
-    if (!groups.includes('admin')) {
-      throw new UnauthorizedException('Admin access required');
-    }
-
-    return { success: true };
-  }
-}
-```
+The `ws` adapter (`@nestjs/platform-ws`) is not supported: its clients carry no headers after the connection is established. Use socket.io.

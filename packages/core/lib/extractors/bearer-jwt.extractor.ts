@@ -3,7 +3,7 @@ import type { CognitoJwtExtractor } from "../interfaces/cognito-jwt-extractor.in
 
 type HeadersRequest = {
   headers?: IncomingHttpHeaders;
-  handshake?: { headers?: IncomingHttpHeaders };
+  handshake?: { headers?: IncomingHttpHeaders; auth?: { token?: unknown } };
 };
 
 /**
@@ -20,7 +20,7 @@ export class BearerJwtExtractor implements CognitoJwtExtractor<HeadersRequest> {
     const headers = request?.headers || request?.handshake?.headers;
     const authorization = headers?.authorization;
 
-    return Boolean(authorization && authorization.trim());
+    return Boolean(authorization?.trim() || socketAuthToken(request));
   }
 
   /**
@@ -34,9 +34,15 @@ export class BearerJwtExtractor implements CognitoJwtExtractor<HeadersRequest> {
       request?.handshake?.headers?.authorization;
 
     if (!authorization) {
-      return null;
+      return socketAuthToken(request);
     }
 
     return authorization.replace("Bearer ", "");
   }
+}
+
+// socket.io clients in browsers can't set headers: io(url, { auth: { token } })
+function socketAuthToken(request: HeadersRequest): string | null {
+  const token = request?.handshake?.auth?.token;
+  return typeof token === "string" ? token : null;
 }

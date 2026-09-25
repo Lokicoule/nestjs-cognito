@@ -105,3 +105,40 @@ export class UsersController {
   }
 }
 ```
+
+## Protect every route
+
+Register the guard globally, then open specific routes with `@PublicRoute()`. The same global guard also covers GraphQL, WebSocket and microservice handlers:
+
+```ts
+import { AuthenticationGuard } from '@nestjs-cognito/auth';
+import { APP_GUARD } from '@nestjs/core';
+
+@Module({
+  providers: [{ provide: APP_GUARD, useClass: AuthenticationGuard }],
+})
+export class AppModule {}
+```
+
+## Other transports
+
+**Fastify:** works as is. Cookies need `@fastify/cookie`: `await app.register(fastifyCookie)`.
+
+**WebSocket:** see [WebSocket](/integrations/websocket).
+
+**Microservices:** the token is read from `data.headers.authorization`, and the user is stored on the transport context, so the message itself is not modified. Add `CognitoRpcExceptionFilter` to return authentication errors to the client:
+
+```ts
+@Controller()
+@UseFilters(CognitoRpcExceptionFilter)
+export class OrdersController {
+  @MessagePattern('orders.list')
+  @Authentication()
+  list(@CognitoUser('username') username: string) {}
+}
+
+// Client
+client.send('orders.list', { headers: { authorization: `Bearer ${token}` } });
+```
+
+For tokens in transport headers (Kafka, NATS...), pass a custom `jwtExtractor`.

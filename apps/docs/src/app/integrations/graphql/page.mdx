@@ -5,33 +5,23 @@ export const metadata = {
 
 # GraphQL
 
-GraphQL uses resolvers instead of controllers. The decorators are slightly different, but the concept is the same.
+The `@nestjs-cognito/auth` decorators work on resolvers: `@Authentication()`, `@Authorization()`, `@PublicRoute()` and `@CognitoUser()`. A global `AuthenticationGuard` also covers GraphQL operations.
 
-## Installation
-
-<CodeGroup>
-```sh {{ title: 'pnpm' }}
-pnpm add @nestjs-cognito/graphql
-```
-```sh {{ title: 'npm' }}
-npm i @nestjs-cognito/graphql
-```
-```sh {{ title: 'yarn' }}
-yarn add @nestjs-cognito/graphql
-```
-</CodeGroup>
+<Note>
+`@nestjs-cognito/graphql` and its `Gql*` decorators are deprecated since 4.0. They are aliases of the `@nestjs-cognito/auth` decorators and will be removed in 5.0.
+</Note>
 
 ## Authentication
 
 ```typescript
-import { GqlAuthentication, GqlCognitoUser } from '@nestjs-cognito/graphql';
+import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
 import type { CognitoJwtPayload } from '@nestjs-cognito/core';
 
 @Resolver()
 export class UserResolver {
   @Query()
-  @GqlAuthentication()
-  async me(@GqlCognitoUser() user: CognitoJwtPayload) {
+  @Authentication()
+  async me(@CognitoUser() user: CognitoJwtPayload) {
     return {
       id: user.sub,
       username: user.username,
@@ -44,12 +34,12 @@ export class UserResolver {
 ## Authorization
 
 ```typescript
-import { GqlAuthorization } from '@nestjs-cognito/graphql';
+import { Authorization } from '@nestjs-cognito/auth';
 
 @Resolver()
 export class AdminResolver {
   @Mutation()
-  @GqlAuthorization(['admin'])
+  @Authorization(['admin'])
   async adminOperation() {
     return { success: true };
   }
@@ -59,10 +49,10 @@ export class AdminResolver {
 ## Public Routes
 
 ```typescript
-import { PublicRoute } from '@nestjs-cognito/auth';
+import { Authentication, PublicRoute } from '@nestjs-cognito/auth';
 
 @Resolver()
-@GqlAuthentication()
+@Authentication()
 export class ProductResolver {
   @Query()
   @PublicRoute()
@@ -75,14 +65,14 @@ export class ProductResolver {
 ## Access and ID tokens
 
 ```typescript
-import { GqlCognitoIdUser, GqlCognitoAccessUser } from '@nestjs-cognito/graphql';
+import { Authentication, CognitoAccessUser, CognitoIdUser } from '@nestjs-cognito/auth';
 import type { CognitoIdTokenPayload, CognitoAccessTokenPayload } from '@nestjs-cognito/core';
 
 @Resolver()
 export class UserResolver {
   @Query()
-  @GqlAuthentication()
-  async profile(@GqlCognitoIdUser() user: CognitoIdTokenPayload) {
+  @Authentication()
+  async profile(@CognitoIdUser() user: CognitoIdTokenPayload) {
     return {
       email: user.email,
       groups: user['cognito:groups']
@@ -90,8 +80,8 @@ export class UserResolver {
   }
 
   @Query()
-  @GqlAuthentication()
-  async tokenInfo(@GqlCognitoAccessUser() token: CognitoAccessTokenPayload) {
+  @Authentication()
+  async tokenInfo(@CognitoAccessUser() token: CognitoAccessTokenPayload) {
     return {
       scope: token.scope,
       clientId: token.client_id
@@ -102,7 +92,11 @@ export class UserResolver {
 
 ## Subscriptions
 
-Subscriptions use WebSockets. You need to verify the token during connection:
+Subscriptions use WebSockets. You need to verify the token during connection.
+
+<Note>
+This section has not been checked against NestJS 12 and graphql-ws yet.
+</Note>
 
 <Mermaid>
 
@@ -159,8 +153,8 @@ Protect subscriptions:
 @Resolver()
 export class NotificationResolver {
   @Subscription()
-  @GqlAuthentication()
-  notificationAdded(@GqlCognitoUser() user: CognitoJwtPayload) {
+  @Authentication()
+  notificationAdded(@CognitoUser() user: CognitoJwtPayload) {
     return pubSub.asyncIterator(`notifications.${user.sub}`);
   }
 }

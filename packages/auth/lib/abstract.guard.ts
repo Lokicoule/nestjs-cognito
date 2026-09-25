@@ -89,12 +89,17 @@ export abstract class AbstractGuard implements CanActivate {
         throw new CognitoTokenTypeMismatchError(tokenUse, payload.token_use);
       }
 
-      request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
-      request[COGNITO_USER_CONTEXT_PROPERTY] =
+      // RPC: keep the message untouched and store the user on its context.
+      const store =
+        context.getType() === "rpc"
+          ? (context.switchToRpc().getContext() as Record<string, unknown>)
+          : request;
+      store[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
+      store[COGNITO_USER_CONTEXT_PROPERTY] =
         UserMapper.fromCognitoJwtPayload(payload);
 
       if (!isPublic) {
-        return this.onValidate(this.#getAuthenticatedUser(request));
+        return this.onValidate(this.#getAuthenticatedUser(store));
       }
 
       return true;

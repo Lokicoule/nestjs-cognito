@@ -233,6 +233,17 @@ export class CatsController {
 }
 ```
 
+### Global Guard and Other Transports
+
+Register the guard globally and open routes with `@PublicRoute()`. The same guard covers HTTP (Express and Fastify), GraphQL, socket.io and microservices, and every decorator of this package also works on GraphQL resolvers:
+
+```typescript
+providers: [{ provide: APP_GUARD, useClass: AuthenticationGuard }]
+```
+
+- **socket.io:** the token comes from the `Authorization` header or `io(url, { auth: { token } })`. Add `@UseFilters(CognitoWsExceptionFilter)` to send errors to the client.
+- **Microservices:** the token comes from `data.headers.authorization`, and the message is not modified. Add `@UseFilters(CognitoRpcExceptionFilter)`.
+
 ## Authorization
 
 Implement role-based access control (RBAC) using Cognito user groups. Authorization automatically includes authentication, so you don't need both guards.

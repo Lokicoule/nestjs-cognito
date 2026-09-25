@@ -10,6 +10,8 @@
 
 </div>
 
+> **Deprecated since 4.0.** `@nestjs-cognito/auth` now handles GraphQL resolvers: use `Authentication`, `Authorization`, `CognitoUser`, `CognitoAccessUser` and `CognitoIdUser` from it. The `Gql*` exports of this package are aliases of those decorators and will be removed in 5.0.
+
 ## Overview
 
 `@nestjs-cognito/graphql` brings AWS Cognito authentication and authorization to your NestJS GraphQL APIs. This package extends [@nestjs-cognito/auth](https://www.npmjs.com/package/@nestjs-cognito/auth) with GraphQL-specific decorators and guards, providing seamless integration with Apollo Server and NestJS GraphQL.
