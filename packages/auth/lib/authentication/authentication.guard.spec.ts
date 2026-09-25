@@ -90,4 +90,25 @@ describe("AuthenticationGuard", () => {
       );
     });
   });
+
+  describe("getRequest", () => {
+    it("parses graphql-ws connection cookies", () => {
+      const req = {
+        extra: { request: { headers: { cookie: "access_token=t; other=1" } } },
+      };
+      const context = createMock<ExecutionContext>({
+        getType: () => "graphql",
+        getArgByIndex: (index: number) => (index === 2 ? { req } : undefined),
+      });
+      const guard = new AuthenticationGuard(
+        createMock<CognitoJwtVerifier>(),
+        createMock<Reflector>(),
+        createMock<CognitoJwtExtractor>(),
+      );
+
+      expect(guard.getRequest(context)).toMatchObject({
+        cookies: { access_token: "t", other: "1" },
+      });
+    });
+  });
 });
