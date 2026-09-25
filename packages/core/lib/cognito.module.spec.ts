@@ -48,6 +48,18 @@ describe("CognitoModule", () => {
     });
   });
 
+  it("lets tests override the verifier with a factory", async () => {
+    const verifier = { verify: jest.fn() };
+    const moduleRef = await Test.createTestingModule({
+      imports: [CognitoModule.register({})],
+    })
+      .overrideProvider(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+      .useFactory({ factory: () => verifier })
+      .compile();
+
+    expect(moduleRef.get(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)).toBe(verifier);
+  });
+
   describe("registerAsync", () => {
     describe("when the `useFactory` option is used", () => {
       it("should provide the cognito identity provider", async () => {

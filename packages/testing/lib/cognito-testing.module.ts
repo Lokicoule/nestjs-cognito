@@ -33,9 +33,12 @@ export class CognitoTestingModule {
   static createJwtVerifierFactory() {
     return {
       verify: async (token: string) => {
-        const decodedToken = decode(token);
+        const decodedToken = decode(token, { json: true });
         if (!decodedToken) {
           throw new Error("Invalid token");
+        }
+        if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
+          throw new Error("Token expired");
         }
         return decodedToken;
       },

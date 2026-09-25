@@ -222,6 +222,20 @@ await request(app.getHttpServer())
   .expect(200);
 ```
 
+### Machine-to-machine and expired tokens
+
+`CognitoMockService` also issues client credentials tokens, and `expiresIn` lets you test expiry:
+
+```typescript
+const mock = moduleRef.get(CognitoMockService);
+
+// Access token for a machine-to-machine client
+const m2mToken = mock.createClientCredentialsToken('billing-service', ['orders/read']);
+
+// Every token issued from now on is already expired
+mock.setMockConfig({ enabled: true, user: { username: 'john' }, expiresIn: -60 });
+```
+
 ### Testing Different Token Types
 
 ```typescript

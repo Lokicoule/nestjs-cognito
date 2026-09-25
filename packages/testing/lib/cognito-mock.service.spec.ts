@@ -1,6 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { CognitoMockService } from "./cognito-mock.service";
-import { TokenPayload } from "./types";
 
 describe("CognitoMockService", () => {
   let service: CognitoMockService;
@@ -47,38 +46,79 @@ describe("CognitoMockService", () => {
       expect(typeof tokens.ExpiresIn).toBe("number");
     });
 
-    it("should include correct claims in access token", () => {
-      const tokens = service.getMockTokens(clientId);
-      const decodedToken = service.verifyToken(
-        tokens.AccessToken!,
-      ) as TokenPayload;
+    it("issues an access token shaped like Cognito's", () => {
+      const token = service.verifyToken(
+        service.getMockTokens(clientId).AccessToken!,
+      );
 
-      expect(decodedToken.token_use).toBe("access");
-      expect(decodedToken.scope).toBe("aws.cognito.signin.user.admin");
-      expect(decodedToken.sub).toBe(mockUser.username);
-      expect(decodedToken.email).toBe(mockUser.email);
-      expect(decodedToken["cognito:groups"]).toEqual(mockUser.groups);
-      expect(decodedToken.custom_field).toBe(mockUser.attributes.custom_field);
+      expect(token).toMatchObject({
+        token_use: "access",
+        sub: "testuser",
+        username: "testuser",
+        client_id: clientId,
+        scope: "aws.cognito.signin.user.admin",
+        "cognito:groups": ["users"],
+      });
+      expect(token).not.toHaveProperty("aud");
+      expect(token).not.toHaveProperty("email");
+      expect(token).not.toHaveProperty("custom_field");
     });
 
-    it("should include correct claims in id token", () => {
-      const tokens = service.getMockTokens(clientId);
-      const decodedToken = service.verifyToken(tokens.IdToken!) as TokenPayload;
+    it("issues an ID token with the user attributes", () => {
+      const token = service.verifyToken(
+        service.getMockTokens(clientId).IdToken!,
+      );
 
-      expect(decodedToken.token_use).toBe("id");
-      expect(decodedToken.sub).toBe(mockUser.username);
-      expect(decodedToken.email).toBe(mockUser.email);
-      expect(decodedToken["cognito:groups"]).toEqual(mockUser.groups);
+      expect(token).toMatchObject({
+        token_use: "id",
+        sub: "testuser",
+        aud: clientId,
+        "cognito:username": "testuser",
+        email: "test@example.com",
+        "cognito:groups": ["users"],
+        custom_field: "custom_value",
+      });
     });
 
-    it("should include correct claims in refresh token", () => {
-      const tokens = service.getMockTokens(clientId);
-      const decodedToken = service.verifyToken(
-        tokens.RefreshToken!,
-      ) as TokenPayload;
+    it("issues an opaque refresh token", () => {
+      const { RefreshToken } = service.getMockTokens(clientId);
 
-      expect(decodedToken.token_use).toBe("refresh");
-      expect(decodedToken.sub).toBe(mockUser.username);
+      expect(() => service.verifyToken(RefreshToken!)).toThrow();
+    });
+
+    it("uses the configured sub and scopes", () => {
+      service.setMockConfig({
+        user: { ...mockUser, sub: "user-id", scopes: ["orders/read"] },
+      });
+      const token = service.verifyToken(
+        service.getMockTokens(clientId).AccessToken!,
+      );
+
+      expect(token).toMatchObject({ sub: "user-id", scope: "orders/read" });
+    });
+
+    it("issues expired tokens when expiresIn is negative", () => {
+      service.setMockConfig({ user: mockUser, expiresIn: -60 });
+      const { IdToken } = service.getMockTokens(clientId);
+
+      expect(() => service.verifyToken(IdToken!)).toThrow("jwt expired");
+    });
+
+    it("issues client credentials tokens", () => {
+      const token = service.verifyToken(
+        service.createClientCredentialsToken("m2m-client", [
+          "orders/read",
+          "orders/write",
+        ]),
+      );
+
+      expect(token).toMatchObject({
+        token_use: "access",
+        sub: "m2m-client",
+        client_id: "m2m-client",
+        scope: "orders/read orders/write",
+      });
+      expect(token).not.toHaveProperty("username");
     });
 
     it("should throw error when no mock user is configured", () => {

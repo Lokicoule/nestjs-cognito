@@ -1,28 +1,28 @@
 export interface MockUserConfig {
   username: string;
+  /** Defaults to the username */
+  sub?: string;
   email?: string;
   groups?: string[];
   attributes?: Record<string, string>;
+  /** Access token scopes. Defaults to `aws.cognito.signin.user.admin` */
+  scopes?: string[];
 }
 
 export interface MockConfig {
   enabled?: boolean;
   user?: MockUserConfig;
+  /** Token lifetime in seconds (default 3600). A negative value issues expired tokens */
+  expiresIn?: number;
 }
 
 export interface TokenPayload {
   sub: string;
   iss: string;
-  aud: string;
   exp: number;
   iat: number;
-  auth_time: number;
-  "cognito:groups": string[];
-  "cognito:username": string;
-  email?: string;
-  email_verified: boolean;
-  token_use: "access" | "id" | "refresh";
-  scope?: string;
+  token_use: "access" | "id";
+  "cognito:groups"?: string[];
   [key: string]: unknown;
 }
 

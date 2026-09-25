@@ -13,119 +13,76 @@ Testing utilities to mock Cognito authentication in NestJS applications.
 npm install -D @nestjs-cognito/testing
 ```
 
-## Functions
+## Module
 
-### `createCognitoTestingModule(options?: TestingModuleOptions)`
+### `CognitoTestingModule.register(config, mockConfig?, options?)`
 
-Creates a testing module with mocked Cognito authentication.
+- `config`: `CognitoModuleOptions`, used in real mode.
+- `mockConfig`: `MockConfig`. With `enabled: true`, tokens are issued locally and no request reaches Cognito.
+- `options`: `CognitoTestingOptions`, e.g. `clientSecret` for app clients with a secret.
 
-**Parameters:**
+`registerAsync(options, mockConfig?, testingOptions?)` takes `CognitoModuleAsyncOptions` instead of `config`.
+
+### `CognitoTestingModule.createJwtVerifierFactory()`
+
+A JWT verifier that decodes tokens without checking their signature, and rejects expired ones. Use it to override the real verifier in tests:
+
 ```typescript
-interface TestingModuleOptions {
-  enabled?: boolean;
-  user?: CognitoTestUser;
-  jwtVerifier?: CognitoJwtVerifierOptions;
-  identityProvider?: CognitoIdentityProviderOptions;
-}
+Test.createTestingModule({ imports: [AppModule] })
+  .overrideProvider(COGNITO_JWT_VERIFIER_INSTANCE_TOKEN)
+  .useFactory({ factory: CognitoTestingModule.createJwtVerifierFactory })
 ```
 
-**Returns:** `DynamicModule`
+## Services
 
-**Usage:**
-```typescript
-Test.createTestingModule({
-  imports: [
-    createCognitoTestingModule({
-      user: {
-        username: 'testuser',
-        email: 'test@example.com',
-        groups: ['users'],
-      },
-    }),
-  ],
-})
-```
+### `CognitoTestingService`
+
+- `getAccessToken(credentials, clientId): Promise<AuthenticationResultType | undefined>`: logs in (mock or real Cognito) and returns `AccessToken`, `IdToken` and `RefreshToken`.
+- `setMockConfig(config: MockConfig): void`
+
+### `CognitoMockService`
+
+- `getMockTokens(clientId): AuthenticationResultType`: tokens for the mocked user, shaped like Cognito's. The access token carries `client_id`, `username` and `scope`. The ID token carries `aud`, `cognito:username`, `email` and the custom attributes. The refresh token is opaque.
+- `createClientCredentialsToken(clientId, scopes): string`: a machine-to-machine access token.
+- `verifyToken(token): TokenPayload`: throws if the token is invalid or expired.
 
 ## Types
 
-### CognitoTestUser
-
 ```typescript
-interface CognitoTestUser {
+interface MockConfig {
+  enabled?: boolean;
+  user?: MockUserConfig;
+  expiresIn?: number; // seconds, default 3600; negative issues expired tokens
+}
+
+interface MockUserConfig {
   username: string;
+  sub?: string;       // defaults to the username
   email?: string;
   groups?: string[];
-  attributes?: Record<string, string>;
+  scopes?: string[];  // defaults to ['aws.cognito.signin.user.admin']
+  attributes?: Record<string, string>; // e.g. { 'custom:tenant': 'acme' }
+}
+
+interface CognitoTestingOptions {
+  clientSecret?: string | (() => string | Promise<string>);
 }
 ```
 
-### TestingModuleOptions
-
-```typescript
-interface TestingModuleOptions {
-  enabled?: boolean;
-  user?: CognitoTestUser;
-  jwtVerifier?: CognitoJwtVerifierOptions;
-  identityProvider?: CognitoIdentityProviderOptions;
-}
-```
-
-## Mock Endpoints
-
-The testing module provides these endpoints when enabled:
+## Endpoints
 
 ### `POST /cognito-testing-login`
-Generate mock JWT tokens.
 
-**Request:**
-```typescript
-{
-  username: string;
-  password: string;
-  clientId: string;
-}
-```
+Logs in and returns the tokens.
 
-**Response:**
-```typescript
-{
-  AccessToken: string;
-  IdToken: string;
-  RefreshToken: string;
-}
-```
+**Request:** `{ username: string; password: string; clientId: string }`
+
+**Response:** `{ AccessToken, IdToken, RefreshToken, TokenType, ExpiresIn }`
 
 ### `POST /config`
-Update mock configuration.
 
-**Request:**
-```typescript
-{
-  enabled?: boolean;
-  user?: CognitoTestUser;
-}
-```
-
-### `GET /config`
-Get current mock configuration.
-
-**Response:**
-```typescript
-{
-  enabled: boolean;
-  user: CognitoTestUser;
-}
-```
-
-## Exports
-
-**Functions:**
-- `createCognitoTestingModule(options?: TestingModuleOptions): DynamicModule`
-
-**Types:**
-- `CognitoTestUser`
-- `TestingModuleOptions`
+Replaces the mock configuration. **Request:** `MockConfig`.
 
 ## Guides
 
-- [Testing](/guides/testing) - Complete testing guide with examples
+- [Testing](/testing-deployment/testing): complete testing guide with examples
