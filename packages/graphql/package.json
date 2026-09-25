@@ -60,7 +60,7 @@
     "@nestjs/testing": "12.1.0",
     "@nestjs/websockets": "12.1.0",
     "@types/ws": "8.18.1",
-    "graphql-ws": "6.2.2",
+    "graphql-ws": "6.3.0",
     "ws": "8.21.3"
   },
   "dependencies": {
