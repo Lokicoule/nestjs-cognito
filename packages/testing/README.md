@@ -574,7 +574,11 @@ Set or read the mock configuration (the mocked user, and whether mock mode is en
 
 **`getMockTokens(clientId: string): AuthenticationResultType`**
 
-Issue mock `AccessToken`, `IdToken` and `RefreshToken` for the configured user, in the same shape as Cognito's `InitiateAuth` response.
+Issue mock tokens for the configured user, shaped like Cognito's. The access token carries `client_id`, `username` and `scope`. The ID token carries `aud`, `cognito:username`, `email` and the custom attributes. The refresh token is opaque. `MockUserConfig` accepts `sub` and `scopes`, and `MockConfig.expiresIn` sets the lifetime (a negative value issues expired tokens).
+
+**`createClientCredentialsToken(clientId: string, scopes: string[]): string`**
+
+Issue a machine-to-machine access token.
 
 **`verifyToken(token: string): TokenPayload`**
 

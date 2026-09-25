@@ -81,16 +81,21 @@ describe("CognitoTestingController", () => {
         clientId: "test-client-id",
       });
 
-      const [, payloadEncoded] = result!.AccessToken!.split(".");
-      const payload = JSON.parse(
-        Buffer.from(payloadEncoded, "base64").toString(),
-      );
+      const decode = (token: string) =>
+        JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
 
-      expect(payload.sub).toBe("testuser");
-      expect(payload.email).toBe("test@example.com");
-      expect(payload["cognito:groups"]).toEqual(["admin", "users"]);
-      expect(payload.custom_field).toBe("custom_value");
-      expect(payload.token_use).toBe("access");
+      expect(decode(result!.IdToken!)).toMatchObject({
+        sub: "testuser",
+        token_use: "id",
+        email: "test@example.com",
+        "cognito:groups": ["admin", "users"],
+        custom_field: "custom_value",
+      });
+      expect(decode(result!.AccessToken!)).toMatchObject({
+        sub: "testuser",
+        token_use: "access",
+        client_id: "test-client-id",
+      });
     });
   });
 
