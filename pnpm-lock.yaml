@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@apollo/server':
         specifier: 5.5.1
-        version: 5.5.1(graphql@16.14.2)
+        version: 5.5.1(graphql@17.0.2)
       '@changesets/cli':
         specifier: ^3.0.0
         version: 3.0.3
@@ -63,8 +63,8 @@ importers:
         specifier: 17.12.0
         version: 17.12.0
       graphql:
-        specifier: 16.14.2
-        version: 16.14.2
+        specifier: 17.0.2
+        version: 17.0.2
       jest:
         specifier: 30.5.2
         version: 30.5.2(@types/node@24.13.6)(ts-node@10.9.2(@types/node@24.13.6)(typescript@6.0.3))
@@ -326,22 +326,22 @@ importers:
     devDependencies:
       '@apollo/server':
         specifier: 5.5.1
-        version: 5.5.1(graphql@16.14.2)
+        version: 5.5.1(graphql@17.0.2)
       '@as-integrations/express5':
         specifier: ^1.1.2
-        version: 1.1.2(@apollo/server@5.5.1(graphql@16.14.2))(express@5.2.1)
+        version: 1.1.2(@apollo/server@5.5.1(graphql@17.0.2))(express@5.2.1)
       '@nestjs-cognito/testing':
         specifier: workspace:*
         version: link:../testing
       '@nestjs/apollo':
         specifier: 14.0.2
-        version: 14.0.2(@apollo/server@5.5.1(graphql@16.14.2))(@as-integrations/express5@1.1.2(@apollo/server@5.5.1(graphql@16.14.2))(express@5.2.1))(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(@nestjs/graphql@14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.14.2)(reflect-metadata@0.2.2)(typescript@6.0.3))(graphql@16.14.2)
+        version: 14.0.2(@apollo/server@5.5.1(graphql@17.0.2))(@as-integrations/express5@1.1.2(@apollo/server@5.5.1(graphql@17.0.2))(express@5.2.1))(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(@nestjs/graphql@14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@17.0.2)(reflect-metadata@0.2.2)(typescript@6.0.3))(graphql@17.0.2)
       '@nestjs/common':
         specifier: 12.1.0
         version: 12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/graphql':
         specifier: 14.0.2
-        version: 14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.14.2)(reflect-metadata@0.2.2)(typescript@6.0.3)
+        version: 14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@17.0.2)(reflect-metadata@0.2.2)(typescript@6.0.3)
       '@nestjs/jwt':
         specifier: 12.0.2
         version: 12.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))
@@ -4034,9 +4034,9 @@ packages:
       ws:
         optional: true
 
-  graphql@16.14.2:
-    resolution: {integrity: sha512-Chq1s4CY7jmh8gO2qvLIJyfCDIN+EHLFW/9iShnp1z8FjBQMoodWP1kDC36VAMXXIvAjj4ARa7ntfAV2BrjsbA==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+  graphql@17.0.2:
+    resolution: {integrity: sha512-FRWbddMxfkjiB7z+aQDWIR+E34xo9I8c9mtK2RPv8PmMzKRvrdsreHL/Ui/TmwHJfhHChEtsFPyMHKI+xuarQQ==}
+    engines: {node: ^22.0.0 || ^24.0.0 || ^25.0.0 || >=26.0.0}
 
   handlebars@4.7.9:
     resolution: {integrity: sha512-4E71E0rpOaQuJR2A3xDZ+GM1HyWYv1clR58tC8emQNeQe3RH7MAzSbat+V0wG78LQBo6m6bzSG/L4pBuCsgnUQ==}
@@ -6740,9 +6740,9 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@apollo/cache-control-types@1.0.3(graphql@16.14.2)':
+  '@apollo/cache-control-types@1.0.3(graphql@17.0.2)':
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
 
   '@apollo/protobufjs@1.2.7':
     dependencies:
@@ -6759,33 +6759,33 @@ snapshots:
       '@types/long': 4.0.2
       long: 4.0.0
 
-  '@apollo/server-gateway-interface@2.0.0(graphql@16.14.2)':
+  '@apollo/server-gateway-interface@2.0.0(graphql@17.0.2)':
     dependencies:
       '@apollo/usage-reporting-protobuf': 4.1.1
       '@apollo/utils.fetcher': 3.1.0
       '@apollo/utils.keyvaluecache': 4.0.0
       '@apollo/utils.logger': 3.0.0
-      graphql: 16.14.2
+      graphql: 17.0.2
 
-  '@apollo/server@5.5.1(graphql@16.14.2)':
+  '@apollo/server@5.5.1(graphql@17.0.2)':
     dependencies:
-      '@apollo/cache-control-types': 1.0.3(graphql@16.14.2)
-      '@apollo/server-gateway-interface': 2.0.0(graphql@16.14.2)
+      '@apollo/cache-control-types': 1.0.3(graphql@17.0.2)
+      '@apollo/server-gateway-interface': 2.0.0(graphql@17.0.2)
       '@apollo/usage-reporting-protobuf': 4.1.1
       '@apollo/utils.createhash': 3.0.1
       '@apollo/utils.fetcher': 3.1.0
       '@apollo/utils.isnodelike': 3.0.0
       '@apollo/utils.keyvaluecache': 4.0.0
       '@apollo/utils.logger': 3.0.0
-      '@apollo/utils.usagereporting': 2.1.0(graphql@16.14.2)
+      '@apollo/utils.usagereporting': 2.1.0(graphql@17.0.2)
       '@apollo/utils.withrequired': 3.0.0
-      '@graphql-tools/schema': 10.0.31(graphql@16.14.2)
+      '@graphql-tools/schema': 10.0.31(graphql@17.0.2)
       async-retry: 1.3.3
       body-parser: 2.2.2
       content-type: 1.0.5
       cors: 2.8.6
       finalhandler: 2.1.0
-      graphql: 16.14.2
+      graphql: 17.0.2
       loglevel: 1.9.2
       lru-cache: 11.2.1
       negotiator: 1.0.0
@@ -6802,9 +6802,9 @@ snapshots:
       '@apollo/utils.isnodelike': 3.0.0
       sha.js: 2.4.11
 
-  '@apollo/utils.dropunuseddefinitions@2.0.1(graphql@16.14.2)':
+  '@apollo/utils.dropunuseddefinitions@2.0.1(graphql@17.0.2)':
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
 
   '@apollo/utils.fetcher@3.1.0': {}
 
@@ -6817,40 +6817,40 @@ snapshots:
 
   '@apollo/utils.logger@3.0.0': {}
 
-  '@apollo/utils.printwithreducedwhitespace@2.0.1(graphql@16.14.2)':
+  '@apollo/utils.printwithreducedwhitespace@2.0.1(graphql@17.0.2)':
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
 
-  '@apollo/utils.removealiases@2.0.1(graphql@16.14.2)':
+  '@apollo/utils.removealiases@2.0.1(graphql@17.0.2)':
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
 
-  '@apollo/utils.sortast@2.0.1(graphql@16.14.2)':
+  '@apollo/utils.sortast@2.0.1(graphql@17.0.2)':
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
       lodash.sortby: 4.7.0
 
-  '@apollo/utils.stripsensitiveliterals@2.0.1(graphql@16.14.2)':
+  '@apollo/utils.stripsensitiveliterals@2.0.1(graphql@17.0.2)':
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
 
-  '@apollo/utils.usagereporting@2.1.0(graphql@16.14.2)':
+  '@apollo/utils.usagereporting@2.1.0(graphql@17.0.2)':
     dependencies:
       '@apollo/usage-reporting-protobuf': 4.1.1
-      '@apollo/utils.dropunuseddefinitions': 2.0.1(graphql@16.14.2)
-      '@apollo/utils.printwithreducedwhitespace': 2.0.1(graphql@16.14.2)
-      '@apollo/utils.removealiases': 2.0.1(graphql@16.14.2)
-      '@apollo/utils.sortast': 2.0.1(graphql@16.14.2)
-      '@apollo/utils.stripsensitiveliterals': 2.0.1(graphql@16.14.2)
-      graphql: 16.14.2
+      '@apollo/utils.dropunuseddefinitions': 2.0.1(graphql@17.0.2)
+      '@apollo/utils.printwithreducedwhitespace': 2.0.1(graphql@17.0.2)
+      '@apollo/utils.removealiases': 2.0.1(graphql@17.0.2)
+      '@apollo/utils.sortast': 2.0.1(graphql@17.0.2)
+      '@apollo/utils.stripsensitiveliterals': 2.0.1(graphql@17.0.2)
+      graphql: 17.0.2
 
   '@apollo/utils.withrequired@3.0.0': {}
 
   '@arr/every@1.0.1': {}
 
-  '@as-integrations/express5@1.1.2(@apollo/server@5.5.1(graphql@16.14.2))(express@5.2.1)':
+  '@as-integrations/express5@1.1.2(@apollo/server@5.5.1(graphql@17.0.2))(express@5.2.1)':
     dependencies:
-      '@apollo/server': 5.5.1(graphql@16.14.2)
+      '@apollo/server': 5.5.1(graphql@17.0.2)
       express: 5.2.1
 
   '@aws-sdk/client-cognito-identity-provider@3.1140.0':
@@ -7609,51 +7609,51 @@ snapshots:
 
   '@golevelup/ts-jest@3.0.0': {}
 
-  '@graphql-tools/merge@9.1.7(graphql@16.14.2)':
+  '@graphql-tools/merge@9.1.7(graphql@17.0.2)':
     dependencies:
-      '@graphql-tools/utils': 11.0.0(graphql@16.14.2)
-      graphql: 16.14.2
+      '@graphql-tools/utils': 11.0.0(graphql@17.0.2)
+      graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-tools/merge@9.2.4(graphql@16.14.2)':
+  '@graphql-tools/merge@9.2.4(graphql@17.0.2)':
     dependencies:
-      '@graphql-tools/utils': 12.0.1(graphql@16.14.2)
-      graphql: 16.14.2
+      '@graphql-tools/utils': 12.0.1(graphql@17.0.2)
+      graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-tools/schema@10.0.31(graphql@16.14.2)':
+  '@graphql-tools/schema@10.0.31(graphql@17.0.2)':
     dependencies:
-      '@graphql-tools/merge': 9.1.7(graphql@16.14.2)
-      '@graphql-tools/utils': 11.0.0(graphql@16.14.2)
-      graphql: 16.14.2
+      '@graphql-tools/merge': 9.1.7(graphql@17.0.2)
+      '@graphql-tools/utils': 11.0.0(graphql@17.0.2)
+      graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-tools/schema@10.1.1(graphql@16.14.2)':
+  '@graphql-tools/schema@10.1.1(graphql@17.0.2)':
     dependencies:
-      '@graphql-tools/merge': 9.2.4(graphql@16.14.2)
-      '@graphql-tools/utils': 12.0.1(graphql@16.14.2)
-      graphql: 16.14.2
+      '@graphql-tools/merge': 9.2.4(graphql@17.0.2)
+      '@graphql-tools/utils': 12.0.1(graphql@17.0.2)
+      graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-tools/utils@11.0.0(graphql@16.14.2)':
+  '@graphql-tools/utils@11.0.0(graphql@17.0.2)':
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.14.2)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@17.0.2)
       '@whatwg-node/promise-helpers': 1.3.2
       cross-inspect: 1.0.1
-      graphql: 16.14.2
+      graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-tools/utils@12.0.1(graphql@16.14.2)':
+  '@graphql-tools/utils@12.0.1(graphql@17.0.2)':
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.14.2)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@17.0.2)
       '@whatwg-node/promise-helpers': 1.3.2
       cross-inspect: 1.0.1
-      graphql: 16.14.2
+      graphql: 17.0.2
       tslib: 2.8.1
 
-  '@graphql-typed-document-node/core@3.2.0(graphql@16.14.2)':
+  '@graphql-typed-document-node/core@3.2.0(graphql@17.0.2)':
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
 
   '@headlessui/react@2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -8102,18 +8102,18 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
     optional: true
 
-  '@nestjs/apollo@14.0.2(@apollo/server@5.5.1(graphql@16.14.2))(@as-integrations/express5@1.1.2(@apollo/server@5.5.1(graphql@16.14.2))(express@5.2.1))(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(@nestjs/graphql@14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.14.2)(reflect-metadata@0.2.2)(typescript@6.0.3))(graphql@16.14.2)':
+  '@nestjs/apollo@14.0.2(@apollo/server@5.5.1(graphql@17.0.2))(@as-integrations/express5@1.1.2(@apollo/server@5.5.1(graphql@17.0.2))(express@5.2.1))(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(@nestjs/graphql@14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@17.0.2)(reflect-metadata@0.2.2)(typescript@6.0.3))(graphql@17.0.2)':
     dependencies:
-      '@apollo/server': 5.5.1(graphql@16.14.2)
+      '@apollo/server': 5.5.1(graphql@17.0.2)
       '@nestjs/common': 12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 12.1.0(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@12.1.0)(@nestjs/platform-express@12.1.0)(@nestjs/websockets@12.1.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/graphql': 14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.14.2)(reflect-metadata@0.2.2)(typescript@6.0.3)
-      graphql: 16.14.2
+      '@nestjs/graphql': 14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@17.0.2)(reflect-metadata@0.2.2)(typescript@6.0.3)
+      graphql: 17.0.2
       iterall: 1.3.0
       lodash.omit: 4.18.0
       tslib: 2.8.1
     optionalDependencies:
-      '@as-integrations/express5': 1.1.2(@apollo/server@5.5.1(graphql@16.14.2))(express@5.2.1)
+      '@as-integrations/express5': 1.1.2(@apollo/server@5.5.1(graphql@17.0.2))(express@5.2.1)
 
   '@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
     dependencies:
@@ -8155,19 +8155,19 @@ snapshots:
       '@nestjs/platform-express': 12.1.0(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)
       '@nestjs/websockets': 12.1.0(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(@nestjs/platform-socket.io@12.1.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)
 
-  '@nestjs/graphql@14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.14.2)(reflect-metadata@0.2.2)(typescript@6.0.3)':
+  '@nestjs/graphql@14.0.2(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.0)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@17.0.2)(reflect-metadata@0.2.2)(typescript@6.0.3)':
     dependencies:
-      '@graphql-tools/merge': 9.2.4(graphql@16.14.2)
-      '@graphql-tools/schema': 10.1.1(graphql@16.14.2)
-      '@graphql-tools/utils': 12.0.1(graphql@16.14.2)
+      '@graphql-tools/merge': 9.2.4(graphql@17.0.2)
+      '@graphql-tools/schema': 10.1.1(graphql@17.0.2)
+      '@graphql-tools/utils': 12.0.1(graphql@17.0.2)
       '@nestjs/common': 12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 12.1.0(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@12.1.0)(@nestjs/platform-express@12.1.0)(@nestjs/websockets@12.1.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/mapped-types': 12.0.0(@nestjs/common@12.1.0(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)
       chokidar: 4.0.3
       es-toolkit: 1.52.0
-      graphql: 16.14.2
-      graphql-tag: 2.12.7(graphql@16.14.2)
-      graphql-ws: 6.2.2(graphql@16.14.2)(ws@8.21.3)
+      graphql: 17.0.2
+      graphql-tag: 2.12.7(graphql@17.0.2)
+      graphql-ws: 6.2.2(graphql@17.0.2)(ws@8.21.3)
       normalize-path: 3.0.0
       reflect-metadata: 0.2.2
       tinyglobby: 0.2.17
@@ -10990,18 +10990,18 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-tag@2.12.7(graphql@16.14.2):
+  graphql-tag@2.12.7(graphql@17.0.2):
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
       tslib: 2.8.1
 
-  graphql-ws@6.2.2(graphql@16.14.2)(ws@8.21.3):
+  graphql-ws@6.2.2(graphql@17.0.2)(ws@8.21.3):
     dependencies:
-      graphql: 16.14.2
+      graphql: 17.0.2
     optionalDependencies:
       ws: 8.21.3
 
-  graphql@16.14.2: {}
+  graphql@17.0.2: {}
 
   handlebars@4.7.9:
     dependencies:
