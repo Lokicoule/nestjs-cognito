@@ -12,7 +12,8 @@ import { decode } from "jsonwebtoken";
 import { CognitoMockService } from "./cognito-mock.service";
 import { CognitoTestingController } from "./cognito-testing.controller";
 import { CognitoTestingService } from "./cognito-testing.service";
-import type { MockConfig } from "./types";
+import { COGNITO_TESTING_OPTIONS } from "./cognito-testing.constants";
+import type { CognitoTestingOptions, MockConfig } from "./types";
 
 const MOCK_CONFIG_TOKEN = "MOCK_CONFIG_TOKEN";
 
@@ -92,6 +93,7 @@ export class CognitoTestingModule {
   static register(
     config: CognitoModuleOptions,
     mockConfig?: MockConfig,
+    testingOptions: CognitoTestingOptions = {},
   ): DynamicModule {
     if (mockConfig?.enabled) {
       const providers = this.createMockProviders(mockConfig);
@@ -111,6 +113,9 @@ export class CognitoTestingModule {
     return {
       module: CognitoTestingModule,
       imports: [CognitoModule.register(config)],
+      providers: [
+        { provide: COGNITO_TESTING_OPTIONS, useValue: testingOptions },
+      ],
       exports: [CognitoModule],
     };
   }
@@ -118,6 +123,7 @@ export class CognitoTestingModule {
   static registerAsync(
     options: CognitoModuleAsyncOptions,
     mockConfig?: MockConfig,
+    testingOptions: CognitoTestingOptions = {},
   ): DynamicModule {
     if (mockConfig?.enabled) {
       const providers = this.createMockProviders(mockConfig);
@@ -137,6 +143,9 @@ export class CognitoTestingModule {
     return {
       module: CognitoTestingModule,
       imports: [CognitoModule.registerAsync(options)],
+      providers: [
+        { provide: COGNITO_TESTING_OPTIONS, useValue: testingOptions },
+      ],
       exports: [CognitoModule],
     };
   }

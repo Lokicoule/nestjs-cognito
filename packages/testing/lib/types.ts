@@ -25,3 +25,8 @@ export interface TokenPayload {
   scope?: string;
   [key: string]: unknown;
 }
+
+export interface CognitoTestingOptions {
+  /** App client secret, or a function returning the current one (read on every call). */
+  clientSecret?: string | (() => string | Promise<string>);
+}

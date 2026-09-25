@@ -450,6 +450,18 @@ describe("Real Cognito E2E (Async)", () => {
 });
 ```
 
+### App Clients with a Secret
+
+If the app client has a secret, pass it as the third argument. It can be a function: it is read on every authentication, so a rotated secret is picked up without restarting.
+
+```typescript
+CognitoTestingModule.register(
+  { identityProvider: { region: "us-east-1" } },
+  undefined,
+  { clientSecret: () => secrets.get("cognito/app-client") },
+);
+```
+
 ## API Reference
 
 ### CognitoTestingModule

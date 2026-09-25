@@ -7,11 +7,15 @@ import {
 import { InjectCognitoIdentityProvider } from "@nestjs-cognito/core";
 import {
   BadRequestException,
+  Inject,
   Injectable,
+  Optional,
   UnauthorizedException,
 } from "@nestjs/common";
+import { createHmac } from "node:crypto";
 import { CognitoMockService } from "./cognito-mock.service";
-import type { MockConfig } from "./types";
+import { COGNITO_TESTING_OPTIONS } from "./cognito-testing.constants";
+import type { CognitoTestingOptions, MockConfig } from "./types";
 
 @Injectable()
 export class CognitoTestingService {
@@ -21,6 +25,9 @@ export class CognitoTestingService {
     @InjectCognitoIdentityProvider()
     private readonly client: CognitoIdentityProvider,
     private readonly cognitoMockService: CognitoMockService,
+    @Optional()
+    @Inject(COGNITO_TESTING_OPTIONS)
+    private readonly options: CognitoTestingOptions = {},
   ) {}
 
   setMockConfig(config: MockConfig) {
@@ -57,6 +64,7 @@ export class CognitoTestingService {
       AuthParameters: {
         USERNAME: username,
         PASSWORD: password,
+        ...(await this.#secretHash(username, clientId)),
       },
     };
 
@@ -98,6 +106,7 @@ export class CognitoTestingService {
       ChallengeResponses: {
         USERNAME: username,
         NEW_PASSWORD: password,
+        ...(await this.#secretHash(username, clientId)),
       },
       Session: session,
     };
@@ -154,5 +163,19 @@ export class CognitoTestingService {
           { cause: error },
         );
     }
+  }
+
+  async #secretHash(username: string, clientId: string) {
+    const { clientSecret } = this.options;
+    const secret =
+      typeof clientSecret === "function" ? await clientSecret() : clientSecret;
+
+    return secret
+      ? {
+          SECRET_HASH: createHmac("sha256", secret)
+            .update(username + clientId)
+            .digest("base64"),
+        }
+      : {};
   }
 }
