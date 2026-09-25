@@ -13,7 +13,11 @@ export function createCognitoUserDecorator(
   return createParamDecorator(
     (data: string | string[], ctx: ExecutionContext) => {
       const request = (
-        getRequest ? getRequest(ctx) : ctx.switchToHttp().getRequest()
+        getRequest
+          ? getRequest(ctx)
+          : ctx.getType() === "rpc"
+            ? ctx.switchToRpc().getContext()
+            : ctx.switchToHttp().getRequest()
       ) as Record<string, CognitoJwtPayload | undefined>;
       const payload = request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY];
 

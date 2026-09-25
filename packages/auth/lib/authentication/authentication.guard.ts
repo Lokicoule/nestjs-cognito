@@ -13,11 +13,16 @@ export class AuthenticationGuard extends AbstractGuard {
    * @returns {Request} - The request
    */
   public getRequest(context: ExecutionContext): object {
-    if (context.getType() === "ws") {
-      return context.switchToWs().getClient();
+    switch (context.getType<string>()) {
+      case "ws":
+        return context.switchToWs().getClient();
+      case "rpc":
+        return context.switchToRpc().getData();
+      case "graphql":
+        return context.getArgByIndex(2)?.req;
+      default:
+        return context.switchToHttp().getRequest();
     }
-
-    return context.switchToHttp().getRequest();
   }
 
   /**

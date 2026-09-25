@@ -3,6 +3,7 @@ export * from "./authentication";
 export * from "./authorization";
 export * from "./cognito-auth.module";
 export * from "./errors";
+export * from "./filters";
 export * from "./user";
 export * from "./utils";
 export * from "./token-use";
