@@ -1,4 +1,4 @@
-import { AuthorizationGuard } from '@nestjs-cognito/graphql';
+import { AuthorizationGuard } from '@nestjs-cognito/auth';
 import { UseGuards } from '@nestjs/common';
 import { Query, Resolver } from '@nestjs/graphql';
 import { WhaleDto } from './dto/whale.dto';

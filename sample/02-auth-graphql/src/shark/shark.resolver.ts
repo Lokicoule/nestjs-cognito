@@ -1,4 +1,4 @@
-import { AuthenticationGuard } from '@nestjs-cognito/graphql';
+import { AuthenticationGuard } from '@nestjs-cognito/auth';
 import { UseGuards } from '@nestjs/common';
 import { Query, Resolver } from '@nestjs/graphql';
 import { SharkDto } from './dto/shark.dto';
