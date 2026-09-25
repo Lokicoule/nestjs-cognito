@@ -27,8 +27,8 @@ Main module for HTTP authentication.
 
 ### Guards
 
-#### `@Authentication()`
-Apply JWT authentication to controllers or routes.
+#### `@Authentication(options?: { tokenUse?: 'access' | 'id' })`
+Apply JWT authentication to controllers or routes. `tokenUse` rejects the other token type with a 401.
 
 ```typescript
 @Authentication()
@@ -106,7 +106,7 @@ interface CognitoJwtVerifierOptions {
 - `CognitoAuthModule`
 
 **Decorators:**
-- `@Authentication()`
+- `@Authentication(options?)`
 - `@Authorization(options: string[] | AuthorizationOptions)`
 - `@PublicRoute()`
 - `@CognitoUser(property?: string)`

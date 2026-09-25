@@ -51,6 +51,7 @@ describe("AbstractGuard", () => {
 
     reflector = createMock<Reflector>({
       get: jest.fn().mockReturnValue(false),
+      getAllAndOverride: jest.fn().mockReturnValue(undefined),
     });
 
     guard = new TestGuard(jwtVerifier, reflector, jwtExtractor);

@@ -1,6 +1,6 @@
-import { applyDecorators, UseGuards } from "@nestjs/common";
+import { applyDecorators, SetMetadata, UseGuards } from "@nestjs/common";
 import { AuthorizationGuard } from "./authorization.guard";
-import { AuthorizationOptions } from "@nestjs-cognito/auth";
+import { AuthorizationOptions, TOKEN_USE_KEY } from "@nestjs-cognito/auth";
 
 /**
  * Decorator for the AuthorizationGuard
@@ -10,5 +10,11 @@ import { AuthorizationOptions } from "@nestjs-cognito/auth";
 export function GqlAuthorization(
   options: AuthorizationOptions,
 ): ClassDecorator & MethodDecorator {
-  return applyDecorators(UseGuards(AuthorizationGuard(options)));
+  return applyDecorators(
+    SetMetadata(
+      TOKEN_USE_KEY,
+      Array.isArray(options) ? undefined : options.tokenUse,
+    ),
+    UseGuards(AuthorizationGuard(options)),
+  );
 }

@@ -17,8 +17,8 @@ npm install @nestjs-cognito/graphql @nestjs-cognito/auth @nestjs-cognito/core
 
 ### Guards
 
-#### `@GqlAuthentication()`
-Apply JWT authentication to GraphQL resolvers or operations.
+#### `@GqlAuthentication(options?: { tokenUse?: 'access' | 'id' })`
+Apply JWT authentication to GraphQL resolvers or operations. `tokenUse` rejects the other token type.
 
 ```typescript
 @Resolver()
@@ -73,7 +73,7 @@ async permissions(@GqlCognitoAccessUser() token: CognitoAccessTokenPayload) {}
 ## Exports
 
 **Decorators:**
-- `@GqlAuthentication()`
+- `@GqlAuthentication(options?)`
 - `@GqlAuthorization(options: string[] | AuthorizationOptions)`
 - `@PublicRoute()` (from `@nestjs-cognito/auth`)
 - `@GqlCognitoUser(property?: string)`

@@ -115,7 +115,7 @@ Protect your GraphQL resolvers by requiring valid AWS Cognito authentication tok
 
 ### @GqlAuthentication Decorator
 
-The `@GqlAuthentication()` decorator is the recommended approach for securing resolvers. It can be applied at the resolver or query/mutation level:
+The `@GqlAuthentication()` decorator is the recommended approach for securing resolvers. It can be applied at the resolver or query/mutation level. Pass `{ tokenUse: "access" }` or `{ tokenUse: "id" }` to accept only one token type.
 
 **Resolver-level authentication:**
 

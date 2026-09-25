@@ -1,3 +1,5 @@
+import type { TokenUse } from "../token-use";
+
 export type AuthorizationOptions =
   | /**  The allowed groups*/ string[]
   | {
@@ -20,4 +22,9 @@ export type AuthorizationOptions =
        * The required OAuth scopes (case-sensitive), e.g. for client credentials tokens
        */
       requiredScopes?: string[];
+
+      /**
+       * Only accept this token type
+       */
+      tokenUse?: TokenUse;
     };

@@ -1,4 +1,5 @@
-import { applyDecorators, UseGuards } from "@nestjs/common";
+import { applyDecorators, SetMetadata, UseGuards } from "@nestjs/common";
+import { TOKEN_USE_KEY } from "../token-use";
 import { AuthorizationGuard } from "./authorization.guard";
 import { AuthorizationOptions } from "./authorization.options";
 
@@ -10,5 +11,11 @@ import { AuthorizationOptions } from "./authorization.options";
 export function Authorization(
   options: AuthorizationOptions,
 ): ClassDecorator & MethodDecorator {
-  return applyDecorators(UseGuards(AuthorizationGuard(options)));
+  return applyDecorators(
+    SetMetadata(
+      TOKEN_USE_KEY,
+      Array.isArray(options) ? undefined : options.tokenUse,
+    ),
+    UseGuards(AuthorizationGuard(options)),
+  );
 }

@@ -19,6 +19,8 @@ import {
 } from "./user/user.constants";
 import { UserMapper } from "./user/user.mapper";
 import { User } from "./user/user.model";
+import { CognitoTokenTypeMismatchError } from "./errors/cognito-token-type-mismatch.error";
+import { TOKEN_USE_KEY, TokenUse } from "./token-use";
 import { IS_PUBLIC_KEY } from "./whitelist";
 
 /**
@@ -79,6 +81,14 @@ export abstract class AbstractGuard implements CanActivate {
         throw new BadRequestException("Invalid token payload");
       }
 
+      const tokenUse = this.#reflector.getAllAndOverride<TokenUse>(
+        TOKEN_USE_KEY,
+        [context.getHandler(), context.getClass()],
+      );
+      if (tokenUse && payload.token_use !== tokenUse) {
+        throw new CognitoTokenTypeMismatchError(tokenUse, payload.token_use);
+      }
+
       request[COGNITO_JWT_PAYLOAD_CONTEXT_PROPERTY] = payload;
       request[COGNITO_USER_CONTEXT_PROPERTY] =
         UserMapper.fromCognitoJwtPayload(payload);
@@ -89,7 +99,12 @@ export abstract class AbstractGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      if (error instanceof BadRequestException) throw error;
+      if (
+        error instanceof BadRequestException ||
+        error instanceof CognitoTokenTypeMismatchError
+      ) {
+        throw error;
+      }
 
       throw new UnauthorizedException("Authentication failed", {
         cause: error as Error,
