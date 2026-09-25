@@ -12,7 +12,7 @@ import { WhaleModule } from './whale/whale.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      playground: true,
+      graphiql: true,
     }),
     AuthModule,
     DolphinModule,
