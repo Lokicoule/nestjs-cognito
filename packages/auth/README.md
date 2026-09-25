@@ -459,6 +459,20 @@ export class UserController {
 - **`@CognitoIdUser`** - Use when you need `email`, `cognito:groups`, custom attributes, or want to enforce ID tokens
 - **`@CognitoUser`** - Use when you don't care about token type or need to support both
 
+### Typing Custom Attributes
+
+Custom attributes are typed as `Json` by default. Declare them once in your app to type them everywhere (`CognitoJwtPayload`, `CognitoIdTokenPayload`, `CognitoAccessTokenPayload`):
+
+```typescript
+declare module "@nestjs-cognito/core" {
+  interface CognitoCustomClaims {
+    "custom:tenant"?: string;
+  }
+}
+```
+
+Declare them optional: Cognito leaves out attributes that have no value.
+
 ## Public Routes
 
 The `@PublicRoute()` decorator makes routes accessible without authentication while still enforcing validation when credentials are provided. This is perfect for implementing "login to see more" features.

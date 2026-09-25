@@ -115,6 +115,20 @@ export class UserController {
 
 **ID tokens** contain: `sub`, `cognito:username`, `email`, `email_verified`, `cognito:groups`, `phone_number`, `phone_number_verified`, and any custom attributes you defined in your user pool.
 
+## Type custom attributes
+
+Custom attributes are typed as `Json` by default. Declare them once in your app to type them everywhere (`CognitoJwtPayload`, `CognitoIdTokenPayload`, `CognitoAccessTokenPayload`):
+
+```typescript
+declare module '@nestjs-cognito/core' {
+  interface CognitoCustomClaims {
+    'custom:tenant'?: string;
+  }
+}
+```
+
+Declare them optional: Cognito leaves out attributes that have no value.
+
 ## Check token type manually
 
 If you're using `@CognitoUser` and need to check which type you got:
