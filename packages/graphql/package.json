@@ -61,7 +61,7 @@
     "@nestjs/websockets": "12.1.0",
     "@types/ws": "8.18.1",
     "graphql-ws": "6.3.0",
-    "ws": "8.21.3"
+    "ws": "8.22.0"
   },
   "dependencies": {
     "@nestjs-cognito/auth": "workspace:*",
