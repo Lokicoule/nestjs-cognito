@@ -41,7 +41,7 @@
     "@nestjs/websockets": "12.1.1",
     "@types/express": "5.0.6",
     "@types/jest": "30.0.0",
-    "@types/node": "24.19.0",
+    "@types/node": "24.19.1",
     "eslint": "10.11.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.6",
