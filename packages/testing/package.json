@@ -45,7 +45,7 @@
     "url": "https://github.com/Lokicoule/nestjs-cognito/issues"
   },
   "devDependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "3.1147.0",
+    "@aws-sdk/client-cognito-identity-provider": "3.1148.0",
     "@nestjs-cognito/core": "workspace:*",
     "@nestjs/common": "12.1.1",
     "@nestjs/testing": "12.1.1"
