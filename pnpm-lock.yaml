@@ -269,8 +269,8 @@ importers:
         specifier: 12.1.1
         version: 12.1.1(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/microservices@12.1.1)(@nestjs/platform-express@12.1.1)(@nestjs/websockets@12.1.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/jwt':
-        specifier: 12.0.2
-        version: 12.0.2(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))
+        specifier: 12.0.3
+        version: 12.0.3(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))
       '@nestjs/microservices':
         specifier: 12.1.1
         version: 12.1.1(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.1)(@nestjs/websockets@12.1.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -343,8 +343,8 @@ importers:
         specifier: 14.0.2
         version: 14.0.2(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.1)(class-transformer@0.5.1)(class-validator@0.14.3)(graphql@16.14.2)(reflect-metadata@0.2.2)(typescript@6.0.3)
       '@nestjs/jwt':
-        specifier: 12.0.2
-        version: 12.0.2(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))
+        specifier: 12.0.3
+        version: 12.0.3(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))
       '@nestjs/microservices':
         specifier: 12.1.1
         version: 12.1.1(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.1.1)(@nestjs/websockets@12.1.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -1572,8 +1572,8 @@ packages:
       typescript:
         optional: true
 
-  '@nestjs/jwt@12.0.2':
-    resolution: {integrity: sha512-1crs22hB7pNf7FnfRRRXvFTo595Rgx+JLyIuWInsyd5Ov/z0N8CCJPqMlTy41D5XTWe8CVr9miwB+2OXxVX9RA==}
+  '@nestjs/jwt@12.0.3':
+    resolution: {integrity: sha512-Gr/lpj1pu5Lfn8b+6WeZZzj4J+Ggm1d4ImgrYLhiWahpJHoc/hhfQ9h9AAVVQ9vM+VskPrlngMu0RZwBIRsx3g==}
     peerDependencies:
       '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
 
@@ -8201,7 +8201,7 @@ snapshots:
       - crossws
       - utf-8-validate
 
-  '@nestjs/jwt@12.0.2(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))':
+  '@nestjs/jwt@12.0.3(@nestjs/common@12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))':
     dependencies:
       '@nestjs/common': 12.1.1(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@types/jsonwebtoken': 9.0.10
