@@ -358,8 +358,8 @@ importers:
         specifier: 8.18.2
         version: 8.18.2
       graphql-ws:
-        specifier: 6.4.0
-        version: 6.4.0(graphql@16.14.2)(ws@8.22.0)
+        specifier: 6.4.1
+        version: 6.4.1(graphql@16.14.2)(ws@8.22.0)
       ws:
         specifier: 8.22.0
         version: 8.22.0
@@ -4042,8 +4042,8 @@ packages:
       ws:
         optional: true
 
-  graphql-ws@6.4.0:
-    resolution: {integrity: sha512-hy5+0vmuGBP+rZyp+MsutGFHARSEiQkQ/Qc8Q+anGjTQDs9BgeS+jLKpGfA8vQLePgd17MT7yVJ1qOKFqIwrWA==}
+  graphql-ws@6.4.1:
+    resolution: {integrity: sha512-a3MzY5u+tCHHwuyimzxMAHZQ6TY7bOpkQURtKXE5kKIkBdsZ2axlb7sLzMpzGFO4guhws9FyMVB1onyX58pO4w==}
     engines: {node: '>=20'}
     peerDependencies:
       '@fastify/websocket': ^10 || ^11
@@ -11017,7 +11017,7 @@ snapshots:
     optionalDependencies:
       ws: 8.22.0
 
-  graphql-ws@6.4.0(graphql@16.14.2)(ws@8.22.0):
+  graphql-ws@6.4.1(graphql@16.14.2)(ws@8.22.0):
     dependencies:
       graphql: 16.14.2
     optionalDependencies:
