@@ -25,7 +25,7 @@
     "@nestjs/schematics": "12.0.7",
     "@types/express": "5.0.6",
     "@types/node": "24.19.2",
-    "eslint": "10.13.0",
+    "eslint": "10.14.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.7",
     "globals": "17.13.0",
