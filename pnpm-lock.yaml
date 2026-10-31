@@ -359,10 +359,10 @@ importers:
         version: 8.18.2
       graphql-ws:
         specifier: 6.4.1
-        version: 6.4.1(graphql@16.14.2)(ws@8.22.0)
+        version: 6.4.1(graphql@16.14.2)(ws@8.22.1)
       ws:
-        specifier: 8.22.0
-        version: 8.22.0
+        specifier: 8.22.1
+        version: 8.22.1
 
   packages/testing:
     dependencies:
@@ -1978,6 +1978,7 @@ packages:
   '@smithy/core@3.38.0':
     resolution: {integrity: sha512-aLyyCnK2p4yvNA2TaM+5owXqb+rZGSiUKEsNP329AzeYnERtAz7NrlTbRsaxqmZ0ooxwoID8LMm959UGQQDIsg==}
     engines: {node: '>=18.0.0'}
+    deprecated: Deprecated due to a bug in custom logger data redaction. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -6567,6 +6568,18 @@ packages:
       utf-8-validate:
         optional: true
 
+  ws@8.22.1:
+    resolution: {integrity: sha512-oyL6OPYme/CmiFvNuGzeoxCJ4nOrZE2O1FwM9MWM1AsGri6nLXB2pg+lNA8aLeXMSav0J6eIVS1j6vUPzUtK9g==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   xmlhttprequest-ssl@2.1.2:
     resolution: {integrity: sha512-TEU+nJVUUnA4CYJFLvK5X9AOeH4KvDvhIfm0vV1GaQRtchnG0hgK5p8hw/xjv8cunWYCsiPCSDzObPyhEwq3KQ==}
     engines: {node: '>=0.4.0'}
@@ -10993,11 +11006,11 @@ snapshots:
     optionalDependencies:
       ws: 8.22.0
 
-  graphql-ws@6.4.1(graphql@16.14.2)(ws@8.22.0):
+  graphql-ws@6.4.1(graphql@16.14.2)(ws@8.22.1):
     dependencies:
       graphql: 16.14.2
     optionalDependencies:
-      ws: 8.22.0
+      ws: 8.22.1
 
   graphql@16.14.2: {}
 
@@ -13315,7 +13328,7 @@ snapshots:
       chromium-bidi: 0.6.3(devtools-protocol@0.0.1312386)
       debug: 4.4.3
       devtools-protocol: 0.0.1312386
-      ws: 8.22.0
+      ws: 8.22.1
     transitivePeerDependencies:
       - bare-buffer
       - bufferutil
@@ -14558,6 +14571,8 @@ snapshots:
   ws@8.21.3: {}
 
   ws@8.22.0: {}
+
+  ws@8.22.1: {}
 
   xmlhttprequest-ssl@2.1.2: {}
 
