@@ -359,10 +359,10 @@ importers:
         version: 8.18.2
       graphql-ws:
         specifier: 6.4.2
-        version: 6.4.2(graphql@16.14.2)(ws@8.22.2)
+        version: 6.4.2(graphql@16.14.2)(ws@8.23.0)
       ws:
-        specifier: 8.22.2
-        version: 8.22.2
+        specifier: 8.23.0
+        version: 8.23.0
 
   packages/testing:
     dependencies:
@@ -6567,8 +6567,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.22.2:
-    resolution: {integrity: sha512-/rEZ2ejown2N5gxVTHUu9bVVC7ttu0/Tgzf5hbTOixR3Fs7mbbXgn2DbdbcKgJOmpQMtrIUWivtYuVMnp/W/yA==}
+  ws@8.23.0:
+    resolution: {integrity: sha512-wCkmX8QMOrKjgO8HW2WyDbTSGeqkocxgDzS9iR79rEAexty6/2qzilx3Ag8Tqf9ykop3irLKle0MtVn5qjVnoQ==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -11005,11 +11005,11 @@ snapshots:
     optionalDependencies:
       ws: 8.22.0
 
-  graphql-ws@6.4.2(graphql@16.14.2)(ws@8.22.2):
+  graphql-ws@6.4.2(graphql@16.14.2)(ws@8.23.0):
     dependencies:
       graphql: 16.14.2
     optionalDependencies:
-      ws: 8.22.2
+      ws: 8.23.0
 
   graphql@16.14.2: {}
 
@@ -13327,7 +13327,7 @@ snapshots:
       chromium-bidi: 0.6.3(devtools-protocol@0.0.1312386)
       debug: 4.4.3
       devtools-protocol: 0.0.1312386
-      ws: 8.22.2
+      ws: 8.23.0
     transitivePeerDependencies:
       - bare-buffer
       - bufferutil
@@ -14571,7 +14571,7 @@ snapshots:
 
   ws@8.22.0: {}
 
-  ws@8.22.2: {}
+  ws@8.23.0: {}
 
   xmlhttprequest-ssl@2.1.2: {}
 
