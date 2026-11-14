@@ -46,7 +46,7 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.7",
     "globals": "17.14.0",
-    "graphql": "16.14.2",
+    "graphql": "16.15.0",
     "jest": "30.5.2",
     "lint-staged": "17.6.0",
     "pactum": "3.9.1",
